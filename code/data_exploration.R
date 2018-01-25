@@ -6,14 +6,28 @@ library(dplyr)
 library(plotly)
 library(extdepth)
 library(mgcv)
+library(irlba)
 
 # open connection to TAS file
 nc = nc_open('/Users/trevh/Research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.30-Nov-2017.nc')
 
 # import 1 ensemble for all time points
-clime = ncvar_get(nc, attributes(nc$var)$names[1], count = c(-1, -1, -1, 1))
+clime = ncvar_get(nc, attributes(nc$var)$names[1], count = c(50, 50, 50, 1))
 clime = sapply(seq(dim(clime)[3]), function(x) as.vector(clime[ , , x]))
 clime = t(clime)
+
+clime.cov = cov(clime)
+clime.eigen = partial_eigen(clime.cov, n = 10)
+
+clime.eigen2 = svdr(clime, k=5)
+clime.eigen2 = ssvd(clime)
+
+clime.eigen3 = svd(clime.cov)$d
+clime.eigen3 = eigen(clime.cov)
+
+# partial eigen is much faster
+microbenchmark::microbenchmark(partial_eigen(clime.cov), times = 10)
+microbenchmark::microbenchmark(eigen(clime.cov), times = 10)
 
 # import and convert data (all ensembles for 1 time point)
 tas = ncvar_get(nc, attributes(nc$var)$names[1], count = c(-1, -1, 1, -1))
