@@ -12,11 +12,13 @@ library(irlba)
 nc = nc_open('/Users/trevh/Research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.30-Nov-2017.nc')
 
 # import 1 ensemble for all time points
-clime = ncvar_get(nc, attributes(nc$var)$names[1], count = c(50, 50, 50, 1))
+clime = ncvar_get(nc, attributes(nc$var)$names[1], count = c(-1, -1, 200, 1))
 clime = sapply(seq(dim(clime)[3]), function(x) as.vector(clime[ , , x]))
 clime = t(clime)
 
 clime.cov = cov(clime)
+partial_eigen(clime.cov)$values
+
 clime.eigen = partial_eigen(clime.cov, n = 10)
 
 clime.eigen2 = svdr(clime, k=5)
