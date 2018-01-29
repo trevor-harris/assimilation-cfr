@@ -2,17 +2,58 @@ rm(list = ls())
 gc()
 
 library(ncdf4)
+library(dplyr)
+library(plotly)
 library(extdepth)
 library(mgcv)
 library(irlba)
+
+get_lat_vec <- function(nc) {
+  # extract latitudes
+  lats = nc$dim$lat$vals
+  
+  # extract number of longitude obs
+  lons = nc$dim$lon$len
+  
+  # rep each lat value lons times. Then group together.
+  lat_vec = sort(rep(lats, lons))
+  return(lat_vec)
+}
+
+
+# preprocess
+preprocess <- function(fmat, lat_vec) {
+  
+  # remove time mean at each spatial location
+  fmat = fmat - rowMeans(fmat)
+  
+  # rescale observations
+  fmat = fmat*sqrt(abs(cos(lat_vec*pi/180)))
+  
+  return(fmat)
+}
 
 # open connection to TAS file
 nc = nc_open('/Users/trevh/Research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.30-Nov-2017.nc')
 
 # import 1 ensemble for all time points
-clime = ncvar_get(nc, attributes(nc$var)$names[1], count = c(-1, -1, -1, 1))
+clime = ncvar_get(nc, attributes(nc$var)$names[1], count = c(-1, -1, 10, 1))
+clime = lapply(seq(dim(clime)[3]), function(x) as.vector(clime[ , , x]))
+
 clime = sapply(seq(dim(clime)[3]), function(x) as.vector(clime[ , , x]))
 clime = t(clime)
+
+
+# clime = clime - rowMeans(clime)
+# clime = clime*sqrt(abs(cos(get_lat_vec(nc)*pi/180)))
+
+clime = preprocess(clime, get_lat_vec(nc))
+
+clime2 = matrix(clime[1,], nc$dim$lon$len, nc$dim$lat$len)
+
+plot_ly(showscale = FALSE) %>% 
+  add_surface(z = ~clime)
+
 
 clime.cov = cov(clime)
 cl.eig = irlba(clime.cov, nv=5)
