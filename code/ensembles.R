@@ -1,8 +1,3 @@
-library(ncdf4)
-library(dplyr)
-library(plotly)
-library(mgcv)
-library(irlba)
 
 # preprocess
 ens_preprocess <- function(nc, t) {
