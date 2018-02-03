@@ -40,8 +40,7 @@ ens_preprocess <- function(nc, t) {
   return(field)
 }
 
-
-# open connection to TAS file
+# open connection to TAS ens file
 nc = nc_open('/Users/trevh/Research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.30-Nov-2017.nc')
 
 ens = ens_preprocess(nc, 1)
@@ -50,3 +49,40 @@ plot_ly(showscale = FALSE) %>%
   add_surface(z = ~ens[[1]])
 
 
+#### PRIOR PREPROCESS
+nc = nc_open('/Users/trevh/Research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.30-Nov-2017.nc')
+
+prior = ncvar_get(nc, attributes(nc$var)$names[1], count = c(-1, -1, -1))
+prior = lapply(1:dim(prior)[3], function(x) t(as.matrix(prior[ , , x])))
+
+lats = as.vector(nc$dim$lat$vals)
+nlon = nc$dim$lon$len
+nlat = nc$dim$lat$len
+
+latmat = matrix(rep(lats, nlon), nlat, nlon)
+latmat = sqrt(abs(cos(latmat*pi/180)))
+
+for (c in 1:length(prior)) {
+  prior[[c]] = data.frame(x = rep(seq_len(nlon), each = nlat),
+                          y = rep(seq_len(nlat), times = nlon),
+                          z = c(prior[[c]]))
+  # gam smoother
+  mod = gam(z ~ te(x, y), data = prior[[c]])$fitted
+  
+  # return to matrix format
+  prior[[c]] = matrix(mod, nlat, nlon)
+  
+  # remove lat mean
+  prior.t = prior[[c]] - rowMeans(prior[[c]])
+  
+  # cosine normalize
+  prior[[c]] = prior.t*latmat
+  
+}
+
+# cleanup
+rm(c, lats, nlat, nlon, latmat, t, prior.t, mod)
+
+# check em
+plot_ly(showscale = FALSE) %>% 
+  add_surface(z = ~prior[[1]])
