@@ -5,3 +5,4 @@
 - 1/28 - Worked out a lot of the details of the preprocessing. Still need to confirm that the smoothing is adequate and the steps ive taken are correct. Also I need to figure out what the cos section is for exactly.
 - 2/2 - Proprocessing now works correctly. Had a strange bug that caused time point t=93 to fail once though. 
 - 2/3 - Understand how the gam smoothing splines work now and what the equation does. Essentially gam() tells it to fit a spline and te() tells it to find the spline on the product RKHS of X and Y.
+- 2/7 - Began the transtion away from the eigenfunction/spline smoothing over to bisquare basis
