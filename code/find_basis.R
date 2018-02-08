@@ -19,7 +19,8 @@ for(e in 1:length(ens)) {
   ens.basis[,e] = basis_coef(as.vector(ens[[e]]), prior.eig$u)
 }
 
-basis_coef(as.vector(ens[[1]]), prior.eig$u)
+# should match prior.basis
+prior.basis = basis_coef(as.vector(prior[[1]]), prior.eig$u)
 
 save(ens.basis, prior.basis, file="data/basis")
 save(ens.basis, prior.basis, file="basis")

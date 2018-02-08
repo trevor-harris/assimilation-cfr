@@ -1,73 +1,45 @@
-rm(list = ls())
-gc()
-
-library(ncdf4)
-library(dplyr)
-library(plotly)
 library(extdepth)
-library(mgcv)
-library(irlba)
+load("basis")
 
-# open connection to TAS file
-nc = nc_open('/Users/trevh/Research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.30-Nov-2017.nc')
+Rcpp::sourceCpp("/Users/trevh/research/extdepth/src/depth.cpp")
 
-# import 1 ensemble for all time points
-clime = ncvar_get(nc, attributes(nc$var)$names[1], count = c(-1, -1, 200, 1))
-clime = sapply(seq(dim(clime)[3]), function(x) as.vector(clime[ , , x]))
-clime = t(clime)
-
-clime.cov = cov(clime)
-partial_eigen(clime.cov)$values
-
-clime.eigen = partial_eigen(clime.cov, n = 10)
-
-clime.eigen2 = svdr(clime, k=5)
-clime.eigen2 = ssvd(clime)
-
-clime.eigen3 = svd(clime.cov)$d
-clime.eigen3 = eigen(clime.cov)
-
-# partial eigen is much faster
-microbenchmark::microbenchmark(partial_eigen(clime.cov), times = 10)
-microbenchmark::microbenchmark(eigen(clime.cov), times = 10)
-
-# import and convert data (all ensembles for 1 time point)
-tas = ncvar_get(nc, attributes(nc$var)$names[1], count = c(-1, -1, 1, -1))
-tas = lapply(seq(dim(tas)[3]), function(x) as.matrix(tas[ , , x]))
+# exdepth works so long as g is included in fmat. Does that make sense? No
+full_basis = cbind(prior.basis, ens.basis)
+Rcpp::sourceCpp("/Users/trevh/research/extdepth/src/depthtest.cpp")
 
 
-# smooth surfaces
-temp = tas[[1]]
-df <- data.frame(x = rep(seq_len(ncol(temp)), each = nrow(temp)),
-                 y = rep(seq_len(nrow(temp)), times = ncol(temp)),
-                 z = c(temp))
+extdepth(prior.basis, cbind(prior.basis, ens.basis))
+edepth(prior.basis, ens.basis)
 
-mod = gam(z ~ te(x, y, k=15), data = df)$fitted
-temp.smooth = matrix(mod, nrow(temp), ncol(temp))
-temp.diff = matrix(temp - mod, nrow(temp), ncol(temp))
+edepth(ens.basis[,3], cbind(prior.basis, ens.basis))
 
-# raw
-plot_ly(showscale = FALSE) %>% 
-  add_surface(z = ~temp)
+extdepth(ens.basis[,2], cbind(prior.basis, ens.basis))
+edepth(ens.basis[,2], cbind(prior.basis, ens.basis))
 
-# smooth
-plot_ly(showscale = FALSE) %>% 
-  add_surface(z = ~temp.smooth)
+edepth(cbind(prior.basis, prior.basis), cbind(prior.basis, ens.basis))
 
-# difference
-plot_ly(showscale = FALSE) %>% 
-  add_surface(z = ~temp.diff)
-
-# test
-mod2 = gam(z ~ s(x, y, k=200, bs="tp"), data = df)
-temp.smooth2 = matrix(mod2$fitted, nrow(temp), ncol(temp))
-temp.diff2 = matrix(temp - mod2$fitted, nrow(temp), ncol(temp))
+# single comparison
+plot(prior.basis, type = "l")
+lines(ens.basis[,1])
 
 
-plot_ly(showscale = FALSE) %>% 
-  add_surface(z = ~temp.smooth2)
+# what do the ens coeff look like
+plot(ens.basis[,1], type = "l")
+for (i in 2:100) {
+  lines(ens.basis[,i])
+}
+# plus prior
+lines(prior.basis, col = "red")
 
-# find basis coefficients
+# same comparison except on dCDFs
+plot(sapply(1:100, function(x) sum(depth(prior.basis, ens.basis) <= x/100))
+     ,type = "l"
+     ,col = "red"
+     ,ylim=c(0, 5)
+     ,xlim=c(1,2))
 
-# apply extdepth to basis coef
 
+for (i in 1:100) {
+  lines(sapply(1:100, function(x) sum(depth(ens.basis[,i], ens.basis) <= x/100)))
+}
+# lines(sapply(1:100, function(x) sum(depth(prior.basis, ens.basis) <= x/100)), col = "red")
