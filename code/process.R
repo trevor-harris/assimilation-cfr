@@ -20,6 +20,7 @@ n.ens = nc.ens$dim$sub_ens$len
 
 
 ##### CONSTRUCT THE BASIS FUNCTIONS #####
+# incase this gets changed do 10 and 15
 nlat.centers = 10
 nlon.centers = 15
 n.center = nlat.centers * nlon.centers
@@ -47,9 +48,7 @@ for (i in 1:n.center) {
 }
 
 
-##### PREPROCESS THE FIELDS #####
-# eventually it'll be a loooop
-t = 1
+t = 600
 
 # extract data from the ncdf4 objects
 ens = ncvar_get(nc.ens, attributes(nc.ens$var)$names[1], start = c(1, 1, t, 1), count = c(-1, -1, 1, -1))
@@ -72,22 +71,45 @@ ens = vapply(1:n.ens, function(x) ens[,,x]*latmat, FUN.VALUE = matrix(0, nrow = 
 prior = prior * latmat
 
 
+
 ##### FIT BASIS AND FIND ED #####
 prior.alpha = coef(fastLmPure(basis, as.vector(prior)))
 ens.alpha = sapply(1:n.ens, function(x) coef(fastLmPure(basis, as.vector(ens[,,x]))))
 
 # calculate extremal depth
 ed = sapply(1:ncol(ens.alpha), function(x) edepth(ens.alpha[,x], ens.alpha))
-central = central_region(ens.alpha, ed)
+central = central_region(ens.alpha, ed, 0.05)
 
+# how far does the prior deviate from the central region
+alpha.dev = rep(0, length(prior.alpha))
+for (a in 1:length(alpha.dev)) {
+  if (central[[1]][a] > prior.alpha[a]) {
+    alpha.dev[a] = prior.alpha[a] - central[[1]][a]
+  } 
+  if (prior.alpha[a] > central[[2]][a]) {
+    alpha.dev[a] = prior.alpha[a] - central[[2]][a]
+  }
+}
+
+# only looks at absolute value of the deviance from the CR (make it go both ways later)
+alpha.dev = matrix(abs(alpha.dev), nlat.centers, nlon.centers)
+plot_ly(colors = "Blues") %>% add_heatmap(z = ~alpha.dev)
+
+
+
+edepth(prior.alpha, ens.alpha)
+
+# measure distance from central region
+prior.alpha.mat = matrix(prior.alpha, nlat.centers, nlon.centers)
+
+plot(central[[1]], type = "l", xlim = c(1, 5))
+lines(central[[2]])
+lines(prior.alpha, col = "red")
+
+plot_ly() %>%
+  add_heatmap(z = ~prior.alpha.mat)
 
 ##### DIAGNOSTICS #####
-# is the prior within the CR?
-plot(prior.alpha, type = "l")
-polygon(c(1:n.center, rev(1:n.center)),
-        c(central[[2]], rev(central[[1]])),
-        col="skyblue",
-        border = NA)
 
 # lines(central[[1]])
 # lines(central[[2]])
@@ -112,7 +134,45 @@ polygon(c(1:n.center, rev(1:n.center)),
 
 
 
+##### PREPROCESS THE FIELDS #####
+# eventually it'll be a loooop
+years = 20
+ed = rep(0, years)
 
+for (t in 1:years) {
+  # extract data from the ncdf4 objects
+  ens = ncvar_get(nc.ens, attributes(nc.ens$var)$names[1], start = c(1, 1, t, 1), count = c(-1, -1, 1, -1))
+  prior = ncvar_get(nc.prior, attributes(nc.prior$var)$names[1], start = c(1, 1, t), count = c(-1, -1, 1))
+  
+  # transpose for intuitive (to me) layout
+  ens = aperm(ens, c(2, 1, 3))
+  prior = t(prior)
+  
+  # remove lat means
+  ens = vapply(1:n.ens, function(x) ens[,,x] - rowMeans(ens[,,x]), FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
+  prior = prior - rowMeans(prior)
+  
+  # normalize
+  lats = as.vector(nc.ens$dim$lat$vals)
+  latmat = matrix(rep(lats, n.lon), n.lat, n.lon)
+  latmat = sqrt(abs(cos(latmat*pi/180)))
+  
+  ens = vapply(1:n.ens, function(x) ens[,,x]*latmat, FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
+  prior = prior * latmat
+  
+  
+  
+  ##### FIT BASIS AND FIND ED #####
+  prior.alpha = coef(fastLmPure(basis, as.vector(prior)))
+  ens.alpha = sapply(1:n.ens, function(x) coef(fastLmPure(basis, as.vector(ens[,,x]))))
+  
+  # # calculate extremal depth
+  # ed = sapply(1:ncol(ens.alpha), function(x) edepth(ens.alpha[,x], ens.alpha))
+  # central = central_region(ens.alpha, ed)
+  
+  ed[t] = edepth(prior.alpha, ens.alpha)
+}
+plot(ed)
 
 
 
