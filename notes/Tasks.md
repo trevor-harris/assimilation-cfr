@@ -36,6 +36,7 @@
    - Based on the above output, what does further investigation look like? How important are differences at a single site at a single time point? Are we more interested in aggregate effects?
    - Check like 5 to 10 years evenly spaced over the 998 years 
    - turn coefficients back to map and color code
+     - ~~Code to do this now works~~
 
 #### Compare ensemble with target ensemble
 
