@@ -37,6 +37,7 @@
    - Check like 5 to 10 years evenly spaced over the 998 years 
    - turn coefficients back to map and color code
      - ~~Code to do this now works~~
+     - probably should use a better interpolation method to avoid being influenced by artifacts of the basis functions
 
 #### Compare ensemble with target ensemble
 
