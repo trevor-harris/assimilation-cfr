@@ -1,6 +1,4 @@
 ##### FIND OPTIMAL NUMBER OF BASIS FUNCTIONS #####
-rm(list = ls())
-gc()
 
 library(ncdf4)
 library(dplyr)
@@ -8,7 +6,7 @@ library(plotly)
 
 ##### CONNECT TO DATA #####
 # read ensembles and prior ncdf4 objects
-nc.prior = nc_open('/Users/trevh/Research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.30-Nov-2017.nc')
+nc.prior = nc_open('/Users/trevh/Research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 
 # get data dim
 n.lon = nc.prior$dim$lon$len
@@ -44,6 +42,7 @@ lon.range = 10:30
 lat.range = 10:30
 
 MSE = matrix(0, length(lon.range), length(lat.range))
+bic.field = matrix(0, length(lon.range), length(lat.range))
 runtime = matrix(0, length(lon.range), length(lat.range))
 for (nlo in lon.range) {
   for (nla in lat.range) {
@@ -78,7 +77,8 @@ for (nlo in lon.range) {
     prior.smooth = matrix(fastLmPure(basis, as.vector(prior.avg))$fitted.values, 96, 144)
  
     MSE[nlo-min(lon.range)+1, nla-min(lat.range)+1] = sum((prior.avg-prior.smooth)^2)
-    runtime[nlo-min(lon.range)+1, nla-min(lat.range)+1] = Sys.time() - start.time
+    bic.field[nlo-min(lon.range)+1, nla-min(lat.range)+1] = BIC(lm(as.vector(prior.avg) ~ basis - 1))
+    # runtime[nlo-min(lon.range)+1, nla-min(lat.range)+1] = Sys.time() - start.time
     
   }
 }
@@ -88,6 +88,45 @@ plot(MSE[1,], type = "l", ylim = c(20000, 100000))
 for(i in 2:nrow(MSE)) {
   lines(MSE[i,])
 }
+
+
+# reshape for plotting
+rotate <- function(x) t(apply(x, 2, rev))
+mse.plot = rotate(MSE)
+bic.plot = rotate(bic.field)
+
+# mse
+dimnames(mse.plot) = list(10:30, 10:30)
+mse.gg = melt(mse.plot)
+colnames(mse.gg) = c("lon", "lat", "value")
+
+ggplot(mse.gg, aes(lon, lat, z = value, fill = value)) + 
+  geom_raster() +
+  geom_contour() +
+  geom_point(aes(x=15, y=10), colour="black") +
+  geom_point(aes(x=30, y=17), colour="black") +
+  scale_fill_distiller(palette = "RdBu") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(title = "MSE of different combination of basis functions")
+
+
+# bic
+dimnames(bic.plot) = list(10:30, 10:30)
+bic.gg = melt(bic.plot)
+colnames(bic.gg) = c("lon", "lat", "value")
+
+ggplot(bic.gg, aes(lon, lat, z = value, fill = value)) + 
+  geom_raster() +
+  geom_contour() +
+  geom_point(aes(x=15, y=10), colour="black") +
+  geom_point(aes(x=30, y=17), colour="black") +
+  scale_fill_distiller(palette = "RdBu") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(title = "bic of different combination of basis functions")
+
+which(bic.plot == min(bic.plot), arr.ind = T) + c(9, 9)
 
 # MSE surface
 plot_ly(showscale = FALSE) %>% 

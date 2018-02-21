@@ -5,7 +5,7 @@
 1. ~~Scrap the Eigendecomp method~~
 2. ~~Create radial (bisquare) basis functions~~
    1. Check that these are accurate and everything lines up (semi done)
-3. Add multi-resultion basis functions
+3. ~~Add multi-resultion basis functions~~
    1. ~~Do you do one layer at a time? I.e. is res 2 fit on the residuals from res 1? Etc~~
    2. ~~Compare against lots of single resolution functions - Doesnt seem to help~~
 4. Coefficients are very noisy - this probably needs to be handled in some way.
@@ -15,8 +15,8 @@
    3. Option 3: Don't do anything - not ideal since prior always has ED = 0
    4. ~~Option 4: Shrink coefficients? terrible idea~~
 5. Selecting an optimal number of basis functions.
-   1. How does adding more basis functions minimize the MSE of smoothed field vs the original?
-   2. min vs max on the radius
+   1. ~~How does adding more basis functions minimize the MSE of smoothed field vs the original?~~
+   2. ~~min vs max on the radius~~
 
 #### Implement a (modified) version of Extremal data depth for handling noisy functional data
 
@@ -32,12 +32,12 @@
 #### Compare ensemble with prior
 
 1. Establish method and output for single time point
-   - What should results here look like? Graphs? a summary statistic? Check the Smerdon paper
+   - ~~What should results here look like? Graphs? a summary statistic? Check the Smerdon paper~~
    - Based on the above output, what does further investigation look like? How important are differences at a single site at a single time point? Are we more interested in aggregate effects?
    - Check like 5 to 10 years evenly spaced over the 998 years 
-   - turn coefficients back to map and color code
+   - ~~turn coefficients back to map and color code~~
      - ~~Code to do this now works~~
-     - probably should use a better interpolation method to avoid being influenced by artifacts of the basis functions
+     - ~~probably should use a better interpolation method to avoid being influenced by artifacts of the basis functions~~
 
 #### Compare ensemble with target ensemble
 
