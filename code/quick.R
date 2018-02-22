@@ -1,7 +1,13 @@
 source('code/setup.R')
 
-basis = create_basis(17, 30, nc.prior)
-fields = preprocess(100, nc.ens, nc.prior)
+t = 100
+
+# commonly use 17x30 and 10x15
+lat.basis = 10
+lon.basis = 15
+
+basis = create_basis(lat.basis, lon.basis, nc.prior)
+fields = preprocess(t, nc.ens, nc.prior)
 
 ens = fields[["ens"]]
 prior = fields[["prior"]]
@@ -28,5 +34,5 @@ prior.vec = basis %*% alpha.dev
 
 prior.diff = matrix(prior.vec , nrow(prior), ncol(prior))
 
-main = paste0("T = ", ) 
-field_plot(prior.diff, nc.prior, "T = 100 with 510 coef")
+main = paste0("T = ", t, " with ", lat.basis*lon.basis, " basis functions") 
+field_plot(prior.diff, nc.prior, main)
