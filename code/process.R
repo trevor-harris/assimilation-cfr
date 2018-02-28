@@ -75,6 +75,8 @@ ens.alpha = sapply(1:dim(ens)[3], function(x) coef(fastLmPure(basis, as.vector(e
 
 # calculate extremal depth
 ed = sapply(1:ncol(ens.alpha), function(x) edepth(ens.alpha[,x], ens.alpha))
+
+edepth(prior.alpha, ens.alpha)
 central = central_region(ens.alpha, ed, 0.05)
 
 # outlier regions

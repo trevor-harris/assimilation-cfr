@@ -76,7 +76,7 @@ preprocess = function(t, nc.ens, nc.prior) {
 }
 
 # Plot smooth tilemap with contours
-field_plot <- function(field, nc, main = "") {
+field_plot <- function(field, nc, main = "", zlim = c(-max(abs(field)), max(abs(field)))) {
   
   lats = as.vector(nc$dim$lat$vals)
   lons = as.vector(nc$dim$lon$vals)
@@ -95,9 +95,9 @@ field_plot <- function(field, nc, main = "") {
   ggplot(field.gg, aes_string(x="lon", y="lat", z="value", fill="value")) + 
     geom_raster(interpolate = TRUE) +
     geom_contour() +
-    borders("world", colour = "grey20") +
+    borders("world", colour = "grey20", ylim = c(-100, 100)) +
     coord_fixed(1.3) +
-    scale_fill_distiller(palette = "RdBu", limits = c(-max(abs(field)), max(abs(field)))) +
+    scale_fill_distiller(palette = "RdBu", limits = zlim) +
     theme_void() +
     theme(plot.title = element_text(hjust = 0.5)) +
     labs(title = main)

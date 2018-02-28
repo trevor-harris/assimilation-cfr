@@ -74,14 +74,16 @@ for (nlo in lon.range) {
     }
     
     # check the smoothed approximation
-    prior.smooth = matrix(fastLmPure(basis, as.vector(prior.avg))$fitted.values, 96, 144)
+    prior.fit = lm(as.vector(prior.avg) ~ basis - 1)
+    prior.smooth = matrix(prior.fit$fitted.values, 96, 144)
  
-    MSE[nlo-min(lon.range)+1, nla-min(lat.range)+1] = sum((prior.avg-prior.smooth)^2)
-    bic.field[nlo-min(lon.range)+1, nla-min(lat.range)+1] = BIC(lm(as.vector(prior.avg) ~ basis - 1))
-    # runtime[nlo-min(lon.range)+1, nla-min(lat.range)+1] = Sys.time() - start.time
+    MSE[nlo-min(lon.range)+1, nla-min(lat.range)+1] = sum(prior.fit$residuals^2)
+    bic.field[nlo-min(lon.range)+1, nla-min(lat.range)+1] = BIC(prior.fit)
     
   }
 }
+
+
 
 # MSE over lat conditional on longittude
 plot(MSE[1,], type = "l", ylim = c(20000, 100000))
@@ -102,13 +104,15 @@ colnames(mse.gg) = c("lon", "lat", "value")
 
 ggplot(mse.gg, aes(lon, lat, z = value, fill = value)) + 
   geom_raster() +
-  geom_contour() +
+  geom_contour(color = "grey30") +
   geom_point(aes(x=15, y=10), colour="black") +
+  geom_point(aes(x=20, y=12), colour="black") +
+  geom_point(aes(x=25, y=15), colour="black") +
   geom_point(aes(x=30, y=17), colour="black") +
   scale_fill_distiller(palette = "RdBu") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5)) +
-  labs(title = "MSE of different combination of basis functions")
+  labs(title = "MSE")
 
 
 # bic
@@ -118,13 +122,15 @@ colnames(bic.gg) = c("lon", "lat", "value")
 
 ggplot(bic.gg, aes(lon, lat, z = value, fill = value)) + 
   geom_raster() +
-  geom_contour() +
+  geom_contour(color = "grey30") +
   geom_point(aes(x=15, y=10), colour="black") +
+  geom_point(aes(x=20, y=12), colour="black") +
+  geom_point(aes(x=25, y=15), colour="black") +
   geom_point(aes(x=30, y=17), colour="black") +
   scale_fill_distiller(palette = "RdBu") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5)) +
-  labs(title = "bic of different combination of basis functions")
+  labs(title = "BIC")
 
 which(bic.plot == min(bic.plot), arr.ind = T) + c(9, 9)
 
