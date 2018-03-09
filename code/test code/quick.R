@@ -1,6 +1,50 @@
 source('code/setup.R')
 
-t = 100
+t = 800
+
+# commonly use 17x30 and 10x15
+lat.basis = 17
+lon.basis = 30
+
+basis = create_basis(lat.basis, lon.basis, nc.prior)
+fields = preprocess(t, nc.ens, nc.prior)
+
+prior.sub = read.csv("data/prior_ens.txt", header = F)
+prior.sub = as.vector(prior.sub[,1])
+
+prior = prep_prior(nc.prior)
+prior = prior[,,prior.sub]
+prior = apply(prior, 1:2, mean)
+
+ens = fields[["ens"]]
+
+##### FIT BASIS AND FIND ED #####
+prior.alpha = coef(fastLmPure(basis, as.vector(prior)))
+ens.alpha = sapply(1:dim(ens)[3], function(x) coef(fastLmPure(basis, as.vector(ens[,,x]))))
+
+# calculate extremal depth
+ed = sapply(1:ncol(ens.alpha), function(x) edepth(ens.alpha[,x], ens.alpha))
+central = central_region(ens.alpha, ed, 0.005)
+
+# Use the x% central regions to measure outlyingness
+alpha.dev = rep(0, length(prior.alpha))
+for (a in 1:length(alpha.dev)) {
+  if (central[[1]][a] > prior.alpha[a]) {
+    alpha.dev[a] = prior.alpha[a] - central[[1]][a]
+  } 
+  if (prior.alpha[a] > central[[2]][a]) {
+    alpha.dev[a] = prior.alpha[a] - central[[2]][a]
+  }
+}
+prior.vec = basis %*% alpha.dev
+
+prior.diff = matrix(prior.vec , nrow(prior), ncol(prior))
+
+main = paste0(lat.basis*lon.basis, " basis functions") 
+field_plot(prior.diff, nc.prior, main)
+# ggsave("plots/150coef.png", width = 8, height = 5.2)
+
+edepth(prior.alpha, ens.alpha)
 
 # commonly use 17x30 and 10x15
 lat.basis = 10
@@ -10,7 +54,7 @@ basis = create_basis(lat.basis, lon.basis, nc.prior)
 fields = preprocess(t, nc.ens, nc.prior)
 
 ens = fields[["ens"]]
-prior = fields[["prior"]]
+prior = avg_prior(nc.prior)
 
 ##### FIT BASIS AND FIND ED #####
 prior.alpha = coef(fastLmPure(basis, as.vector(prior)))
@@ -18,7 +62,7 @@ ens.alpha = sapply(1:dim(ens)[3], function(x) coef(fastLmPure(basis, as.vector(e
 
 # calculate extremal depth
 ed = sapply(1:ncol(ens.alpha), function(x) edepth(ens.alpha[,x], ens.alpha))
-central = central_region(ens.alpha, ed, 0.05)
+central = central_region(ens.alpha, ed, 0.005)
 
 # Use the x% central regions to measure outlyingness
 alpha.dev = rep(0, length(prior.alpha))
@@ -34,46 +78,9 @@ prior.vec = basis %*% alpha.dev
 
 prior.diff = matrix(prior.vec , nrow(prior), ncol(prior))
 
-main = paste0("T = ", t, " with ", lat.basis*lon.basis, " basis functions") 
-p150 = field_plot(prior.diff, nc.prior, main, c(-1, 1)) + guides(colour=FALSE)
+main = paste0(lat.basis*lon.basis, " basis functions") 
+field_plot(prior.diff, nc.prior, main)
+# ggsave("plots/150coef.png", width = 8, height = 5.2)
 
+edepth(prior.alpha, ens.alpha)
 
-# commonly use 17x30 and 10x15
-lat.basis = 17
-lon.basis = 30
-
-basis = create_basis(lat.basis, lon.basis, nc.prior)
-fields = preprocess(t, nc.ens, nc.prior)
-
-ens = fields[["ens"]]
-prior = fields[["prior"]]
-
-##### FIT BASIS AND FIND ED #####
-prior.alpha = coef(fastLmPure(basis, as.vector(prior)))
-ens.alpha = sapply(1:dim(ens)[3], function(x) coef(fastLmPure(basis, as.vector(ens[,,x]))))
-
-# calculate extremal depth
-ed = sapply(1:ncol(ens.alpha), function(x) edepth(ens.alpha[,x], ens.alpha))
-central = central_region(ens.alpha, ed, 0.05)
-
-# Use the x% central regions to measure outlyingness
-alpha.dev = rep(0, length(prior.alpha))
-for (a in 1:length(alpha.dev)) {
-  if (central[[1]][a] > prior.alpha[a]) {
-    alpha.dev[a] = prior.alpha[a] - central[[1]][a]
-  } 
-  if (prior.alpha[a] > central[[2]][a]) {
-    alpha.dev[a] = prior.alpha[a] - central[[2]][a]
-  }
-}
-prior.vec = basis %*% alpha.dev
-
-prior.diff = matrix(prior.vec , nrow(prior), ncol(prior))
-
-main = paste0("T = ", t, " with ", lat.basis*lon.basis, " basis functions") 
-p510 = field_plot(prior.diff, nc.prior, main, c(-1, 1))
-
-
-gridExtra::grid.arrange(p150, p510, ncol = 2)
-
-grid::grid.draw(cbind(ggplotGrob(p150), ggplotGrob(p510), size="last"))

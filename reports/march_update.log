@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  26 FEB 2018 15:35
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  28 FEB 2018 10:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -441,6 +441,18 @@ Package: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
 \Gin@req@height=\dimen112
 \Gin@req@width=\dimen113
 )
+(/usr/local/texlive/2017/texmf-dist/tex/generic/ulem/ulem.sty
+\UL@box=\box28
+\UL@hyphenbox=\box29
+\UL@skip=\skip46
+\UL@hook=\toks22
+\UL@height=\dimen114
+\UL@pe=\count100
+\UL@pixel=\dimen115
+\ULC@box=\box30
+Package: ulem 2012/05/18
+\ULdepth=\dimen116
+)
 (/usr/local/texlive/2017/texmf-dist/tex/latex/adjustbox/adjustbox.sty
 Package: adjustbox 2012/05/21 v1.0 Adjusting TeX boxes (trim, clip, ...)
 
@@ -449,10 +461,10 @@ Package: xkeyval 2014/12/03 v2.7a package option processing (HA)
 
 (/usr/local/texlive/2017/texmf-dist/tex/generic/xkeyval/xkeyval.tex
 (/usr/local/texlive/2017/texmf-dist/tex/generic/xkeyval/xkvutils.tex
-\XKV@toks=\toks22
-\XKV@tempa@toks=\toks23
+\XKV@toks=\toks23
+\XKV@tempa@toks=\toks24
 )
-\XKV@depth=\count100
+\XKV@depth=\count101
 File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
 ))
 (/usr/local/texlive/2017/texmf-dist/tex/latex/adjustbox/adjcalc.sty
@@ -464,32 +476,32 @@ Package: trimclip 2012/05/16 v1.0 Trim and clip general TeX material
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/collectbox/collectbox.sty
 Package: collectbox 2012/05/17 v0.4b Collect macro arguments as boxes
-\collectedbox=\box28
+\collectedbox=\box31
 )
-\tc@llx=\dimen114
-\tc@lly=\dimen115
-\tc@urx=\dimen116
-\tc@ury=\dimen117
+\tc@llx=\dimen117
+\tc@lly=\dimen118
+\tc@urx=\dimen119
+\tc@ury=\dimen120
 Package trimclip Info: Using driver 'tc-pdftex.def'.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/adjustbox/tc-pdftex.def
 File: tc-pdftex.def 2012/05/13 v1.0 Clipping driver for pdftex
 ))
-\adjbox@Width=\dimen118
-\adjbox@Height=\dimen119
-\adjbox@Depth=\dimen120
-\adjbox@Totalheight=\dimen121
+\adjbox@Width=\dimen121
+\adjbox@Height=\dimen122
+\adjbox@Depth=\dimen123
+\adjbox@Totalheight=\dimen124
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/ifoddpage/ifoddpage.sty
 Package: ifoddpage 2016/04/23 v1.1 Conditionals for odd/even page detection
-\c@checkoddpage=\count101
+\c@checkoddpage=\count102
 )
 (/usr/local/texlive/2017/texmf-dist/tex/latex/varwidth/varwidth.sty
 Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
-\@vwid@box=\box29
-\sift@deathcycles=\count102
-\@vwid@loff=\dimen122
-\@vwid@roff=\dimen123
+\@vwid@box=\box32
+\sift@deathcycles=\count103
+\@vwid@loff=\dimen125
+\@vwid@roff=\dimen126
 ))
 (/usr/local/texlive/2017/texmf-dist/tex/latex/subfig/subfig.sty
 Package: subfig 2005/06/28 ver: 1.3 subfig package
@@ -500,67 +512,67 @@ Package: caption 2016/02/21 v3.3-144 Customizing captions (AR)
 (/usr/local/texlive/2017/texmf-dist/tex/latex/caption/caption3.sty
 Package: caption3 2016/05/22 v1.7-166 caption3 kernel (AR)
 Package caption3 Info: TeX engine: e-TeX on input line 67.
-\captionmargin=\dimen124
-\captionmargin@=\dimen125
-\captionwidth=\dimen126
-\caption@tempdima=\dimen127
-\caption@indent=\dimen128
-\caption@parindent=\dimen129
-\caption@hangindent=\dimen130
+\captionmargin=\dimen127
+\captionmargin@=\dimen128
+\captionwidth=\dimen129
+\caption@tempdima=\dimen130
+\caption@indent=\dimen131
+\caption@parindent=\dimen132
+\caption@hangindent=\dimen133
 )
-\c@ContinuedFloat=\count103
+\c@ContinuedFloat=\count104
 )
-\c@KVtest=\count104
-\sf@farskip=\skip46
-\sf@captopadj=\dimen131
-\sf@capskip=\skip47
-\sf@nearskip=\skip48
-\c@subfigure=\count105
-\c@subfigure@save=\count106
-\c@lofdepth=\count107
-\c@subtable=\count108
-\c@subtable@save=\count109
-\c@lotdepth=\count110
-\sf@top=\skip49
-\sf@bottom=\skip50
+\c@KVtest=\count105
+\sf@farskip=\skip47
+\sf@captopadj=\dimen134
+\sf@capskip=\skip48
+\sf@nearskip=\skip49
+\c@subfigure=\count106
+\c@subfigure@save=\count107
+\c@lofdepth=\count108
+\c@subtable=\count109
+\c@subtable@save=\count110
+\c@lotdepth=\count111
+\sf@top=\skip50
+\sf@bottom=\skip51
 )
 (/usr/local/texlive/2017/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count111
-\float@exts=\toks24
-\float@box=\box30
-\@float@everytoks=\toks25
-\@floatcapt=\box31
+\c@float@type=\count112
+\float@exts=\toks25
+\float@box=\box33
+\@float@everytoks=\toks26
+\@floatcapt=\box34
 )
 (./march_update.aux)
 \openout1 = `march_update.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
 
 (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count112
-\scratchdimen=\dimen132
-\scratchbox=\box32
-\nofMPsegments=\count113
-\nofMParguments=\count114
-\everyMPshowfont=\toks26
-\MPscratchCnt=\count115
-\MPscratchDim=\dimen133
-\MPnumerator=\count116
-\makeMPintoPDFobject=\count117
-\everyMPtoPDFconversion=\toks27
+\scratchcounter=\count113
+\scratchdimen=\dimen135
+\scratchbox=\box35
+\nofMPsegments=\count114
+\nofMParguments=\count115
+\everyMPshowfont=\toks27
+\MPscratchCnt=\count116
+\MPscratchDim=\dimen136
+\MPnumerator=\count117
+\makeMPintoPDFobject=\count118
+\everyMPtoPDFconversion=\toks28
 ) (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2017/03/19 v0.25 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -614,12 +626,12 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: subfig package v1.3 is loaded.
 Package caption Info: float package is loaded.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Try loading font information for U+msa on input line 18.
+LaTeX Font Info:    Try loading font information for U+msa on input line 19.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 18.
+LaTeX Font Info:    Try loading font information for U+msb on input line 19.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -634,17 +646,17 @@ LaTeX Warning: No \author given.
 File: ../plots/Mse_basis.png Graphic file (type png)
 
 <use ../plots/Mse_basis.png>
-Package pdftex.def Info: ../plots/Mse_basis.png used on input line 55.
+Package pdftex.def Info: ../plots/Mse_basis.png used on input line 56.
 (pdftex.def)             Requested size: 272.99881pt x 222.07886pt.
 
 <../plots/Bic_basis.png, id=21, 640.3925pt x 520.94624pt>
 File: ../plots/Bic_basis.png Graphic file (type png)
 
 <use ../plots/Bic_basis.png>
-Package pdftex.def Info: ../plots/Bic_basis.png used on input line 56.
+Package pdftex.def Info: ../plots/Bic_basis.png used on input line 57.
 (pdftex.def)             Requested size: 272.99881pt x 222.07886pt.
 
-Overfull \hbox (84.86574pt too wide) in paragraph at lines 55--57
+Overfull \hbox (84.86574pt too wide) in paragraph at lines 56--58
 [] [][] 
  []
 
@@ -652,32 +664,32 @@ Overfull \hbox (84.86574pt too wide) in paragraph at lines 55--57
 <../plots/150coef.png, id=28, 2409.0pt x 1565.85pt>
 File: ../plots/150coef.png Graphic file (type png)
  <use ../plots/150coef.png>
-Package pdftex.def Info: ../plots/150coef.png used on input line 88.
+Package pdftex.def Info: ../plots/150coef.png used on input line 89.
 (pdftex.def)             Requested size: 272.99881pt x 177.42879pt.
 
 <../plots/240coef.png, id=29, 2409.0pt x 1565.85pt>
 File: ../plots/240coef.png Graphic file (type png)
  <use ../plots/240coef.png>
-Package pdftex.def Info: ../plots/240coef.png used on input line 91.
+Package pdftex.def Info: ../plots/240coef.png used on input line 92.
 (pdftex.def)             Requested size: 272.99881pt x 177.42879pt.
 
-Overfull \hbox (84.86574pt too wide) in paragraph at lines 86--92
+Overfull \hbox (84.86574pt too wide) in paragraph at lines 87--93
 [] [][] 
  []
 
 <../plots/375coef.png, id=30, 2409.0pt x 1565.85pt>
 File: ../plots/375coef.png Graphic file (type png)
  <use ../plots/375coef.png>
-Package pdftex.def Info: ../plots/375coef.png used on input line 95.
+Package pdftex.def Info: ../plots/375coef.png used on input line 96.
 (pdftex.def)             Requested size: 272.99881pt x 177.42879pt.
 
 <../plots/510coef.png, id=31, 2409.0pt x 1565.85pt>
 File: ../plots/510coef.png Graphic file (type png)
  <use ../plots/510coef.png>
-Package pdftex.def Info: ../plots/510coef.png used on input line 98.
+Package pdftex.def Info: ../plots/510coef.png used on input line 99.
 (pdftex.def)             Requested size: 272.99881pt x 177.42879pt.
 
-Overfull \hbox (84.86574pt too wide) in paragraph at lines 93--99
+Overfull \hbox (84.86574pt too wide) in paragraph at lines 94--100
 [] [][] 
  []
 
@@ -685,17 +697,17 @@ Overfull \hbox (84.86574pt too wide) in paragraph at lines 93--99
 File: ../plots/t100diff.png Graphic file (type png)
 
 <use ../plots/t100diff.png>
-Package pdftex.def Info: ../plots/t100diff.png used on input line 110.
+Package pdftex.def Info: ../plots/t100diff.png used on input line 111.
 (pdftex.def)             Requested size: 272.99881pt x 177.42879pt.
 
 <../plots/t400diff.png, id=36, 2409.0pt x 1565.85pt>
 File: ../plots/t400diff.png Graphic file (type png)
 
 <use ../plots/t400diff.png>
-Package pdftex.def Info: ../plots/t400diff.png used on input line 113.
+Package pdftex.def Info: ../plots/t400diff.png used on input line 114.
 (pdftex.def)             Requested size: 272.99881pt x 177.42879pt.
 
-Overfull \hbox (84.86574pt too wide) in paragraph at lines 108--114
+Overfull \hbox (84.86574pt too wide) in paragraph at lines 109--115
 [] [][] 
  []
 
@@ -703,17 +715,17 @@ Overfull \hbox (84.86574pt too wide) in paragraph at lines 108--114
 File: ../plots/t800diff.png Graphic file (type png)
 
 <use ../plots/t800diff.png>
-Package pdftex.def Info: ../plots/t800diff.png used on input line 117.
+Package pdftex.def Info: ../plots/t800diff.png used on input line 118.
 (pdftex.def)             Requested size: 272.99881pt x 177.42879pt.
 
 <../plots/proxysites.png, id=38, 552.0625pt x 353.32pt>
 File: ../plots/proxysites.png Graphic file (type png)
 
 <use ../plots/proxysites.png>
-Package pdftex.def Info: ../plots/proxysites.png used on input line 120.
+Package pdftex.def Info: ../plots/proxysites.png used on input line 121.
 (pdftex.def)             Requested size: 234.00238pt x 149.76276pt.
 
-Overfull \hbox (45.86931pt too wide) in paragraph at lines 115--121
+Overfull \hbox (45.86931pt too wide) in paragraph at lines 116--122
 [] [][] 
  []
 
@@ -721,11 +733,11 @@ Overfull \hbox (45.86931pt too wide) in paragraph at lines 115--121
 ts/510coef.png>] [6 <../plots/t100diff.png> <../plots/t400diff.png> <../plots/t
 800diff.png> <../plots/proxysites.png>] [7] (./march_update.aux) ) 
 Here is how much of TeX's memory you used:
- 4759 strings out of 492995
- 69888 string characters out of 6132704
- 135982 words of memory out of 5000000
- 8211 multiletter control sequences out of 15000+600000
- 12443 words of font info for 48 fonts, out of 8000000 for 9000
+ 4839 strings out of 492995
+ 70678 string characters out of 6132704
+ 137864 words of memory out of 5000000
+ 8286 multiletter control sequences out of 15000+600000
+ 12549 words of font info for 49 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  61i,11n,96p,728b,437s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/t
@@ -740,7 +752,7 @@ e/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/
 xmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2017/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2017/texmf
 -dist/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on march_update.pdf (7 pages, 4692767 bytes).
+Output written on march_update.pdf (7 pages, 3164770 bytes).
 PDF statistics:
  93 PDF objects out of 1000 (max. 8388607)
  52 compressed objects within 1 object stream

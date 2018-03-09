@@ -5,6 +5,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{ulem} 
 
 \usepackage[export]{adjustbox}
 \usepackage{subfig}
@@ -30,7 +31,7 @@ Our primary goal during the first phase of this project has been to measure the 
 
 %%% DATA
 \section{Data}
-Our analysis, and this report, have been updated to use the latest reconstructions from February. This consists of a $96\times144$ prior field and 100 $96\times144$ ensemble member fields observed over 998 time points. So far we have only considered in detail a small subset of the time points for testing and illustration.
+Our analysis, and this report, have been updated to use the latest reconstructions from February. This consists of 998 $96\times144$ prior ensembles and 100 $96\times144$ ensemble member fields observed over 1001 time points. So far we have only considered in detail a small subset of the time points for testing and illustration.
 
 \section{Methods}
 We assume that each random field, the prior and the ensemble members, are noisy observations of smooth 2-dimensional functions. In doing so, we simplify our testing and measurement problem from comparing random fields to comparing smooth functions. 
@@ -74,12 +75,12 @@ $ H_A:$ The prior does not come from the same process as the ensemble
 \section{Results}
 
 \subsection{Hypothesis Tests}
-First we found the  \textit{p} values from the Extremal Depth of the prior with respect to the ensemble at each time point. In the vast majority of cases the \textit{p} value was found to be 0, indicating that the prior is significantly different from the ensemble. One possible reason for this is because ED rejects $H_0$ if even a single prior basis coefficient is outside the range spanned by the ensemble's basis coefficients. Since the coefficients tend to be very close to each other, it's quite likely there will be at least one prior coefficient outside the range of the ensemble's.
+First we found the  \textit{p} values from the Extremal Depth of the prior with respect to the ensemble at each time point. \sout{In the vast majority of cases the \textit{p} value was found to be 0, indicating that the prior is significantly different from the ensemble}. One possible reason for this is because ED rejects $H_0$ if even a single prior basis coefficient is outside the range spanned by the ensemble's basis coefficients. Since the coefficients tend to be very close to each other, it's quite likely there will be at least one prior coefficient outside the range of the ensemble's.
 
 To give a more informative presentation of the difference between the prior and ensembles, we plotted how far the prior was outside either the upper or lower limit of the $95\%$ central region for each coefficient. This gives a new vector of coefficients which represents a spatial field of the difference between the prior and the ensemble as a whole.
 
 \subsection{Different numbers of basis functions}
-Before examining specific time points in detail we wanted to see how sensitive both the Extremal depth tests and the ``difference fields'' were to an increasing number of basis functions. We found the Extremal Depth, central regions, and differences fields for the prior at time 100 for 150, 240, 375, and 510 basis functions. While all of the ED tests gave a \textit{p}  value of 0, the following plots show that the difference fields can be quite dissimilar.
+Before examining specific time points in detail we wanted to see how sensitive both the Extremal depth tests and the ``difference fields'' were to an increasing number of basis functions. We found the Extremal Depth, central regions, and differences fields for the prior at time 400 for 150, 240, 375, and 510 basis functions. While all of the ED tests gave a \textit{p}  value of 0, the following plots show that the difference fields can be quite dissimilar.
 
 \begin{figure}[H]
 
@@ -125,7 +126,7 @@ Next, to see where and how the ensemble differs from the prior over time we plot
 \section{Conclusion}
 
 \subsection{Summary}
-Our intent for this phase of the project has been to test for and quantify differences between the prior and the ensemble. So far we have seen that at almost every time point ED registers the prior and the ensemble as being significantly different. While these results may be the result of the information gain from the pseudo-proxies on the prior, some of this may be attributable to the fact that the representing basis coefficients tend to be very close together. This makes it fairly easy for the prior to test as being ``outside'' the range of the ensemble.
+Our intent for this phase of the project has been to test for and quantify differences between the prior and the ensemble. \sout{So far we have seen that at almost every time point ED registers the prior and the ensemble as being significantly different.} While these results may be the result of the information gain from the pseudo-proxies on the prior, some of this may be attributable to the fact that the representing basis coefficients tend to be very close together. This makes it fairly easy for the prior to test as being ``outside'' the range of the ensemble.
 
 Furthermore, we have seen that where the prior and the posterior significantly differ can depend heavily on both time and the number of representing basis functions and that it is not necessarily tied to proxy locations.
 
@@ -158,8 +159,9 @@ Furthermore, we have seen that where the prior and the posterior significantly d
 	6 (2), 461–464
 	
 \bibitem{steiger18}
-	Steiger, Nathan (2018)
-	``On the external forcing of ENSO over the past millennium in a data assimilation-based reconstruction''
+	Steiger, N.J., J.E. Smerdon, E.R. Cook, B.I. Cook, (2018)
+	`` A reconstruction of global hydroclimate and dynamical variables over the Common Era.''
+	\textit{In review}
 \end{thebibliography}
 
 \end{document}

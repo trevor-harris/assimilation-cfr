@@ -10,8 +10,14 @@ for (t in ts) {
   basis = create_basis(lat.basis, lon.basis, nc.prior)
   fields = preprocess(t, nc.ens, nc.prior)
   
+  prior.sub = read.csv("data/prior_ens.txt", header = F)
+  prior.sub = as.vector(prior.sub[,1])
+  
+  prior = prep_prior(nc.prior)
+  prior = prior[,,prior.sub]
+  prior = apply(prior, 1:2, mean)
+  
   ens = fields[["ens"]]
-  prior = fields[["prior"]]
   
   ##### FIT BASIS AND FIND ED #####
   prior.alpha = coef(fastLmPure(basis, as.vector(prior)))
@@ -36,6 +42,6 @@ for (t in ts) {
   prior.diff = matrix(prior.vec , nrow(prior), ncol(prior))
   
   main = paste0("T = ", t) 
-  field_plot(prior.diff, nc.prior, main, c(-2, 2))
+  field_plot(prior.diff, nc.prior, main, c(-1, 1))
   ggsave(paste0("plots/t", t, "diff", ".png"), width = 8, height = 5.2)
 }
