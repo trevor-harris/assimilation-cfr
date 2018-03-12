@@ -1,12 +1,4 @@
-##### FIND OPTIMAL NUMBER OF BASIS FUNCTIONS #####
-
-library(ncdf4)
-library(dplyr)
-library(plotly)
-
-##### CONNECT TO DATA #####
-# read ensembles and prior ncdf4 objects
-nc.prior = nc_open('/Users/trevh/Research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+source('code/setup.R')
 
 # get data dim
 n.lon = nc.prior$dim$lon$len
@@ -43,35 +35,9 @@ lat.range = 10:30
 
 MSE = matrix(0, length(lon.range), length(lat.range))
 bic.field = matrix(0, length(lon.range), length(lat.range))
-runtime = matrix(0, length(lon.range), length(lat.range))
 for (nlo in lon.range) {
   for (nla in lat.range) {
-    start.time = Sys.time()
-    nlat.centers = nlo
-    nlon.centers = nla
-    n.center = nlat.centers * nlon.centers
-    
-    lats = as.vector(nc.prior$dim$lat$vals)
-    lons = as.vector(nc.prior$dim$lon$vals)
-    lats.cen = seq(min(lats), max(lats), length.out = nlat.centers)
-    lons.cen = seq(min(lons), max(lons), length.out = nlon.centers)
-    
-    # find the radius (1.5 times the minimal distance)
-    # will either be the distance b/w the first point and the next (horizontally or vertically)
-    rad = 1.5 * min(abs(lats.cen[1] - lats.cen[2]), abs(lons.cen[1] - lons.cen[2]))
-    
-    # CHECK THAT THIS LINES UP WITH X
-    latlon = as.matrix(expand.grid(1:nlat.centers, 1:nlon.centers))
-    basis = matrix(0, n.lat*n.lon, n.center)
-    
-    for (i in 1:n.center) {
-      
-      # dist = (lat - center.lat)^2 + (lon - center.lon)^2
-      dist = c(outer((lats - lats.cen[latlon[i,][1]])^2, (lons - lons.cen[latlon[i,][2]])^2, "+"))
-      
-      # use the bisquare (radial) basis
-      basis[,i] = (1 - dist/rad^2)^2 * (sqrt(dist) < rad)
-    }
+    basis = create_basis(nla, nlo, nc.prior)
     
     # check the smoothed approximation
     prior.fit = lm(as.vector(prior.avg) ~ basis - 1)
@@ -79,7 +45,6 @@ for (nlo in lon.range) {
  
     MSE[nlo-min(lon.range)+1, nla-min(lat.range)+1] = sum(prior.fit$residuals^2)
     bic.field[nlo-min(lon.range)+1, nla-min(lat.range)+1] = BIC(prior.fit)
-    
   }
 }
 
@@ -97,18 +62,21 @@ rotate <- function(x) t(apply(x, 2, rev))
 mse.plot = rotate(MSE)
 bic.plot = rotate(bic.field)
 
+mse.plot = MSE
+bic.plot = bic.field
+
 # mse
-dimnames(mse.plot) = list(10:30, 10:30)
+dimnames(mse.plot) = list(lon.range, lat.range)
 mse.gg = melt(mse.plot)
 colnames(mse.gg) = c("lon", "lat", "value")
 
 ggplot(mse.gg, aes(lon, lat, z = value, fill = value)) + 
   geom_raster() +
   geom_contour(color = "grey30") +
-  geom_point(aes(x=15, y=10), colour="black") +
-  geom_point(aes(x=20, y=12), colour="black") +
-  geom_point(aes(x=25, y=15), colour="black") +
-  geom_point(aes(x=30, y=17), colour="black") +
+  # geom_point(aes(x=15, y=10), colour="black") +
+  # geom_point(aes(x=20, y=12), colour="black") +
+  # geom_point(aes(x=25, y=15), colour="black") +
+  # geom_point(aes(x=30, y=17), colour="black") +
   scale_fill_distiller(palette = "RdBu") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5)) +
@@ -116,17 +84,17 @@ ggplot(mse.gg, aes(lon, lat, z = value, fill = value)) +
 
 
 # bic
-dimnames(bic.plot) = list(10:30, 10:30)
+dimnames(bic.plot) = list(lon.range, lat.range)
 bic.gg = melt(bic.plot)
 colnames(bic.gg) = c("lon", "lat", "value")
 
 ggplot(bic.gg, aes(lon, lat, z = value, fill = value)) + 
   geom_raster() +
   geom_contour(color = "grey30") +
-  geom_point(aes(x=15, y=10), colour="black") +
-  geom_point(aes(x=20, y=12), colour="black") +
-  geom_point(aes(x=25, y=15), colour="black") +
-  geom_point(aes(x=30, y=17), colour="black") +
+  # geom_point(aes(x=15, y=10), colour="black") +
+  # geom_point(aes(x=20, y=12), colour="black") +
+  # geom_point(aes(x=25, y=15), colour="black") +
+  # geom_point(aes(x=30, y=17), colour="black") +
   scale_fill_distiller(palette = "RdBu") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5)) +
@@ -147,12 +115,12 @@ plot_ly(showscale = FALSE) %>%
 
 # runtime surface
 plot_ly(showscale = FALSE) %>% 
-  add_surface(z = ~runtime) %>%
+  add_surface(z = ~bic.field) %>%
   layout(
     scene = list(
       xaxis = list(title = "lon"),
       yaxis = list(title = "lat"),
-      zaxis = list(title = "Run Time")
+      zaxis = list(title = "BIC")
     )
   )
 

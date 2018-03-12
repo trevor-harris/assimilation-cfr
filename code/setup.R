@@ -168,11 +168,11 @@ field_plot <- function(field, nc, main = "", zlim = c(-max(abs(field)), max(abs(
   n.lat = nc$dim$lat$len
   
   # rotates the matrix
-  field = t(apply(field, 2, rev))
-  dimnames(field) = list(lons-180, lats)
+  # field = t(apply(field, 2, rev))
+  dimnames(field) = list(lats, lons-180)
   
   field.gg = melt(field)
-  colnames(field.gg) = c("lon", "lat", "value")
+  colnames(field.gg) = c("lat", "lon", "value")
   
   # map it
   ggplot(field.gg, aes_string(x="lon", y="lat", z="value", fill="value")) + 

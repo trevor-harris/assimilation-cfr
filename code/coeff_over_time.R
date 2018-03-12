@@ -1,7 +1,7 @@
 source('code/setup.R')
 
 # commonly use 17x30 and 10x15
-lat.basis = 17
+lat.basis = 30
 lon.basis = 30
 
 basis = create_basis(lat.basis, lon.basis, nc.prior)
@@ -12,13 +12,14 @@ prior.sub = read.csv("data/prior_ens.txt", header = F)
 prior.sub = as.vector(prior.sub[,1])
 
 prior.ens = prep_prior(nc.prior)
-prior.ens = prior[,,prior.sub]
+prior.ens = prior.ens[,,prior.sub]
 
 # compute the central regions and find the ED of each prior ensemble member in the list
 # also save the CR difference fields
 ens_num = seq(0, 100, by=10)
 ens_num[1] = 1
 
+ens_num = 100
 cr_diff_fields = array(0, dim = c(dim(prior.ens)[1], dim(prior.ens)[2], length(ens_num)))
 for(e in ens_num) {
 
