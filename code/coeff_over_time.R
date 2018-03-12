@@ -16,11 +16,12 @@ prior.ens = prior.ens[,,prior.sub]
 
 # compute the central regions and find the ED of each prior ensemble member in the list
 # also save the CR difference fields
-ens_num = seq(0, 100, by=10)
+ens_num = seq(0, 100, by=20)
 ens_num[1] = 1
 
-ens_num = 100
+# ens_num = 100
 cr_diff_fields = array(0, dim = c(dim(prior.ens)[1], dim(prior.ens)[2], length(ens_num)))
+eds = rep(0, length(ens_num))
 for(e in ens_num) {
 
   # slice prior to member e
@@ -51,6 +52,7 @@ for(e in ens_num) {
   prior.diff = matrix(prior.vec , nrow(prior), ncol(prior))
   
   cr_diff_fields[,,which(ens_num == e)] = prior.diff
+  eds[e] = edepth(prior.coef, post.coef)
 }
 
 # plot the difference fields
