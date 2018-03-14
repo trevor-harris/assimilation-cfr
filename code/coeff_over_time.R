@@ -52,7 +52,7 @@ for(e in ens_num) {
   prior.diff = matrix(prior.vec , nrow(prior), ncol(prior))
   
   cr_diff_fields[,,which(ens_num == e)] = prior.diff
-  eds[e] = edepth(prior.coef, post.coef)
+  eds[which(ens_num == e)] = edepth(prior.coef, post.coef)
 }
 
 # plot the difference fields
