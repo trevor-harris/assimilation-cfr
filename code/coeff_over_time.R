@@ -1,8 +1,20 @@
 source('code/setup.R')
 
+##### CONNECT TO DATA #####
+# read ensembles and prior ncdf4 objects
+nc.post = nc_open('/Users/trevh/Research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.prior = nc_open('/Users/trevh/Research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+
+
+##### CONNECT TO DATA #####
+# read ensembles and prior ncdf4 objects
+nc.post = nc_open('/Users/Trevor/research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.prior = nc_open('/Users/Trevor/research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+
+
 # commonly use 17x30 and 10x15
-lat.basis = 30
-lon.basis = 30
+lat.basis = 38
+lon.basis = 32
 
 basis = create_basis(lat.basis, lon.basis, nc.prior)
 proj = solve(t(basis) %*% basis) %*% t(basis)
@@ -16,12 +28,12 @@ prior.ens = prior.ens[,,prior.sub]
 
 # compute the central regions and find the ED of each prior ensemble member in the list
 # also save the CR difference fields
-ens_num = seq(0, 100, by=20)
+ens_num = seq(0, 100, by=10)
 ens_num[1] = 1
 
-# ens_num = 100
+ens_num = 100
 cr_diff_fields = array(0, dim = c(dim(prior.ens)[1], dim(prior.ens)[2], length(ens_num)))
-eds = rep(0, length(ens_num))
+eds = 
 for(e in ens_num) {
 
   # slice prior to member e
