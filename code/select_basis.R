@@ -1,4 +1,10 @@
-source('code/setup.R')
+# source('code/setup.R')
+
+##### CONNECT TO DATA #####
+# read ensembles and prior ncdf4 objects
+nc.post = nc_open('/Users/Trevor/research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.prior = nc_open('/Users/Trevor/research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+
 
 # get data dim
 n.lon = nc.prior$dim$lon$len
@@ -30,8 +36,8 @@ prior.avg = prior.avg / n.time
 
 
 ##### FIND OPTIMAL NUMBER OF BASIS FUNCTIONS #####
-lon.range = 10:30
-lat.range = 10:30
+lon.range = 20:40
+lat.range = 20:40
 
 MSE = matrix(0, length(lon.range), length(lat.range))
 bic.field = matrix(0, length(lon.range), length(lat.range))
@@ -49,21 +55,22 @@ for (nlo in lon.range) {
 }
 
 
+# # MSE over lat conditional on longittude
+# plot(MSE[1,], type = "l", ylim = c(20000, 100000))
+# for(i in 2:nrow(MSE)) {
+#   lines(MSE[i,])
+# }
 
-# MSE over lat conditional on longittude
-plot(MSE[1,], type = "l", ylim = c(20000, 100000))
-for(i in 2:nrow(MSE)) {
-  lines(MSE[i,])
-}
 
-
-# reshape for plotting
-rotate <- function(x) t(apply(x, 2, rev))
-mse.plot = rotate(MSE)
-bic.plot = rotate(bic.field)
+# # reshape for plotting
+# rotate <- function(x) t(apply(x, 2, rev))
+# mse.plot = rotate(MSE)
+# bic.plot = rotate(bic.field)
 
 mse.plot = MSE
 bic.plot = bic.field
+
+which(bic.field == min(bic.field), arr.ind = T) + c(19, 19)
 
 # mse
 dimnames(mse.plot) = list(lon.range, lat.range)
@@ -73,10 +80,10 @@ colnames(mse.gg) = c("lon", "lat", "value")
 ggplot(mse.gg, aes(lon, lat, z = value, fill = value)) + 
   geom_raster() +
   geom_contour(color = "grey30") +
-  # geom_point(aes(x=15, y=10), colour="black") +
-  # geom_point(aes(x=20, y=12), colour="black") +
-  # geom_point(aes(x=25, y=15), colour="black") +
-  # geom_point(aes(x=30, y=17), colour="black") +
+  geom_point(aes(x=22, y=20), colour="black") +
+  geom_point(aes(x=24, y=24), colour="black") +
+  geom_point(aes(x=26, y=28), colour="black") +
+  geom_point(aes(x=28, y=32), colour="black") +
   scale_fill_distiller(palette = "RdBu") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5)) +
@@ -91,16 +98,16 @@ colnames(bic.gg) = c("lon", "lat", "value")
 ggplot(bic.gg, aes(lon, lat, z = value, fill = value)) + 
   geom_raster() +
   geom_contour(color = "grey30") +
-  # geom_point(aes(x=15, y=10), colour="black") +
-  # geom_point(aes(x=20, y=12), colour="black") +
-  # geom_point(aes(x=25, y=15), colour="black") +
-  # geom_point(aes(x=30, y=17), colour="black") +
+  geom_point(aes(x=22, y=20), colour="black") +
+  geom_point(aes(x=24, y=24), colour="black") +
+  geom_point(aes(x=26, y=28), colour="black") +
+  geom_point(aes(x=28, y=32), colour="black") +
   scale_fill_distiller(palette = "RdBu") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5)) +
   labs(title = "BIC")
 
-which(bic.plot == min(bic.plot), arr.ind = T) + c(9, 9)
+which(bic.plot == min(bic.plot), arr.ind = T) + c(19, 19)
 
 # MSE surface
 plot_ly(showscale = FALSE) %>% 

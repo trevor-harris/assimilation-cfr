@@ -5,7 +5,12 @@ library(extdepth)
 library(ncdf4)
 library(dplyr)
 library(reshape2)
-library(plotly)
+
+##### CONNECT TO DATA #####
+# read ensembles and prior ncdf4 objects
+nc.post = nc_open('/Users/trevh/Research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.prior = nc_open('/Users/trevh/Research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+
 
 create_basis = function(nlat.centers, nlon.centers, nc) {
   
