@@ -33,7 +33,6 @@ ens_num[1] = 1
 
 ens_num = 100
 cr_diff_fields = array(0, dim = c(dim(prior.ens)[1], dim(prior.ens)[2], length(ens_num)))
-eds = 
 for(e in ens_num) {
 
   # slice prior to member e
