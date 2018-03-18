@@ -39,7 +39,7 @@ for(e in ens_num) {
     post = prep_post_time(nc.post, e)
     
     # this time with only the last half of the ensemble
-    post = post[,,1:501]
+    # post = post[,,1:501]
     
     ##### FIT BASIS AND FIND ED #####
     prior.coef = proj %*% as.vector(prior)
@@ -56,10 +56,14 @@ write.csv(eds, "edepths_28x32")
 eds.df = data.frame(ed = eds, ind = 1:100)
 ggplot(eds.df, aes(x = ind, y = ed)) +
   geom_point(aes(color = eds), show.legend = FALSE) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black")) +
   theme(plot.title = element_text(hjust = 0.5)) + 
-  labs(x = "Ensemble No.", y = "Extremal Depth", title = "Depth of Prior Ensemble Members")
+  labs(x = "Ensemble No.", 
+       y = "Extremal Depth", 
+       title = "Depth of Prior Ensemble Members")
 
 ggsave(paste0("paper/figures/prior_depths_tail", ".png"), width = 5, height = 3.2)
 
