@@ -78,20 +78,21 @@ mse.gg = melt(mse.plot)
 colnames(mse.gg) = c("lon", "lat", "value")
 
 ggplot(mse.gg, aes(lon, lat, z = value, fill = value)) + 
-  geom_raster(interpolate = TRUE) +
+  geom_raster(interpolate = T) +
   geom_contour(color = "grey30") +
-  # geom_point(aes(x=22, y=20), colour="black") +
-  # geom_point(aes(x=24, y=24), colour="black") +
-  # geom_point(aes(x=26, y=28), colour="black") +
   geom_point(aes(x=28, y=32), colour="black") +
   scale_fill_distiller(palette = "RdBu") +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-        panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_blank()) +
   theme(plot.title = element_text(hjust = 0.5)) +
-  labs(title = "MSE")
+  labs(x = "longitude knots",
+       y = "latitude knots",
+       title = "MSE", 
+       fill="MSE")
 
 ggsave(paste0("paper/figures/mse_select", ".png"), width = 5, height = 3.2)
-
 
 
 # bic
@@ -100,18 +101,26 @@ bic.gg = melt(bic.plot)
 colnames(bic.gg) = c("lon", "lat", "value")
 
 ggplot(bic.gg, aes(lon, lat, z = value, fill = value)) + 
-  geom_raster(interpolate = TRUE) +
+  geom_raster(interpolate = T) +
   geom_contour(color = "grey30") +
-  # geom_point(aes(x=22, y=20), colour="black") +
-  # geom_point(aes(x=24, y=24), colour="black") +
-  # geom_point(aes(x=26, y=28), colour="black") +
   geom_point(aes(x=28, y=32), colour="black") +
   scale_fill_distiller(palette = "RdBu") +
-  theme_minimal() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_blank()) +
   theme(plot.title = element_text(hjust = 0.5)) +
-  labs(title = "BIC")
+  labs(x = "longitude knots",
+       y = "latitude knots",
+       title = "BIC", 
+       fill="BIC")
+
 
 ggsave(paste0("paper/figures/bic_select", ".png"), width = 5, height = 3.2)
+
+# which point is the smallest withen a standard error?
+bic.1se = which.min(abs(bic.plot[1:9, 1:13] - (bic.plot[9, 13] + 1*sqrt(var(as.vector(bic.plot))))))
+which(bic.plot == bic.plot[bic.1se], arr.ind = T)
 
 
 which(bic.plot == min(bic.plot), arr.ind = T) + c(19, 19)
