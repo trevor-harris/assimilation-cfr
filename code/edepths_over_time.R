@@ -39,7 +39,7 @@ for(e in ens_num) {
     post = prep_post_time(nc.post, e)
     
     # this time with only the last half of the ensemble
-    post = post[,,1:501]
+    # post = post[,,1:501]
     
     ##### FIT BASIS AND FIND ED #####
     prior.coef = proj %*% as.vector(prior)

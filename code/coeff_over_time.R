@@ -13,7 +13,7 @@ nc.prior = nc_open('/Users/Trevor/research/assimilation-cfr/data/tas_prior_da_hy
 
 
 # commonly use 17x30 and 10x15
-lat.basis = 38
+lat.basis = 28
 lon.basis = 32
 
 basis = create_basis(lat.basis, lon.basis, nc.prior)
@@ -31,7 +31,7 @@ prior.ens = prior.ens[,,prior.sub]
 ens_num = seq(0, 100, by=10)
 ens_num[1] = 1
 
-ens_num = 100
+ens_num = c(1, 25, 50, 75, 100)
 cr_diff_fields = array(0, dim = c(dim(prior.ens)[1], dim(prior.ens)[2], length(ens_num)))
 for(e in ens_num) {
 
@@ -47,7 +47,7 @@ for(e in ens_num) {
   
   # calculate extremal depth
   ed = edepth_set(post.coef)
-  central = central_region(post.coef, ed, 0.05)
+  central = central_region(post.coef, ed, 0.5)
   
   # Use the x% central regions to measure outlyingness
   alpha.dev = rep(0, length(prior.coef))
@@ -69,7 +69,9 @@ for(e in ens_num) {
 # plot the difference fields
 for(e in 1:length(ens_num)) {
   print(field_plot(cr_diff_fields[,,e], nc.prior, main = paste0("Ensemble ", ens_num[e])))
+  ggsave(paste0("paper/figures/ens_diff_", ens_num[e], ".png"), width = 5, height = 3.2)
 }
+
 
 
 
