@@ -13,8 +13,8 @@ nc.prior = nc_open('/Users/Trevor/research/assimilation-cfr/data/tas_prior_da_hy
 
 
 # commonly use 17x30 and 10x15
-lat.basis = 28
-lon.basis = 32
+lat.basis = 32
+lon.basis = 28
 
 basis = create_basis(lat.basis, lon.basis, nc.prior)
 proj = solve(t(basis) %*% basis) %*% t(basis)
@@ -50,7 +50,8 @@ for(e in ens_num) {
 
 plot(eds, main = "Depth of each prior ensemble member", ylab = "Extremal Depth")
 
-round(eds[c(1, 25, 50, 75, 100)], 3)
+round(eds[c(25, 50, 75, 100)], 3)
+
 write.csv(eds, "edepths_28x32")
 
 eds.df = data.frame(ed = eds, ind = 1:100)
@@ -66,7 +67,5 @@ ggplot(eds.df, aes(x = ind, y = ed)) +
        title = "Depth of Prior Ensemble Members")
 
 ggsave(paste0("paper/figures/prior_depths_tail", ".png"), width = 5, height = 3.2)
-
-
 
 
