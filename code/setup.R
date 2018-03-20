@@ -167,12 +167,14 @@ field_plot <- function(field, nc, main = "", zlim = c(-max(abs(field)), max(abs(
   field.gg = melt(field)
   colnames(field.gg) = c("lat", "lon", "value")
   
-  # map it
-  ggplot(field.gg, aes_string(x="lon", y="lat", z="value", fill="value")) + 
-    geom_raster(interpolate = TRUE) +
-    geom_contour() +
-    borders("world", colour = "grey20", ylim = c(-100, 100)) +
-    coord_fixed(1.3) +
+  world = map_data("world")
+  world = world[world$long <= 178, ]
+  
+  ggplot() +
+    geom_raster(data = field.gg, aes(x=lon, y=lat, fill=value), interpolate = TRUE) +
+    geom_contour(data = field.gg, aes(x=lon, y=lat, z=value)) +
+    geom_polygon(data = world, aes(x=long, y=lat, group=group), fill = NA, color="black") +
+    coord_cartesian() +
     scale_fill_distiller(palette = "RdBu", limits = zlim) +
     theme_void() +
     theme(plot.title = element_text(hjust = 0.5)) +

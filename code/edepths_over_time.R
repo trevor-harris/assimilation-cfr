@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 source('code/setup.R')
 
 ##### CONNECT TO DATA #####
@@ -67,5 +68,3 @@ ggplot(eds.df, aes(x = ind, y = ed)) +
        title = "Depth of Prior Ensemble Members")
 
 ggsave(paste0("paper/figures/prior_depths_tail", ".png"), width = 5, height = 3.2)
-
-

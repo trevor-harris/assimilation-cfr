@@ -72,4 +72,3 @@ for(e in 1:length(ens_num)) {
   print(field_plot(cr_diff_fields[,,e], nc.prior, main = paste0("Ensemble ", ens_num[e]), zlim = c(-1, 1)))
   ggsave(paste0("paper/figures/ens_diff_", ens_num[e], ".png"), width = 5, height = 3.2)
 }
-
