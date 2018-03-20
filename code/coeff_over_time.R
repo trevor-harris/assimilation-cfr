@@ -32,6 +32,7 @@ ens_num = seq(0, 100, by=10)
 ens_num[1] = 1
 
 ens_num = c(1, 25, 50, 75, 100)
+eds = ens_num
 cr_diff_fields = array(0, dim = c(dim(prior.ens)[1], dim(prior.ens)[2], length(ens_num)))
 for(e in ens_num) {
 
