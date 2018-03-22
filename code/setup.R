@@ -7,6 +7,7 @@ library(dplyr)
 library(reshape2)
 library(plotly)
 
+#### DEFINE USEFUL FUNCTIONS ####
 create_basis = function(nlat.centers, nlon.centers, nc) {
   
   n.center = nlat.centers * nlon.centers
@@ -61,8 +62,8 @@ preprocess = function(t, nc.post, nc.prior) {
   prior = t(prior)
   
   # remove lat means
-  ens = vapply(1:n.ens, function(x) ens[,,x] - rowMeans(ens[,,x]), FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
-  prior = prior - rowMeans(prior)
+  # ens = vapply(1:n.ens, function(x) ens[,,x] - rowMeans(ens[,,x]), FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
+  # prior = prior - rowMeans(prior)
   
   # normalize
   lats = as.vector(nc.ens$dim$lat$vals)
@@ -88,7 +89,7 @@ prep_prior = function(nc.prior) {
   prior = aperm(prior, c(2, 1, 3))
   
   # remove lat means
-  prior = vapply(1:n.ens, function(x) prior[,,x] - rowMeans(prior[,,x]), FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
+  # prior = vapply(1:n.ens, function(x) prior[,,x] - rowMeans(prior[,,x]), FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
   
   # normalize
   lats = as.vector(nc.prior$dim$lat$vals)
@@ -113,7 +114,7 @@ prep_post_ens = function(nc.post, t) {
   ens = aperm(ens, c(2, 1, 3))
   
   # remove lat means
-  ens = vapply(1:n.ens, function(x) ens[,,x] - rowMeans(ens[,,x]), FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
+  # ens = vapply(1:n.ens, function(x) ens[,,x] - rowMeans(ens[,,x]), FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
   
   # normalize
   lats = as.vector(nc.post$dim$lat$vals)
@@ -139,7 +140,7 @@ prep_post_time = function(nc.post, e) {
   ens = aperm(ens, c(2, 1, 3))
   
   # remove lat means
-  ens = vapply(1:n.time, function(x) ens[,,x] - rowMeans(ens[,,x]), FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
+  # ens = vapply(1:n.time, function(x) ens[,,x] - rowMeans(ens[,,x]), FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
   
   # normalize
   lats = as.vector(nc.post$dim$lat$vals)
@@ -180,3 +181,4 @@ field_plot <- function(field, nc, main = "", zlim = c(-max(abs(field)), max(abs(
     theme(plot.title = element_text(hjust = 0.5)) +
     labs(title = main)
 }
+

@@ -19,10 +19,14 @@ lats.cen = seq(min(-lats.pi), max(lats.pi), length.out = nlat.centers)
 lats.cen = (acos(lats.cen) / (pi/2) * max(lats)) - 90
 lats.cen = -lats.cen
 
+world = map_data("world")
+world = world[world$long <= 178, ]
+
 grid = expand.grid(lons.cen, lats.cen)
 colnames(grid) = c("Longitude", "Latitude")
 ggplot(grid) +
-  borders("world", colour = "grey30") +
+  geom_polygon(data = world, aes(x=long, y=lat, group=group), fill = NA, color="black") +
+  coord_cartesian() +
   geom_point(aes(x = Longitude, y = Latitude, color = "red"), show.legend = F) +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
@@ -30,4 +34,3 @@ ggplot(grid) +
         plot.title = element_text(hjust = 0.5)) +
   labs(x = "", y = "")
 ggsave("paper/figures/basis_grid.png", width = 5, height = 3.2)
-

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 source('code/setup.R')
 
 ##### CONNECT TO DATA #####

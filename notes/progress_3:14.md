@@ -23,21 +23,21 @@
 1. Try to figure out if the Wilcoxon sign rank test is the way to go or not. 
    1. If so make sure that the implementation is correct.
       1. In particular make sure that ties between the ranks are being handled appropriately.
-   2. Find a non Monte Carlo based way of getting the distribution under H_0?
+   2. ~~Find a non Monte Carlo based way of getting the distribution under H_0?~~
    3. Meet with Naveen?
    4. Alternatively use or adapt a Kolmogorov-Smirnov like test?
       1. infact this may even be more appropriate since we're trying to compare distributions
-2. Create MSE and BIC plots
-3. Create plots for both vertical and horizontal comparisons
-   1. Horizontal (first priority)
-      1. How often each location is outside a given central region
-         1. We're going to need a smaller number than 95% here since many fields have high ED. Maybe 50% will give us enough.
+2. ~~Create MSE and BIC plots~~
+3. ~~Create plots for both vertical and horizontal comparisons~~
+   1. ~~Horizontal (first priority)~~
+      1. ~~How often each location is outside a given central region~~
+         1. ~~We're going to need a smaller number than 95% here since many fields have high ED. Maybe 50% will give us enough.~~
       2. Average distance outside the X% region
    2. Vertical 
       1. Number of prior spatial fields outside the posterior X% central region? Or vice versa
       2. more?
-4. Start compiling results into a latex document.
-5. start reading Riemannian papers
+4. ~~Start compiling results into a latex document.~~
+5. ~~start reading Riemannian papers~~
    1. CSDA_fdaTB_final —> CSDA_PCA_12 —> Rosenthal
 
 
