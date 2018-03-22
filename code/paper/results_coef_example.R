@@ -39,7 +39,7 @@ ggplot() +
   labs(x = "Coefficient",
        y = "Value",
        title = " Ens. 76: Prior vs Posterior")
-# ggsave(paste0("paper/figures/prior_post_coef_76", ".png"), width = 5, height = 3.2)
+ggsave(paste0("paper/figures/prior_post_coef_76", ".png"), width = 5, height = 3.2)
 
 # create the prior/CR regions comparison graph
 cr.df = data.frame(ind = 1:896, lower=central[[1]], upper=central[[2]])
@@ -64,6 +64,6 @@ ggplot() +
        y = "Value",
        title = " Ens. 76: Prior vs Central Regions",
        fill = "sdfa")
-# ggsave(paste0("paper/figures/prior_cr_coef_76", ".png"), width = 5, height = 3.2)
+ggsave(paste0("paper/figures/prior_cr_coef_76", ".png"), width = 5, height = 3.2)
 
 

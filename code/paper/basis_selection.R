@@ -1,10 +1,6 @@
-# source('code/setup.R')
+##### BASIS SELECTION #####
 
-##### CONNECT TO DATA #####
-# read ensembles and prior ncdf4 objects
-nc.post = nc_open('/Users/Trevor/research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-nc.prior = nc_open('/Users/Trevor/research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-
+source('code/setup.R')
 
 # get data dim
 n.lon = nc.prior$dim$lon$len
@@ -21,7 +17,7 @@ for (t in 1:n.time) {
   prior = t(prior)
   
   # remove lat means
-  prior = prior - rowMeans(prior)
+  # prior = prior - rowMeans(prior)
   
   # normalize
   lats = as.vector(nc.prior$dim$lat$vals)
@@ -33,7 +29,8 @@ for (t in 1:n.time) {
 }
 prior.avg = prior.avg / n.time
 
-
+plot_ly(showscale = FALSE) %>% 
+  add_surface(z = ~prior.avg)
 
 ##### FIND OPTIMAL NUMBER OF BASIS FUNCTIONS #####
 lon.range = 20:40
@@ -54,7 +51,6 @@ for (nlo in lon.range) {
   }
 }
 
-
 mse.plot = MSE
 bic.plot = bic.field
 
@@ -68,7 +64,7 @@ colnames(mse.gg) = c("lon", "lat", "value")
 ggplot(mse.gg, aes(lon, lat, z = value, fill = value)) + 
   geom_raster(interpolate = T) +
   geom_contour(color = "grey30") +
-  geom_point(aes(x=28, y=32), colour="black") +
+  geom_point(aes(x=26, y=40), colour="black") +
   scale_fill_distiller(palette = "RdBu") +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
@@ -91,7 +87,7 @@ colnames(bic.gg) = c("lon", "lat", "value")
 ggplot(bic.gg, aes(lon, lat, z = value, fill = value)) + 
   geom_raster(interpolate = T) +
   geom_contour(color = "grey30") +
-  geom_point(aes(x=28, y=32), colour="black") +
+  geom_point(aes(x=26, y=40), colour="black") +
   scale_fill_distiller(palette = "RdBu") +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
