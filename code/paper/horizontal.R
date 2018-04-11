@@ -21,8 +21,8 @@ for(e in ens.rng) {
   # prep posterior at member e
   post = prep_post_time(nc.post, e)
   
-  # this time with only the last half of the ensemble
-  # post = post[,,1:501]
+  # this time with only the tail of the ensemble
+  # post = post[,,801:1001]
   
   # FIT BASIS AND FIND ED
   prior.coef = proj %*% as.vector(prior)
@@ -43,11 +43,11 @@ ggplot(eds.df, aes(x = ind, y = ed)) +
        y = "Extremal Depth", 
        title = "Depth of Prior Ensemble Members")
 
-ggsave(paste0("paper/figures/prior_depths", ".png"), width = 5, height = 3.2)
+# ggsave(paste0("paper/figures/prior_depths", ".png"), width = 5, height = 3.2)
 
 
 #### Difference Fields #####
-ens.rng = c(10, 25, 45, 76)
+ens.rng = c(10, 25, 56, 76)
 cr_diff_fields = array(0, dim = c(dim(prior.ens)[1], dim(prior.ens)[2], length(ens.rng)))
 for(e in ens.rng) {
   
@@ -85,11 +85,11 @@ for(e in ens.rng) {
 # plot the difference fields
 for(e in 1:length(ens.rng)) {
   print(field_plot(cr_diff_fields[,,e], nc.prior, main = paste0("Ensemble ", ens.rng[e]), zlim = c(-2, 2)))
-  ggsave(paste0("paper/figures/ens_diff_", ens.rng[e], ".png"), width = 5, height = 3.2)
+  # ggsave(paste0("paper/figures/ens_diff_", ens.rng[e], ".png"), width = 5, height = 3.2)
 }
 
 # corresponding ED values
-round(eds[ens.rng], 3)
+round(eds[c(10, 25, 45, 76)], 3)
 
 
 #### Coef Examples ####
@@ -140,7 +140,7 @@ for(e in ens.rng) {
          y = "Value",
          title = paste0(" Ens.", e, ": Prior vs Posterior"))
   print(all.plot)
-  ggsave(paste0("paper/figures/prior_post_coef_", e, ".png"), width = 5, height = 3.2)
+  # ggsave(paste0("paper/figures/prior_post_coef_", e, ".png"), width = 5, height = 3.2)
   
   cr.plot = ggplot() +
     geom_line(data = cr.df, aes(x = ind, y = value, group = variable)) +
@@ -158,5 +158,23 @@ for(e in ens.rng) {
          title = paste0(" Ens.", e, ": Prior vs Central Regions"),
          fill = "sdfa")
   print(cr.plot)
-  ggsave(paste0("paper/figures/prior_cr_coef_", e, ".png"), width = 5, height = 3.2)
+  # ggsave(paste0("paper/figures/prior_cr_coef_", e, ".png"), width = 5, height = 3.2)
 }
+
+# slice prior to member e
+prior = prior.ens[,,76]
+
+# prep posterior at member e
+post = prep_post_time(nc.post, 76)
+
+# FIT BASIS AND FIND ED
+prior.coef = proj %*% as.vector(prior)
+post.coef = sapply(1:dim(post)[3], function(x) proj %*% as.vector(post[,,x]))
+
+ed = edepth_set(post.coef)
+central = central_region(post.coef, ed, 0.05)
+
+which(prior.coef[] <= central[[1]])
+which(prior.coef[] >= central[[2]])
+
+

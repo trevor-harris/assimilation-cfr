@@ -173,3 +173,93 @@ field_plot <- function(field, nc, main = "", zlim = c(-max(abs(field)), max(abs(
     labs(title = main)
 }
 
+
+#### regionalize ####
+matsplitter<-function(M, r, c) {
+  rg <- (row(M)-1)%/%r+1
+  cg <- (col(M)-1)%/%c+1
+  rci <- (rg-1)*max(cg) + cg
+  N <- prod(dim(M))/r/c
+  cv <- unlist(lapply(1:N, function(x) M[rci==x]))
+  dim(cv)<-c(r,c,N)
+  cv
+}
+
+#### Repeat for each region #### -- Outer most testing (this is the full procedure)
+wilcox.field = function(prior.split, post.split, iter=500, seed = 12345) {
+  set.seed(seed)
+  
+  nlat = dim(prior.split)[1]
+  nlon = dim(prior.split)[2]
+  regions = dim(prior.split)[3]
+  ens = dim(prior.split)[4]
+  
+  prior.proj = matrix(0, ens, iter)
+  post.proj = matrix(0, ens, iter)
+  wilco.field = 1:regions
+  proj = matrix(rnorm(nlat*nlon*iter), nlat*nlon, iter)
+  
+  for(r in 1:regions) {
+    for(e in 1:ens) {
+      prior.proj[e,] = as.vector(as.vector(prior.split[,,r,e]) %*% proj)
+      post.proj[e,] = as.vector(as.vector(post.split[,,r,e]) %*% proj)
+    }
+    wilco = sapply(1:iter, function(x) wilcox.test(prior.proj[,x], post.proj[,x], alternative = "two.sided",paired = TRUE)$statistic)
+    wilco.field[r] = mean(wilco)
+  }
+  wilco.field
+}
+
+#### permutation test ####
+
+# permute_fields = function(prior.split, post.split, seed = 12345) {
+#   set.seed(seed)
+#   
+#   nlat = dim(prior.split)[1]
+#   nlon = dim(prior.split)[2]
+#   regions = dim(prior.split)[3]
+#   ens = dim(prior.split)[4]
+#   
+#   prior.split.new = prior.split
+#   post.split.new = post.split
+#   
+#   prior.ind = sample.int(nlat * nlon)
+#   
+#   for(r in 1:regions) {
+#     for (e in 1:ens) {
+#       both.split = rbind(prior.split[,,r,e], post.split[,,r,e])
+#       prior.split.new[,,r,e] = matrix(as.vector(both.split)[prior.ind], nlat, nlon)
+#       post.split.new[,,r,e] = matrix(as.vector(both.split)[-prior.ind], nlat, nlon)
+#     }
+#   }
+#   
+#   return(list(prior.split.new, post.split.new))
+# }
+
+permute_fields = function(prior.split, post.split, seed = 12345) {
+  set.seed(seed)
+  
+  nlat = dim(prior.split)[1]
+  nlon = dim(prior.split)[2]
+  regions = dim(prior.split)[3]
+  ens = dim(prior.split)[4]
+  
+  prior.split.new = prior.split
+  post.split.new = post.split
+  
+  prior.ind = sample(c(0, 1), size = ens, replace = TRUE)
+  
+  for (e in 1:ens) {
+    if (prior.ind[e] == 1) {
+      prior.split.new[,,,e] = post.split[,,,e]
+      post.split.new[,,,e] = prior.split[,,,e]
+    } else {
+      prior.split.new[,,,e] = prior.split[,,,e]
+      post.split.new[,,,e] = post.split[,,,e]
+    }
+  }
+  
+  return(list(prior.split.new, post.split.new))
+}
+
+
