@@ -210,6 +210,31 @@ wilcox.field = function(prior.split, post.split, iter=500, seed = 12345) {
   wilco.field
 }
 
+
+ks.field = function(prior.split, post.split, iter=500, seed = 12345) {
+  set.seed(seed)
+  
+  nlat = dim(prior.split)[1]
+  nlon = dim(prior.split)[2]
+  regions = dim(prior.split)[3]
+  ens = dim(prior.split)[4]
+  
+  prior.proj = matrix(0, ens, iter)
+  post.proj = matrix(0, ens, iter)
+  kol.field = 1:regions
+  proj = matrix(rnorm(nlat*nlon*iter), nlat*nlon, iter)
+  
+  for(r in 1:regions) {
+    for(e in 1:ens) {
+      prior.proj[e,] = as.vector(as.vector(prior.split[,,r,e]) %*% proj)
+      post.proj[e,] = as.vector(as.vector(post.split[,,r,e]) %*% proj)
+    }
+    kol = sapply(1:iter, function(x) ks.test(prior.proj[,x], post.proj[,x], alternative = "two.sided")$statistic)
+    kol.field[r] = mean(kol)
+  }
+  kol.field
+}
+
 #### permutation test ####
 
 # permute_fields = function(prior.split, post.split, seed = 12345) {
