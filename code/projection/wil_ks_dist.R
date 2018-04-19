@@ -1,5 +1,5 @@
 prior.gp = sim_gp(mu = 0, scale = 1)
-post.gp = sim_gp(mu = 0, scale = 0.01)
+post.gp = sim_gp(mu = 1, scale = 1)
 
 # split em all
 sim.prior.split = vapply(1:100, function(x) matsplitter(prior.gp[,,x], 10, 10),

@@ -27,7 +27,8 @@ prior.ens = prior.ens[,,prior.sub]
 
 
 ##### prep posterior ####
-post.ens = prep_post_ens(nc.post, 100)
+t = 10
+post.ens = prep_post_ens(nc.post, t)
 
 # split em all
 nlat = 24
@@ -47,15 +48,45 @@ perms = 100
 perm.fields = matrix(0, regions, perms)
 for (p in 1:perms) {
   new.fields = permute_fields(prior.split, post.split, seed = p)
-  perm.fields[,p] = wilcox.field(new.fields[[1]], new.fields[[2]])
+  perm.fields[,p] = ks.field(new.fields[[1]], new.fields[[2]])
 }
 
 # find the observed wilcoxon field
-wilco.field = wilcox.field(prior.split, post.split)
+kst.field = ks.field(prior.split, post.split)
 
 
 plot_ly(showscale = F) %>%
-  add_surface(z = ~matrix(wilco.field, 8, 8))
+  add_surface(z = ~matrix(ks.field, 8, 8))
+
+
+# plot the observed and permuted (as vectors)
+pltmin = min(c(perm.fields, kst.field))
+pltmax = max(c(perm.fields, kst.field))
+
+plot(perm.fields[,1], type = "l", main=paste0("KS Field t = ", t), ylab = "Mean KS", xlab = "Region", ylim = c(pltmin, pltmax))
+for(p in 2:perms) {
+  lines(perm.fields[,p])
+}
+lines(kst.field, col = "red", lwd = 2)
+
+# find the central regions
+perm.ed = edepth_set(perm.fields)
+perm.cr = central_region(perm.fields, perm.ed)
+
+# add them to the plot
+lines(perm.cr[[1]], col = "blue", lwd = 2)
+lines(perm.cr[[2]], col = "blue", lwd = 2)
+
+# add median
+lines(perm.fields[perm.ed == 1], col = "blue")
+
+
+
+
+
+
+
+
 
 
 # What if we averaged over the projected values and found a single test statistic

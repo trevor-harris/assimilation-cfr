@@ -229,12 +229,47 @@ ks.field = function(prior.split, post.split, iter=500, seed = 12345) {
       prior.proj[e,] = as.vector(as.vector(prior.split[,,r,e]) %*% proj)
       post.proj[e,] = as.vector(as.vector(post.split[,,r,e]) %*% proj)
     }
-    kol = sapply(1:iter, function(x) ks.test(prior.proj[,x], post.proj[,x], alternative = "two.sided")$statistic)
+    kol = sapply(1:iter, function(x) ks.test(prior.proj[,x], post.proj[,x])$statistic)
     kol.field[r] = mean(kol)
   }
   kol.field
 }
 
+
+ks.ez = function(x, y) {
+  n <- length(x)
+  n.x <- as.double(n)
+  n.y <- length(y)
+  w <- c(x, y)
+  z <- cumsum(ifelse(order(w) <= n.x, 1/n.x, -1/n.y))
+  # z <- z[c(which(diff(sort(w)) != 0), n.x + n.y)] #exclude ties
+  max(abs(z))
+}
+ks.ez = compiler::cmpfun(ks.ez)
+
+ks.field.ez = function(prior.split, post.split, iter=100, seed = 12345) {
+  # set.seed(seed)
+  
+  nlat = dim(prior.split)[1]
+  nlon = dim(prior.split)[2]
+  regions = dim(prior.split)[3]
+  ens = dim(prior.split)[4]
+  
+  prior.proj = matrix(0, ens, iter)
+  post.proj = matrix(0, ens, iter)
+  kol.field = 1:regions
+  proj = matrix(rnorm(nlat*nlon*iter), nlat*nlon, iter)
+  
+  for(r in 1:regions) {
+    for(e in 1:ens) {
+      prior.proj[e,] = as.vector(as.vector(prior.split[,,r,e]) %*% proj)
+      post.proj[e,] = as.vector(as.vector(post.split[,,r,e]) %*% proj)
+    }
+    kol = sapply(1:iter, function(x) ks.ez(prior.proj[,x], post.proj[,x]))
+    kol.field[r] = mean(kol)
+  }
+  kol.field
+}
 #### permutation test ####
 
 # permute_fields = function(prior.split, post.split, seed = 12345) {
@@ -262,7 +297,7 @@ ks.field = function(prior.split, post.split, iter=500, seed = 12345) {
 # }
 
 permute_fields = function(prior.split, post.split, seed = 12345) {
-  set.seed(seed)
+  # set.seed(seed)
   
   nlat = dim(prior.split)[1]
   nlon = dim(prior.split)[2]
@@ -287,4 +322,29 @@ permute_fields = function(prior.split, post.split, seed = 12345) {
   return(list(prior.split.new, post.split.new))
 }
 
+isbetween = function(x, a, b) {
+  if(x < a) return(0)
+  if(x > b) return(0)
+  else return(1)
+}
 
+sim_gp = function(fields = 100, mu = 0, scale = 1, pts = 30) {
+  # kernel function
+  exp_kernel <- function(X,l){
+    D <- plgp::distance(X)
+    Sigma <- exp(-D/l)^2
+  }
+  
+  # spatial locations to estimate
+  grid = seq(-1, 1, length = pts)
+  grid = expand.grid(grid, grid)
+  
+  # calc sigma with cov kernel
+  sigma = exp_kernel(grid, l = scale)
+  
+  # sample fields from the GP
+  gps = MASS::mvrnorm(fields, rep(mu, dim(sigma)[1]), sigma)
+  gps = vapply(1:fields, function(i) matrix(gps[i,], pts, pts) 
+               ,FUN.VALUE = array(0, dim = c(pts, pts)))
+  return(gps)
+}
