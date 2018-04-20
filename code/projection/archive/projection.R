@@ -8,9 +8,7 @@ library(reshape2)
 library(plotly)
 library(plgp)
 
-# source('code/prep_functions.R')
-source('code/ks_field_functions.R')
-source('code/sim_functions.R')
+source('code/functions.R')
 
 ##### CONNECT TO DATA #####
 # read ensembles and prior ncdf4 objects
@@ -43,12 +41,6 @@ prior.split = vapply(1:ens, function(x) matsplitter(prior.ens[,,x], nlat, nlon),
 
 post.split = vapply(1:ens, function(x) matsplitter(post.ens[,,x], nlat, nlon),
                     FUN.VALUE = array(0,dim = c(nlat, nlon, regions)))
-
-
-
-
-
-
 
 
 # find the permutation distribution of wilcoxon fields

@@ -1,0 +1,28 @@
+# helper function
+isbetween = function(x, a, b) {
+  if(x < a) return(0)
+  if(x > b) return(0)
+  else return(1)
+}
+
+#### SIMULATION ####
+sim_gp = function(fields = 100, mu = 0, l = 1, pts = 30) {
+  # kernel function
+  exp_kernel <- function(X,l){
+    D <- plgp::distance(X)
+    Sigma <- exp(-D/l)
+  }
+  
+  # spatial locations to estimate
+  grid = seq(-1, 1, length = pts)
+  grid = expand.grid(grid, grid)
+  
+  # calc sigma with cov kernel
+  sigma = exp_kernel(grid, l = l)
+  
+  # sample fields from the GP
+  gps = MASS::mvrnorm(fields, rep(mu, dim(sigma)[1]), sigma)
+  gps = vapply(1:fields, function(i) matrix(gps[i,], pts, pts) 
+               ,FUN.VALUE = array(0, dim = c(pts, pts)))
+  return(gps)
+}
