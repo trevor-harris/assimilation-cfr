@@ -34,7 +34,7 @@ for (i in 1:simulations) {
   kol.field = kst.field(sim.prior.split, sim.post.split)
   
   # find the permutation distribution
-  perm.fields = kst.permute(sim.prior.split, sim.post.split, 100, 1)
+  perm.fields = kst.permute(sim.prior.split, sim.post.split, 100, 100)
   
   # find the central regions
   perm.ed = edepth_set(perm.fields)

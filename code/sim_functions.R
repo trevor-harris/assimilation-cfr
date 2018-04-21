@@ -33,6 +33,8 @@ sim_gp = function(fields = 100, mu = 0, l = 1, pts = 30) {
   if(fields > 1) {
     gps = vapply(1:fields, function(i) matrix(gps[i,], pts, pts) 
                  ,FUN.VALUE = array(0, dim = c(pts, pts)))
+  } else {
+    gps = array(gps, dim=c(pts, pts, 1))
   }
   return(gps)
 }
