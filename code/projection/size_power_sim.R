@@ -14,17 +14,10 @@ sim_size_power = function(post_mu, samples = 100) {
                             FUN.VALUE = array(0, dim = c(10, 10, 9)))
     
     
-    # find the observed wilco field
+    # find the observed kst field
     kol.field = kst.field(sim.prior.split, sim.post.split)
-    
+
     # find the permutation distribution
-    # perms = 100
-    # perm.fields = matrix(0, 9, perms)
-    # for (p in 1:perms) {
-    #   new.fields = permute_fields(sim.prior.split, sim.post.split)
-    #   perm.fields[,p] = kst.field(new.fields[[1]], new.fields[[2]])
-    # }
-    
     perm.fields = kst.permute(sim.prior.split, sim.post.split, 100, 1)
     
     # find the central regions
@@ -41,6 +34,11 @@ sim_size_power = function(post_mu, samples = 100) {
 # under the null
 diff_null = sim_size_power(0)
 sum(diff_null) / (9*100)
+
+
+# under a single alternative
+diff_alt = sim_size_power(0.5)
+sum(diff_alt) / (9*100)
 
 # under the alternatives
 diff_alt = array(0, dim = c(9, 200, 10))

@@ -85,6 +85,9 @@ kst.permute = function(prior.split, post.split, perms = 100, iter = 100) {
 
 #### regionalize ####
 matsplitter<-function(M, r, c) {
+  # splits 1 matrix into c MxR matricies
+  # I have no idea how this works
+  
   rg <- (row(M)-1)%/%r+1
   cg <- (col(M)-1)%/%c+1
   rci <- (rg-1)*max(cg) + cg
@@ -93,3 +96,32 @@ matsplitter<-function(M, r, c) {
   dim(cv)<-c(r,c,N)
   cv
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -20,9 +20,20 @@ sim_gp = function(fields = 100, mu = 0, l = 1, pts = 30) {
   # calc sigma with cov kernel
   sigma = exp_kernel(grid, l = l)
   
+  # calc mu
+  if(length(mu) == 1) {
+    mu = rep(mu, dim(sigma)[1])
+  } else {
+    mu = mu
+  }
+  
   # sample fields from the GP
-  gps = MASS::mvrnorm(fields, rep(mu, dim(sigma)[1]), sigma)
-  gps = vapply(1:fields, function(i) matrix(gps[i,], pts, pts) 
-               ,FUN.VALUE = array(0, dim = c(pts, pts)))
+  gps = MASS::mvrnorm(fields, mu, sigma)
+  
+  if(fields > 1) {
+    gps = vapply(1:fields, function(i) matrix(gps[i,], pts, pts) 
+                 ,FUN.VALUE = array(0, dim = c(pts, pts)))
+  }
   return(gps)
 }
+
