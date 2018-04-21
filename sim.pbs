@@ -1,0 +1,10 @@
+# imputs
+
+#PBS -l walltime=01:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -N GP_SIM
+#PBS -q secondary
+
+
+# Run the simulation for the given params
+Rscript power.R ${SHIFT} ${SIMS}
