@@ -45,5 +45,5 @@ for (i in 1:simulations) {
 }
 
 cat("#### Saving Data \n")
-save(diffs, file = paste0("out_data/diff_mu_parab_", mean_shift,".RData"))
+save(diffs, file = paste0("../../../outdata/diff_mu_parab_", mean_shift,".RData"))
 
