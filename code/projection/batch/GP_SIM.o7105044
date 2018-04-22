@@ -1,0 +1,10 @@
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells  96232  5.2     350000 18.7   237559 12.7
+Vcells 205941  1.6     786432  6.0   702759  5.4
+#### Starting Simulation 
+sim 1
+sim 2
+sim 3
+sim 4
+sim 5
+sim 6

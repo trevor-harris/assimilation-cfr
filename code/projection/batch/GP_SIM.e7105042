@@ -1,0 +1,25 @@
+----------------------------------------
+Begin Torque Prologue (Sat Apr 21 19:02:26 2018)
+Job ID:           7105042.cc-mgmt1.campuscluster.illinois.edu
+Username:         trevorh2
+Group:            stat
+Job Name:         GP_SIM
+Limits:           walltime=01:00:00,nodes=1:ppn=1,neednodes=1:ppn=1
+Job Queue:        secondary
+Account:          stat
+Nodes:            golub337
+End Torque Prologue
+----------------------------------------
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: mvtnorm
+Loading required package: tgp
