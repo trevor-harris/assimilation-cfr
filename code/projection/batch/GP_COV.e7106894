@@ -1,0 +1,39 @@
+----------------------------------------
+Begin Torque Prologue (Sun Apr 22 16:56:03 2018)
+Job ID:           7106894.cc-mgmt1.campuscluster.illinois.edu
+Username:         trevorh2
+Group:            stat
+Job Name:         GP_COV
+Limits:           walltime=01:00:00,nodes=1:ppn=1,neednodes=1:ppn=1
+Job Queue:        secondary
+Account:          stat
+Nodes:            golub314
+End Torque Prologue
+----------------------------------------
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: mvtnorm
+Loading required package: tgp
+----------------------------------------
+Begin Torque Epilogue (Sun Apr 22 17:19:04 2018)
+Job ID:           7106894.cc-mgmt1.campuscluster.illinois.edu
+Username:         trevorh2
+Group:            stat
+Job Name:         GP_COV
+Session:          67282
+Limits:           walltime=01:00:00,nodes=1:ppn=1,neednodes=1:ppn=1
+Resources:        cput=00:22:42,vmem=329836kb,walltime=00:23:02,mem=157508kb,energy_used=0
+Job Queue:        secondary
+Account:          stat
+Nodes:            golub314
+End Torque Epilogue
+----------------------------------------
