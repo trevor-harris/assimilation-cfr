@@ -16,6 +16,9 @@ source('../../sim_functions.R')
 prior_mu = matrix(0, 30, 30)
 post_mu = kronecker(diag(1, 3, 3), matrix(mean_shift, 10, 10))
 
+prior_mu = as.vector(prior_mu)
+post_mu = as.vector(post_mu)
+
 cat("#### Starting Simulation \n")
 diffs = matrix(0, 9, simulations)
 for (i in 1:simulations) {
