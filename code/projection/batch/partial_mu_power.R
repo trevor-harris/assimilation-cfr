@@ -2,7 +2,7 @@ rm(list = ls()); gc()
 
 # get args
 args = commandArgs(TRUE)
-cov_scale = as.double(args[1])
+mean_shift = as.double(args[1])
 simulations = as.integer(args[2])
 
 library(extdepth)
@@ -13,12 +13,14 @@ library(plgp)
 source('../../ks_field_functions.R')
 source('../../sim_functions.R')
 
+prior_mu = matrix(0, 30, 30)
+post_mu = kronecker(diag(1, 3, 3), matrix(mean_shift, 10, 10))
 
 cat("#### Starting Simulation \n")
 diffs = matrix(0, 9, simulations)
 for (i in 1:simulations) {
-  prior.gp = sim_gp(mu = 0, l = 1)
-  post.gp = sim_gp(mu = 0, l = 1*cov_scale)
+  prior.gp = sim_gp(mu = prior_mu, l = 1)
+  post.gp = sim_gp(mu = post_mu, l = 1)
   
   # split em all
   sim.prior.split = vapply(1:100, function(x) matsplitter(prior.gp[,,x], 10, 10),
@@ -43,5 +45,5 @@ for (i in 1:simulations) {
 }
 
 cat("#### Saving Data \n")
-save(diffs, file = paste0("../../../outdata/cov_scale_", cov_scale,".RData"))
+save(diffs, file = paste0("../../../outdata/mu_partial_", as.integer(mean_shift*10),".RData"))
 
