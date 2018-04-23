@@ -10,7 +10,6 @@ for (f in 1:length(files)) {
 }
 names(outdata) = gsub(".RData", "", files)
 
-files
 
 # hard coded COVARIANCE stuff
 # over each region
@@ -22,9 +21,13 @@ for(i in scales) {
 }
 # plots
 plot(scales, cov_powers[,1], type = "l", main = "Covariance Power")
-for(i in 2:13) {
+for(i in 2:9) {
   lines(scales, cov_powers[,i])
 }
+lines(scales, apply(cov_powers, 1, mean), col = "red")
+
+
+
 
 
 # hard coded MEAN stuff
@@ -38,16 +41,23 @@ plot(para_mu[,1], type = "l", main = "Parabolic Mean Power")
 for(i in 2:9) {
   lines(para_mu[,i])
 }
+lines(apply(para_mu, 1, mean), col = "red")
+
+
 
 
 # Partial mean over each region
-partial_mu = matrix(0, 13, 9)
-for(i in 1:10) {
-  partial_mu[i,] = sapply(1:9, function(x) sum(outdata[[paste0("mu_partial_", i)]][x,])/100)
+means = c(1:10, 20, 30)
+partial_mu = matrix(0, length(means), 9)
+for(i in means) {
+  j = which(means == i)
+  partial_mu[j,] = sapply(1:9, function(x) sum(outdata[[paste0("mu_partial_", i)]][x,])/100)
 }
 # plots
-plot(partial_mu[,1], type = "l", main = "Partial Mean Power")
-for(i in 2:13) {
-  lines(partial_mu[,i])
+plot(means/10, partial_mu[,1], type = "l", main = "Partial Mean Power")
+for(i in 2:9) {
+  lines(means/10, partial_mu[,i])
 }
+
+lines(means/10, apply(partial_mu, 1, mean), col = "red")
 
