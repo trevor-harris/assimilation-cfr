@@ -2,10 +2,10 @@
 
 #PBS -l walltime=01:00:00
 #PBS -l nodes=1:ppn=1
-#PBS -N GP_MU_PARA
+#PBS -N GP_MU_CONST
 #PBS -q secondary
 
 cd $PBS_O_WORKDIR
 
 # Run the simulation for the given params
-Rscript para_mu_power.R ${SHIFT} ${SIMS}
+Rscript mu_power.R ${SHIFT} ${SIMS}

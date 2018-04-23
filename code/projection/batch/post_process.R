@@ -11,6 +11,8 @@ for (f in 1:length(files)) {
 names(outdata) = gsub(".RData", "", files)
 
 
+
+
 # hard coded COVARIANCE stuff
 # over each region
 scales = c(0.01, 0.05, 0.1, 0.3, 0.5, 0.7, 1.3, 1.5, 1.7, 2, 3, 4, 5)

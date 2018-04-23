@@ -2,7 +2,7 @@
 
 #PBS -l walltime=01:00:00
 #PBS -l nodes=1:ppn=1
-#PBS -N GP_MU_P
+#PBS -N GP_MU_PART
 #PBS -q secondary
 
 cd $PBS_O_WORKDIR
