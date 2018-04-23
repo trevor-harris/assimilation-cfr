@@ -48,5 +48,5 @@ for (i in 1:simulations) {
 }
 
 cat("#### Saving Data \n")
-save(diffs, file = paste0("../../../outdata/mu_partial_", as.integer(mean_shift*10),".RData"))
+save(diffs, file = paste0("../../../outdata/mu_partial_", mean_shift,".RData"))
 
