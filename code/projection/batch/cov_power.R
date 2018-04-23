@@ -43,5 +43,5 @@ for (i in 1:simulations) {
 }
 
 cat("#### Saving Data \n")
-save(diffs, file = paste0("../../../outdata/diff_cov_scale_", as.integer(cov_scale*10),".RData"))
+save(diffs, file = paste0("../../../outdata/diff_cov_scale_", cov_scale,".RData"))
 
