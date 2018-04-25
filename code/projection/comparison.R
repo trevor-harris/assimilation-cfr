@@ -1,6 +1,6 @@
 
 prior.gp = sim_gp(mu = 0, l = 1)
-post.gp = sim_gp(mu = 0.5, l = 1)
+post.gp = sim_gp(mu = 0.3, l = 1)
 
 # split em all
 gp.prior.split = vapply(1:100, function(x) matsplitter(prior.gp[,,x], 10, 10),
@@ -49,13 +49,18 @@ sapply(1:length(kol.field), function(x) 1-isbetween(kol.field[x], perm.cr[[1]][x
 
 
 
-### L2
-# l2.val = l2.field(gp.prior.split, gp.post.split)
-# l2.perm = l2.permute(gp.prior.split, gp.post.split)
-# 
-# # find the central regions
-# perm.ed = edepth_set(l2.perm)
-# perm.cr = central_region(l2.perm, perm.ed)
-# 
-# sapply(1:length(l2.val), function(x) 1-isbetween(l2.val[x], perm.cr[[1]][x], perm.cr[[2]][x]))
+### L2 (actuall l inf)
+l2.val = l2.field(gp.prior.split, gp.post.split)
+l2.perm = l2.permute(gp.prior.split, gp.post.split)
+
+# find the central regions
+perm.ed = edepth_set(l2.perm)
+perm.cr = central_region(l2.perm, perm.ed)
+
+plot(l2.val, type = "l", col = "red", ylim=c(0, 1))
+for(i in 1:dim(l2.perm)[2]) {
+  lines(l2.perm[,i])
+}
+
+sapply(1:length(l2.val), function(x) 1-isbetween(l2.val[x], perm.cr[[1]][x], perm.cr[[2]][x]))
 

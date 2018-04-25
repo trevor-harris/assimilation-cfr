@@ -42,7 +42,6 @@ kst.fast = function(x, y) {
 }
 
 library(abind)
-library(irlba)
 eigen.proj = function(prior.split, post.split, eig=5) {
   
   nlat = dim(prior.split)[1]
@@ -55,11 +54,29 @@ eigen.proj = function(prior.split, post.split, eig=5) {
   all.eigen = array(0, dim = c(nlat*nlon, eig, regions))
   for (r in 1:regions) {
     all.split.vec = t(sapply(1:(2*ens), function(x) as.vector(all.split[,,r,x])))
-    # all.eigen[,,r] = irlba(all.split.vec, nv = eig)$v
     all.eigen[,,r] = princomp(all.split.vec)$scores[1:eig]
   }
   return(all.eigen)
 }
+
+
+eigen.proj = function(prior.split, post.split, eig=5) {
+  
+  nlat = dim(prior.split)[1]
+  nlon = dim(prior.split)[2]
+  regions = dim(prior.split)[3]
+  ens = dim(prior.split)[4]
+  
+  all.diff = array(abind(prior.split, post.split, along=4), dim = c(nlat, nlon, regions, (2*ens)))
+  
+  all.eigen = array(0, dim = c(nlat*nlon, eig, regions))
+  for (r in 1:regions) {
+    all.split.vec = t(sapply(1:(2*ens), function(x) as.vector(all.split[,,r,x])))
+    all.eigen[,,r] = princomp(all.split.vec)$scores[1:eig]
+  }
+  return(all.eigen)
+}
+
 
 
 kst.field.eig = function(prior.split, post.split, eigen=5, proj_mat = NULL) {
@@ -88,7 +105,7 @@ kst.field.eig = function(prior.split, post.split, eigen=5, proj_mat = NULL) {
       post.proj[e,] = as.vector(as.vector(post.split[,,r,e]) %*% proj_mat[,,r])
     }
     kol = sapply(1:eigen, function(x) kst.fast(prior.proj[,x], post.proj[,x]))
-    kol.field[r] = mean(kol)
+    kol.field[r] = max(kol)
   }
   kol.field
 }
@@ -145,8 +162,11 @@ l2.field = function(prior.split, post.split) {
   
   for(r in 1:regions) {
     for(e in 1:ens) {
-      prior.proj[e] = sum((prior.split[,,r,e])^2)
-      post.proj[e] = sum((post.split[,,r,e])^2)
+      # prior.proj[e] = sum((prior.split[,,r,e])^2)
+      # post.proj[e] = sum((post.split[,,r,e])^2)
+      
+      prior.proj[e] = max((prior.split[,,r,e]))
+      post.proj[e] = max((post.split[,,r,e]))
     }
     kol.field[r] = kst.fast(prior.proj, post.proj)
   }

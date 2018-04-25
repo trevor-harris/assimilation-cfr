@@ -58,7 +58,10 @@ viz_power(power_data, prefix[2], pts[[2]],
           "Constant Mean Power", xlab = "Shift")
 
 viz_power(power_data, prefix[3], pts[[3]], 
-          "Parabolic Mean Power", xlab = "Shift")
+          "Constant Mean Power (Eigen)", xlab = "Shift")
 
 viz_power(power_data, prefix[4], pts[[4]], 
+          "Parabolic Mean Power", xlab = "Shift")
+
+viz_power(power_data, prefix[5], pts[[5]], 
           "Partial Mean Power", xlab = "Shift")
