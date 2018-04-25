@@ -42,7 +42,7 @@ kst.fast = function(x, y) {
 }
 
 library(abind)
-eigen.diff = function(prior.split, post.split, eig=5) {
+eigen.proj = function(prior.split, post.split, eig=5) {
   
   nlat = dim(prior.split)[1]
   nlon = dim(prior.split)[2]
@@ -60,7 +60,7 @@ eigen.diff = function(prior.split, post.split, eig=5) {
 }
 
 
-eigen.proj = function(prior.split, post.split, eig=5) {
+eigen.diff = function(prior.split, post.split, eig=5) {
   
   nlat = dim(prior.split)[1]
   nlon = dim(prior.split)[2]
