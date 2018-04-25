@@ -44,6 +44,31 @@ viz_power = function(ds, prefix, pts, title, xlab) {
   lines(pts, apply(powers, 1, mean), col = "red")
 }
 
+viz_power_comp = function(ds, prefix1, prefix2, pts1, pts2, title, xlab, legend.vars) {
+  powers1 = matrix(0, length(pts1), 9)
+  for(i in pts1) {
+    j = which(pts1 == i)
+    powers1[j,] = sapply(1:9, function(x) sum(ds[[paste0(prefix1, i)]][x,])/100)
+  }
+  
+  powers2 = matrix(0, length(pts2), 9)
+  for(i in pts2) {
+    j = which(pts2 == i)
+    powers2[j,] = sapply(1:9, function(x) sum(ds[[paste0(prefix2, i)]][x,])/100)
+  }
+  
+  # plots
+  plot(pts1, powers1[,1], type = "l", col = "red", main = title, xlab = xlab)
+  lines(pts2, powers2[,1], col = "blue")
+  for(i in 2:9) {
+    lines(pts1, powers1[,i], col = "red")
+    lines(pts2, powers2[,i], col = "blue")
+  }
+  lines(pts1, apply(powers1, 1, mean), lwd = 2)
+  lines(pts2, apply(powers2, 1, mean), lwd = 2)
+  legend("right", legend = legend.vars, col=c("red", "blue"), lty=c(1, 1))
+}
+
 
 # extract the data components
 power_data = load_power_data(data.dir)
@@ -59,6 +84,9 @@ viz_power(power_data, prefix[2], pts[[2]],
 
 viz_power(power_data, prefix[3], pts[[3]], 
           "Constant Mean Power (Eigen)", xlab = "Shift")
+
+viz_power_comp(power_data, prefix[2], prefix[3], pts[[2]], pts[[3]],
+               "Random vs Eigen", "shift", c("Random", "Eigen"))
 
 viz_power(power_data, prefix[4], pts[[4]], 
           "Parabolic Mean Power", xlab = "Shift")
