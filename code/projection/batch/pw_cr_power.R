@@ -43,5 +43,5 @@ for (i in 1:simulations) {
 }
 
 cat("#### Saving Data \n")
-# save(diffs, file = paste0("../../../outdata/pw_cr_", mean_shift,".RData"))
-# save(diffs_bf, file = paste0("../../../outdata/pw_cr_bf_", mean_shift,".RData"))
+save(diffs, file = paste0("../../../outdata/pw_cr_", mean_shift,".RData"))
+save(diffs_bf, file = paste0("../../../outdata/pw_cr_bf_", mean_shift,".RData"))
