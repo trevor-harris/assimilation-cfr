@@ -130,47 +130,47 @@ matsplitter<-function(M, r, c) {
 
 
 
-# l2.field = function(prior.split, post.split) {
-#   # computes the KST field statistic between two samples of X and Y regionalized 2D functions
-#   # prior.split and post.split same as in permute_fields
-#   
-#   nlat = dim(prior.split)[1]
-#   nlon = dim(prior.split)[2]
-#   regions = dim(prior.split)[3]
-#   ens = dim(prior.split)[4]
-# 
-#   prior.proj = rep(0, ens)
-#   post.proj = rep(0, ens)
-#   kol.field = 1:regions
-#   
-#   for(r in 1:regions) {
-#     for(e in 1:ens) {
-#       # prior.proj[e] = sum((prior.split[,,r,e])^2)
-#       # post.proj[e] = sum((post.split[,,r,e])^2)
-#       
-#       prior.proj[e] = max((prior.split[,,r,e]))
-#       post.proj[e] = max((post.split[,,r,e]))
-#     }
-#     kol.field[r] = kst.fast(prior.proj, post.proj)
-#   }
-#   kol.field
-# }
-# 
-# l2.permute = function(prior.split, post.split, perms = 100) {
-#   # generates the permutation distribution for the kst field.
-#   regions = dim(prior.split)[3]
-#   perm.fields = matrix(0, regions, perms)
-#   
-#   # dont just naively use the field test. Eigenfunctions are INVARIANT to permutation
-#   for (p in 1:perms) {
-#     new.fields = permute_fields(prior.split, post.split)
-#     prior = new.fields[[1]]
-#     post = new.fields[[2]]
-#     perm.fields[,p] = l2.field(prior, post)
-#   }
-#   
-#   return(perm.fields)
-# }
+l2.field = function(prior.split, post.split) {
+  # computes the KST field statistic between two samples of X and Y regionalized 2D functions
+  # prior.split and post.split same as in permute_fields
+
+  nlat = dim(prior.split)[1]
+  nlon = dim(prior.split)[2]
+  regions = dim(prior.split)[3]
+  ens = dim(prior.split)[4]
+
+  prior.proj = rep(0, ens)
+  post.proj = rep(0, ens)
+  kol.field = 1:regions
+
+  for(r in 1:regions) {
+    for(e in 1:ens) {
+      # prior.proj[e] = sum((prior.split[,,r,e])^2)
+      # post.proj[e] = sum((post.split[,,r,e])^2)
+
+      prior.proj[e] = max((prior.split[,,r,e]))
+      post.proj[e] = max((post.split[,,r,e]))
+    }
+    kol.field[r] = kst.fast(prior.proj, post.proj)
+  }
+  kol.field
+}
+
+l2.permute = function(prior.split, post.split, perms = 100) {
+  # generates the permutation distribution for the kst field.
+  regions = dim(prior.split)[3]
+  perm.fields = matrix(0, regions, perms)
+
+  # dont just naively use the field test. Eigenfunctions are INVARIANT to permutation
+  for (p in 1:perms) {
+    new.fields = permute_fields(prior.split, post.split)
+    prior = new.fields[[1]]
+    post = new.fields[[2]]
+    perm.fields[,p] = l2.field(prior, post)
+  }
+
+  return(perm.fields)
+}
 
 
 

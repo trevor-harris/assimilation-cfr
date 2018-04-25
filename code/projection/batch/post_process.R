@@ -88,8 +88,13 @@ viz_power(power_data, prefix[3], pts[[3]],
 viz_power_comp(power_data, prefix[2], prefix[3], pts[[2]], pts[[3]],
                "Random vs Eigen", "shift", c("Random", "Eigen"))
 
+viz_power_comp(power_data, prefix[2], prefix[6], pts[[2]], pts[[6]],
+               "Depth vs Pointwise", "shift", c("Depth", "Pointwise"))
+
 viz_power(power_data, prefix[4], pts[[4]], 
           "Parabolic Mean Power", xlab = "Shift")
 
 viz_power(power_data, prefix[5], pts[[5]], 
           "Partial Mean Power", xlab = "Shift")
+
+

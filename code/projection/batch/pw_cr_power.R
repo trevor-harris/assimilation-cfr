@@ -37,8 +37,9 @@ for (i in 1:simulations) {
   perm.fields = kst.permute(prior.gp.split, post.gp.split, 100, 100)
   
   # PW central regions
-  diffs[,i] = sapply(1:length(kol.field), function(r) as.integer(kol.field[r] <= quantile(perm.fields[r,], 0.95)))
-  diffs_bf[,i] = sapply(1:length(kol.field), function(r) as.integer(kol.field[r] <= quantile(perm.fields[r,], (1-(0.05/9)))))
+  bf_val = (1-(0.05/9))
+  diffs[,i] = sapply(1:length(kol.field), function(r) as.integer(kol.field[r] > quantile(perm.fields[r,], 0.95)))
+  diffs_bf[,i] = sapply(1:length(kol.field), function(r) as.integer(kol.field[r] > quantile(perm.fields[r,], bf_val)))
   cat(paste0("sim ", i, "\n"))
 }
 
