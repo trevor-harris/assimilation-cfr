@@ -61,7 +61,7 @@ kst.field = function(prior.split, post.split, iter=100) {
       post.proj[e,] = as.vector(as.vector(post.split[,,r,e]) %*% proj)
     }
     kol = sapply(1:iter, function(x) kst.fast(prior.proj[,x], post.proj[,x]))
-    kol.field[r] = max(kol)
+    kol.field[r] = mean(kol)
   }
   kol.field
 }

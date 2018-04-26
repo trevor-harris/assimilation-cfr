@@ -6,11 +6,14 @@ load_power_data = function(data.dir) {
   files = list.files(data.dir)
   
   outdata = vector("list", length(files))
+  # for (f in 1:length(files)) {
+  #   load(paste0(data.dir, files[f]))
+  #   outdata[[f]] = diffs
+  # }
   for (f in 1:length(files)) {
-    load(paste0(data.dir, files[f]))
-    outdata[[f]] = diffs
+    outdata[[f]] = readRDS(paste0(data.dir, files[f]))
   }
-  names(outdata) = gsub(".RData", "", files)
+  names(outdata) = gsub(".rds", "", files)
   return(outdata)
 }
 
@@ -91,10 +94,17 @@ viz_power_comp(power_data, prefix[2], prefix[3], pts[[2]], pts[[3]],
 viz_power_comp(power_data, prefix[2], prefix[6], pts[[2]], pts[[6]],
                "Depth vs Pointwise", "shift", c("Depth", "Pointwise"))
 
+viz_power_comp(power_data, prefix[2], prefix[7], pts[[2]], pts[[7]],
+               "Depth vs Pointwise", "shift", c("Depth", "Pointwise"))
+
 viz_power(power_data, prefix[4], pts[[4]], 
           "Parabolic Mean Power", xlab = "Shift")
 
 viz_power(power_data, prefix[5], pts[[5]], 
           "Partial Mean Power", xlab = "Shift")
 
+
+viz_power(power_data, "pw_cr_bf_", get_pts(power_data, "pw_cr_bf_"), title = "", xlab = "")
+
+get_pts(power_data, "pw_cr_bf_")
 

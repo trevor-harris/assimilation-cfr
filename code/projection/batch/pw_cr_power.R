@@ -17,7 +17,9 @@ prior_mu = 0
 
 cat("#### Starting Simulation \n")
 diffs = matrix(0, 9, simulations)
+diffs_pw = matrix(0, 9, simulations)
 diffs_bf = matrix(0, 9, simulations)
+
 for (i in 1:simulations) {
   prior.gp = sim_gp(mu = prior_mu, l = 1)
   post.gp = sim_gp(mu = prior_mu + mean_shift, l = 1)
@@ -38,11 +40,19 @@ for (i in 1:simulations) {
   
   # PW central regions
   bf_val = (1-(0.05/9))
-  diffs[,i] = sapply(1:length(kol.field), function(r) as.integer(kol.field[r] > quantile(perm.fields[r,], 0.95)))
+  diffs_pw[,i] = sapply(1:length(kol.field), function(r) as.integer(kol.field[r] > quantile(perm.fields[r,], 0.95)))
   diffs_bf[,i] = sapply(1:length(kol.field), function(r) as.integer(kol.field[r] > quantile(perm.fields[r,], bf_val)))
+  
+  perm.ed = edepth_set(perm.fields)
+  perm.cr = central_region(perm.fields, perm.ed)
+  
+  diffs[,i] = sapply(1:length(kol.field), function(x) as.integer(kol.field[x] > perm.cr[[2]][x]))
+  
   cat(paste0("sim ", i, "\n"))
+  cat(diffs_bf[,i], "\n")
 }
 
 cat("#### Saving Data \n")
-save(diffs, file = paste0("../../../outdata/pw_cr_", mean_shift,".RData"))
-save(diffs_bf, file = paste0("../../../outdata/pw_cr_bf_", mean_shift,".RData"))
+saveRDS(diffs, file = paste0("../../../outdata/depth_cr_", mean_shift,".rds"))
+saveRDS(diffs_pw, file = paste0("../../../outdata/pw_cr_", mean_shift,".rds"))
+saveRDS(diffs_bf, file = paste0("../../../outdata/bf_cr_", mean_shift,".rds"))

@@ -48,5 +48,5 @@ for (i in 1:simulations) {
 }
 
 cat("#### Saving Data \n")
-save(diffs, file = paste0("../../../outdata/mu_partial_", mean_shift,".RData"))
+saveRDS(diffs, file = paste0("../../../outdata/mu_partial_", mean_shift,".rds"))
 
