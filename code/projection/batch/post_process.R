@@ -108,16 +108,16 @@ viz_power_comp(power_data, prefix[3], prefix[7], pts[[3]], pts[[7]],
 viz_power_means(power_data, prefix[3], prefix[1], pts[[3]], pts[[1]],
                "Depth vs Bonferroni", "shift", c("Depth", "Bonferroni"))
 
-
-
 sum(power_data[["pw_cr_0"]]) / 900
 sum(power_data[["bf_cr_0"]]) / 900
 sum(power_data[["depth_cr_0"]]) / 900
 
-plot(apply(power_data[["pw_cr_0"]], 1, mean), type="l", col = "green", ylim=c(0, 0.1))
-lines(apply(power_data[["bf_cr_0"]], 1, mean), col = "blue")
-lines(apply(power_data[["depth_cr_0"]], 1, mean), col = "red")
+plot(apply(power_data[["pw_cr_0.4"]], 1, mean), type="l", col = "green", ylim=c(0, 1))
+lines(apply(power_data[["bf_cr_0.4"]], 1, mean), col = "blue")
+lines(apply(power_data[["depth_cr_0.4"]], 1, mean), col = "red")
 # legend("right", legend = c("Pointwise", "Bonferroni", "Depth"), col=c("green", "red", "blue"), lty=c(1, 1))
+
+
 
 # graph em
 viz_power(power_data, prefix[2], pts[[2]], 
