@@ -33,17 +33,17 @@ for (i in 1:simulations) {
   
   
   # find the observed kst field
-  kol.field = kst.field(prior.gp.split, post.gp.split)
+  kol.field = kst.field(prior.gp.split, post.gp.split, 200)
   
   # find the permutation distribution
-  perm.fields = kst.permute(prior.gp.split, post.gp.split, 100, 100)
+  perm.fields = kst.permute(prior.gp.split, post.gp.split, 200, 200)
   
   # PW central regions
   bf_val = (1-(0.05/9))
   diffs_pw[,i] = sapply(1:length(kol.field), function(r) as.integer(kol.field[r] > quantile(perm.fields[r,], 0.95)))
   diffs_bf[,i] = sapply(1:length(kol.field), function(r) as.integer(kol.field[r] > quantile(perm.fields[r,], bf_val)))
   
-  perm.ed = edepth_set(perm.fields)
+  perm.ed = edepth_set(perm.fields, depth_function = "rank")
   perm.cr = central_region(perm.fields, perm.ed)
   
   diffs[,i] = sapply(1:length(kol.field), function(x) as.integer(kol.field[x] > perm.cr[[2]][x]))

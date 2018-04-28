@@ -73,38 +73,67 @@ viz_power_comp = function(ds, prefix1, prefix2, pts1, pts2, title, xlab, legend.
 }
 
 
+viz_power_means = function(ds, prefix1, prefix2, pts1, pts2, title, xlab, legend.vars) {
+  powers1 = matrix(0, length(pts1), 9)
+  for(i in pts1) {
+    j = which(pts1 == i)
+    powers1[j,] = sapply(1:9, function(x) sum(ds[[paste0(prefix1, i)]][x,])/100)
+  }
+  
+  powers2 = matrix(0, length(pts2), 9)
+  for(i in pts2) {
+    j = which(pts2 == i)
+    powers2[j,] = sapply(1:9, function(x) sum(ds[[paste0(prefix2, i)]][x,])/100)
+  }
+  
+  # plots
+  plot(pts1, apply(powers1, 1, mean), type = "l", col = "red", main = title, xlab = xlab)
+  lines(pts2, apply(powers2, 1, mean), col = "blue")
+  legend("right", legend = legend.vars, col=c("red", "blue"), lty=c(1, 1))
+}
+
+
 # extract the data components
 power_data = load_power_data(data.dir)
 prefix = get_prefix(power_data)
 pts = sapply(prefix, function(x) get_pts(power_data, x))
 
+
+viz_power_comp(power_data, prefix[3], prefix[1], pts[[3]], pts[[1]],
+               "Depth vs Bonferroni", "shift", c("Depth", "Bonferroni"))
+
+viz_power_comp(power_data, prefix[3], prefix[7], pts[[3]], pts[[7]],
+               "Depth vs Pointwise", "shift", c("Depth", "Pointwise"))
+
+viz_power_means(power_data, prefix[3], prefix[1], pts[[3]], pts[[1]],
+               "Depth vs Bonferroni", "shift", c("Depth", "Bonferroni"))
+
+
+
+sum(power_data[["pw_cr_0"]]) / 900
+sum(power_data[["bf_cr_0"]]) / 900
+sum(power_data[["depth_cr_0"]]) / 900
+
+plot(apply(power_data[["pw_cr_0"]], 1, mean), type="l", col = "green", ylim=c(0, 0.1))
+lines(apply(power_data[["bf_cr_0"]], 1, mean), col = "blue")
+lines(apply(power_data[["depth_cr_0"]], 1, mean), col = "red")
+# legend("right", legend = c("Pointwise", "Bonferroni", "Depth"), col=c("green", "red", "blue"), lty=c(1, 1))
+
 # graph em
-viz_power(power_data, prefix[1], pts[[1]], 
+viz_power(power_data, prefix[2], pts[[2]], 
           "Covariance Power", xlab = "Scale")
 
-viz_power(power_data, prefix[2], pts[[2]], 
+viz_power(power_data, prefix[3], pts[[3]], 
           "Constant Mean Power", xlab = "Shift")
 
-viz_power(power_data, prefix[3], pts[[3]], 
+viz_power(power_data, prefix[4], pts[[4]], 
           "Constant Mean Power (Eigen)", xlab = "Shift")
 
-viz_power_comp(power_data, prefix[2], prefix[3], pts[[2]], pts[[3]],
+viz_power_comp(power_data, prefix[3], prefix[4], pts[[3]], pts[[4]],
                "Random vs Eigen", "shift", c("Random", "Eigen"))
 
-viz_power_comp(power_data, prefix[2], prefix[6], pts[[2]], pts[[6]],
-               "Depth vs Pointwise", "shift", c("Depth", "Pointwise"))
-
-viz_power_comp(power_data, prefix[2], prefix[7], pts[[2]], pts[[7]],
-               "Depth vs Pointwise", "shift", c("Depth", "Pointwise"))
-
-viz_power(power_data, prefix[4], pts[[4]], 
+viz_power(power_data, prefix[5], pts[[5]], 
           "Parabolic Mean Power", xlab = "Shift")
 
-viz_power(power_data, prefix[5], pts[[5]], 
+viz_power(power_data, prefix[6], pts[[6]], 
           "Partial Mean Power", xlab = "Shift")
-
-
-viz_power(power_data, "pw_cr_bf_", get_pts(power_data, "pw_cr_bf_"), title = "", xlab = "")
-
-get_pts(power_data, "pw_cr_bf_")
-

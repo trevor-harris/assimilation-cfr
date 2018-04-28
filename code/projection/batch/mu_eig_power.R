@@ -37,10 +37,10 @@ for (i in 1:simulations) {
   perm.fields = kst.permute.eig(sim.prior.split, sim.post.split, eigen = 20)
   
   # find the central regions
-  perm.ed = edepth_set(perm.fields)
+  perm.ed = edepth_set(perm.fields, depth_function = "rank")
   perm.cr = central_region(perm.fields, perm.ed)
   
-  diffs[,i] = sapply(1:length(kol.field), function(x) 1-isbetween(kol.field[x], perm.cr[[1]][x], perm.cr[[2]][x]))
+  diffs[,i] = sapply(1:length(kol.field), function(x) as.integer(kol.field[x] > perm.cr[[2]][x]))
   cat(paste0("sim ", i, "\n"))
 }
 
