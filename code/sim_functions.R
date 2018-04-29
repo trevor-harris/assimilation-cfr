@@ -39,3 +39,31 @@ sim_gp = function(fields = 100, mu = 0, l = 1, pts = 30) {
   return(gps)
 }
 
+
+
+#### SIMULATION ####
+sim_gp.1d = function(fields = 100, mu = 0, l = 1, pts = 30) {
+  # kernel function
+  exp_kernel <- function(X,l){
+    D <- plgp::distance(X)
+    Sigma <- exp(-D/l)
+  }
+  
+  # spatial locations to estimate
+  grid = seq(-1, 1, length = pts)
+  
+  # calc sigma with cov kernel
+  sigma = exp_kernel(grid, l = l)
+  
+  # calc mu
+  if(length(mu) == 1) {
+    mu = rep(mu, dim(sigma)[1])
+  } else {
+    mu = mu
+  }
+  
+  # sample fields from the GP
+  gps = MASS::mvrnorm(fields, mu, sigma)
+  return(gps)
+}
+
