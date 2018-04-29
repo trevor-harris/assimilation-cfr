@@ -13,7 +13,6 @@ library(plgp)
 source('../../ks_field_functions.R')
 source('../../sim_functions.R')
 
-mean_shift = 0.2
 prior_mu = matrix(0, 30, 30)
 post_mu = kronecker(diag(1, 3, 3), matrix(mean_shift, 11, 12))
 post_mu = post_mu[1:30,1:30]
