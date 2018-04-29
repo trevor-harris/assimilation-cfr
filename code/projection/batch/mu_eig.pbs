@@ -1,9 +1,9 @@
 # inputs
 
-#PBS -l walltime=01:00:00
+#PBS -l walltime=02:00:00
 #PBS -l nodes=1:ppn=1
 #PBS -N GP_MU_EIG_CONST
-#PBS -q secondary
+#PBS -q stat
 
 cd $PBS_O_WORKDIR
 
