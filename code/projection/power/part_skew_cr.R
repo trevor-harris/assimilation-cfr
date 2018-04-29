@@ -59,6 +59,6 @@ for (i in 1:simulations) {
 }
 
 cat("#### Saving Data \n")
-saveRDS(diffs, file = paste0("../../../outdata/depth_skew_cr_", mean_shift,".rds"))
-saveRDS(diffs_pw, file = paste0("../../../outdata/pw_skew_cr_", mean_shift,".rds"))
-saveRDS(diffs_bf, file = paste0("../../../outdata/bf_skew_cr_", mean_shift,".rds"))
+saveRDS(diffs, file = paste0("../../../outdata/pointwise/depth_skew_cr_", mean_shift,".rds"))
+saveRDS(diffs_pw, file = paste0("../../../outdata/pointwise/pw_skew_cr_", mean_shift,".rds"))
+saveRDS(diffs_bf, file = paste0("../../../outdata/pointwise/bf_skew_cr_", mean_shift,".rds"))
