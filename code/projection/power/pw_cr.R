@@ -27,7 +27,7 @@ for (i in 1:simulations) {
   prior.gp.split = vapply(1:100, function(x) matsplitter(prior.gp[,,x], 5, 5),
                            FUN.VALUE = array(0, dim = c(5, 5, regions)))
   
-  post.gp.split = vapply(1:100, function(x) matsplitter(post.gp[,,x], 10, 10),
+  post.gp.split = vapply(1:100, function(x) matsplitter(post.gp[,,x], 5, 5),
                           FUN.VALUE = array(0, dim = c(5, 5, regions)))
   
   
