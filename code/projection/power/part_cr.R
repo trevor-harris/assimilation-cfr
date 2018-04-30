@@ -11,8 +11,8 @@ library(plgp)
 source('../../ks_field_functions.R')
 source('../../sim_functions.R')
 
-prior_mu = matrix(0, 40, 40)
-post_mu = kronecker(diag(1, 4, 4), matrix(mean_shift, 10, 10))
+prior_mu = as.vector(matrix(0, 40, 40))
+post_mu = as.vector(kronecker(diag(1, 4, 4), matrix(mean_shift, 10, 10)))
 
 regions = 64
 
