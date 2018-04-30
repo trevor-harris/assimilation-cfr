@@ -1,15 +1,10 @@
 rm(list = ls())
 
-data.dir = "/Users/trevh/research/assimilation-cfr/outdata/"
-
 load_power_data = function(data.dir) {
   files = list.files(data.dir)
   
   outdata = vector("list", length(files))
-  # for (f in 1:length(files)) {
-  #   load(paste0(data.dir, files[f]))
-  #   outdata[[f]] = diffs
-  # }
+
   for (f in 1:length(files)) {
     outdata[[f]] = readRDS(paste0(data.dir, files[f]))
   }
@@ -67,8 +62,8 @@ viz_power_comp = function(ds, prefix1, prefix2, pts1, pts2, title, xlab, legend.
     lines(pts1, powers1[,i], col = "red")
     lines(pts2, powers2[,i], col = "blue")
   }
-  lines(pts1, apply(powers1, 1, mean), lwd = 2)
-  lines(pts2, apply(powers2, 1, mean), lwd = 2)
+  lines(pts1, apply(powers1, 1, mean), col = "darkred", lwd = 3)
+  lines(pts2, apply(powers2, 1, mean), col = "darkblue", lwd = 3)
   legend("right", legend = legend.vars, col=c("red", "blue"), lty=c(1, 1))
 }
 
@@ -92,21 +87,38 @@ viz_power_means = function(ds, prefix1, prefix2, pts1, pts2, title, xlab, legend
   legend("right", legend = legend.vars, col=c("red", "blue"), lty=c(1, 1))
 }
 
+data.dir = "/Users/trevh/research/assimilation-cfr/outdata/pointwise/"
+list.files(data.dir)
 
 # extract the data components
 power_data = load_power_data(data.dir)
 prefix = get_prefix(power_data)
-pts = sapply(prefix, function(x) get_pts(power_data, x))
+pts = lapply(prefix, function(x) get_pts(power_data, x))
+names(pts) = prefix
+
+# plot em
+viz_power_comp(power_data, prefix[4], prefix[1], pts[[4]], pts[[1]],
+               "Depth vs Bonferroni Full", "shift", c("Depth", "Bonferroni"))
+
+viz_power_comp(power_data, prefix[5], prefix[2], pts[[5]], pts[[2]],
+               "Depth vs Bonferroni Partial", "shift", c("Depth", "Pointwise"))
+
+viz_power_comp(power_data, prefix[6], prefix[3], pts[[6]], pts[[3]],
+               "Depth vs Bonferroni Skew Partial", "shift", c("Depth", "Bonferroni"))
 
 
-viz_power_comp(power_data, prefix[3], prefix[1], pts[[3]], pts[[1]],
-               "Depth vs Bonferroni", "shift", c("Depth", "Bonferroni"))
 
-viz_power_comp(power_data, prefix[3], prefix[7], pts[[3]], pts[[7]],
-               "Depth vs Pointwise", "shift", c("Depth", "Pointwise"))
+viz_power_means(power_data, prefix[4], prefix[1], pts[[4]], pts[[1]],
+               "Depth vs Bonferroni Full", "shift", c("Depth", "Bonferroni"))
 
-viz_power_means(power_data, prefix[3], prefix[1], pts[[3]], pts[[1]],
-               "Depth vs Bonferroni", "shift", c("Depth", "Bonferroni"))
+viz_power_means(power_data, prefix[5], prefix[2], pts[[5]], pts[[2]],
+               "Depth vs Bonferroni Partial", "shift", c("Depth", "Pointwise"))
+
+viz_power_means(power_data, prefix[6], prefix[3], pts[[6]], pts[[3]],
+               "Depth vs Bonferroni Skew Partial", "shift", c("Depth", "Bonferroni"))
+
+
+
 
 sum(power_data[["pw_cr_0"]]) / 900
 sum(power_data[["bf_cr_0"]]) / 900
@@ -115,7 +127,7 @@ sum(power_data[["depth_cr_0"]]) / 900
 plot(apply(power_data[["pw_cr_0.4"]], 1, mean), type="l", col = "green", ylim=c(0, 1))
 lines(apply(power_data[["bf_cr_0.4"]], 1, mean), col = "blue")
 lines(apply(power_data[["depth_cr_0.4"]], 1, mean), col = "red")
-# legend("right", legend = c("Pointwise", "Bonferroni", "Depth"), col=c("green", "red", "blue"), lty=c(1, 1))
+ # legend("right", legend = c("Pointwise", "Bonferroni", "Depth"), col=c("green", "red", "blue"), lty=c(1, 1))
 
 
 
