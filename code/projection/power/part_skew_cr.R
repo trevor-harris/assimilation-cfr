@@ -11,9 +11,9 @@ library(plgp)
 source('../../ks_field_functions.R')
 source('../../sim_functions.R')
 
-prior_mu = matrix(0, 30, 30)
-post_mu = kronecker(diag(1, 3, 3), matrix(mean_shift, 11, 12))
-post_mu = post_mu[1:30,1:30]
+prior_mu = matrix(0, 40, 40)
+post_mu = kronecker(diag(1, 4, 4), matrix(mean_shift, 11, 12))
+post_mu = post_mu[1:40,1:40]
 
 prior_mu = as.vector(prior_mu)
 post_mu = as.vector(post_mu)
