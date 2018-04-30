@@ -26,8 +26,8 @@ diffs_pw = matrix(0, regions, simulations)
 diffs_bf = matrix(0, regions, simulations)
 
 for (i in 1:simulations) {
-  prior.gp = sim_gp(mu = prior_mu, l = 1, 40)
-  post.gp = sim_gp(mu = post_mu, l = 1, 40)
+  prior.gp = sim_gp(mu = prior_mu, l = 1, pts = 40)
+  post.gp = sim_gp(mu = post_mu, l = 1, pts = 40)
   
   # split em all
   prior.gp.split = vapply(1:100, function(x) matsplitter(prior.gp[,,x], 5, 5),
