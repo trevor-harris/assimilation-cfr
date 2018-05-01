@@ -43,28 +43,28 @@ viz_power = function(ds, prefix, pts, title, xlab) {
 }
 
 viz_power_comp = function(ds, prefix1, prefix2, pts1, pts2, title, xlab, legend.vars) {
-  powers1 = matrix(0, length(pts1), 9)
+  powers1 = matrix(0, length(pts1), 64)
   for(i in pts1) {
     j = which(pts1 == i)
-    powers1[j,] = sapply(1:9, function(x) sum(ds[[paste0(prefix1, i)]][x,])/100)
+    powers1[j,] = sapply(1:64, function(x) sum(ds[[paste0(prefix1, i)]][x,])/100)
   }
   
-  powers2 = matrix(0, length(pts2), 9)
+  powers2 = matrix(0, length(pts2), 64)
   for(i in pts2) {
     j = which(pts2 == i)
-    powers2[j,] = sapply(1:9, function(x) sum(ds[[paste0(prefix2, i)]][x,])/100)
+    powers2[j,] = sapply(1:64, function(x) sum(ds[[paste0(prefix2, i)]][x,])/100)
   }
   
   # plots
   plot(pts1, powers1[,1], type = "l", col = "red", main = title, xlab = xlab)
   lines(pts2, powers2[,1], col = "blue")
-  for(i in 2:9) {
+  for(i in 2:64) {
     lines(pts1, powers1[,i], col = "red")
     lines(pts2, powers2[,i], col = "blue")
   }
   lines(pts1, apply(powers1, 1, mean), col = "darkred", lwd = 3)
   lines(pts2, apply(powers2, 1, mean), col = "darkblue", lwd = 3)
-  legend("right", legend = legend.vars, col=c("red", "blue"), lty=c(1, 1))
+  # legend("right", legend = legend.vars, col=c("red", "blue"), lty=c(1, 1))
 }
 
 
@@ -72,13 +72,13 @@ viz_power_means = function(ds, prefix1, prefix2, pts1, pts2, title, xlab, legend
   powers1 = matrix(0, length(pts1), 9)
   for(i in pts1) {
     j = which(pts1 == i)
-    powers1[j,] = sapply(1:9, function(x) sum(ds[[paste0(prefix1, i)]][x,])/100)
+    powers1[j,] = sapply(1:64, function(x) sum(ds[[paste0(prefix1, i)]][x,])/100)
   }
   
   powers2 = matrix(0, length(pts2), 9)
   for(i in pts2) {
     j = which(pts2 == i)
-    powers2[j,] = sapply(1:9, function(x) sum(ds[[paste0(prefix2, i)]][x,])/100)
+    powers2[j,] = sapply(1:64, function(x) sum(ds[[paste0(prefix2, i)]][x,])/100)
   }
   
   # plots
@@ -96,15 +96,27 @@ prefix = get_prefix(power_data)
 pts = lapply(prefix, function(x) get_pts(power_data, x))
 names(pts) = prefix
 
-# plot em
-viz_power_comp(power_data, prefix[4], prefix[1], pts[[4]], pts[[1]],
+# plot em (9 regions)
+viz_power_comp(power_data, prefix[7], prefix[1], pts[[7]], pts[[1]],
                "Depth vs Bonferroni Full", "shift", c("Depth", "Bonferroni"))
 
-viz_power_comp(power_data, prefix[5], prefix[2], pts[[5]], pts[[2]],
+viz_power_comp(power_data, prefix[9], prefix[3], pts[[9]], pts[[3]],
                "Depth vs Bonferroni Partial", "shift", c("Depth", "Pointwise"))
 
-viz_power_comp(power_data, prefix[6], prefix[3], pts[[6]], pts[[3]],
+viz_power_comp(power_data, prefix[11], prefix[5], pts[[11]], pts[[5]],
                "Depth vs Bonferroni Skew Partial", "shift", c("Depth", "Bonferroni"))
+
+# plot em (64 regions)
+viz_power_comp(power_data, prefix[8], prefix[2], pts[[8]], pts[[2]],
+               "Depth vs Bonferroni Full", "shift", c("Depth", "Bonferroni"))
+
+viz_power_comp(power_data, prefix[10], prefix[4], pts[[10]], pts[[4]],
+               "Depth vs Bonferroni Partial", "shift", c("Depth", "Pointwise"))
+
+viz_power_comp(power_data, prefix[12], prefix[6], pts[[12]], pts[[6]],
+               "Depth vs Bonferroni Skew Partial", "shift", c("Depth", "Bonferroni"))
+
+
 
 
 
