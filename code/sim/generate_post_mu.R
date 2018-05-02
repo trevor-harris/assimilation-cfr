@@ -18,7 +18,7 @@ gp_mu_thre = sign(gp_mu) * sqrt(abs(remove_IQR(gp_mu))) / 2
 plot_ly(showscale = F) %>%
   add_surface(z = ~gp_mu_thre)
 
-saveRDS(matrix(post_mu, pts, pts), file = paste0("/Users/trevh/research/assimilation-cfr/simdata/post_mu.rds"))
+saveRDS(matrix(gp_mu_thre, pts, pts), file = paste0("/Users/trevh/research/assimilation-cfr/simdata/post_mu.rds"))
 image(gp_mu_thre)
 
 
