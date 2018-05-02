@@ -1,5 +1,7 @@
 #!/bin/bash
 
-for BATCHS in 1 2 3 4 5 6 7 8 9 10; do
-	qsub -v BATCH=$BATCHS,SIMS=100 depth_bonf.pbs
+for RUNS in 1 2 3; do
+for BATCHS in {1..25}; do
+	qsub -v BATCH=$BATCHS,SIMS=100,RUN=$RUNS depth_bonf.pbs
+done
 done

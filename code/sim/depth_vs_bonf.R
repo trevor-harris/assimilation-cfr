@@ -4,6 +4,7 @@ rm(list = ls()); gc()
 args = commandArgs(TRUE)
 batch_no = as.double(args[1])
 simulations = as.integer(args[2])
+run = as.integer(args[3])
 
 library(extdepth)
 library(plgp)
@@ -19,7 +20,7 @@ regions = 64
 
 # standard flat prior mean
 prior_mu = matrix(0, pts, pts)
-post_mu = readRDS("../../simdata/post_mu.rds")
+post_mu = readRDS(paste0("../../simdata/run", run,"/post_mu.rds"))
 
 prior_mu = as.vector(prior_mu)
 post_mu = as.vector(post_mu)
@@ -61,7 +62,7 @@ for (i in 1:simulations) {
 }
 
 cat("#### Saving Data \n")
-saveRDS(diffs_de, file = paste0("../../simdata/Depth", batch_no, ".rds"))
-saveRDS(diffs_bf, file = paste0("../../simdata/Bonferroni", batch_no, ".rds"))
+saveRDS(diffs_de, file = paste0("../../simdata/run", run,"/Depth", batch_no, ".rds"))
+saveRDS(diffs_bf, file = paste0("../../simdata/run", run,"/Bonferroni", batch_no, ".rds"))
 
 

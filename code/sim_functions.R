@@ -6,11 +6,16 @@ isbetween = function(x, a, b) {
 }
 
 #### SIMULATION ####
-sim_gp = function(fields = 100, mu = 0, l = 1, pts = 30) {
+sim_gp = function(fields = 100, mu = 0, l = 1, pts = 30, ker = "exp") {
   # kernel function
   exp_kernel <- function(X,l){
     D <- plgp::distance(X)
     Sigma <- exp(-D/l)
+  }
+  
+  gaus_kernel <- function(X, l) {
+    D <- plgp::distance(X)
+    Sigma <- exp(-(D/l)^2)
   }
   
   # spatial locations to estimate
@@ -18,8 +23,8 @@ sim_gp = function(fields = 100, mu = 0, l = 1, pts = 30) {
   grid = expand.grid(grid, grid)
   
   # calc sigma with cov kernel
-  sigma = exp_kernel(grid, l = l)
-  
+  if (ker == "exp") sigma = exp_kernel(grid, l = l)
+  if (ker == "gauss") sigma = gaus_kernel(grid, l = l)
   # calc mu
   if(length(mu) == 1) {
     mu = rep(mu, dim(sigma)[1])

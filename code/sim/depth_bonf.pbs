@@ -1,6 +1,6 @@
 # inputs
 
-#PBS -l walltime=02:30:00
+#PBS -l walltime=04:00:00
 #PBS -l nodes=1:ppn=1
 #PBS -N GP_DEPTH_BONF
 #PBS -q stat
