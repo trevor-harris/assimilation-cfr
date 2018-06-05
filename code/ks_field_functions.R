@@ -66,6 +66,47 @@ kst.field = function(prior.split, post.split, iter=100) {
   kol.field
 }
 
+kst.permute2 = function(prior.split, post.split, perms = 100, proj = 100) {
+  
+  # get dim
+  nlat = dim(prior.split)[1]
+  nlon = dim(prior.split)[2]
+  regions = dim(prior.split)[3]
+  ens = dim(prior.split)[4]
+  
+  # setup intermediate variables
+  prior.proj = matrix(0, ens, proj)
+  post.proj = matrix(0, ens, proj)
+  kol.field = 1:regions
+  proj.mat = matrix(rnorm(nlat*nlon*proj), nlat*nlon, proj)
+  
+  # setup output
+  observed.field = rep(0, regions)
+  permuted.fields = matrix(0, regions, perms)
+  
+  for(r in 1:regions) {
+    for(e in 1:ens) {
+      prior.proj[e,] = as.vector(as.vector(prior.split[,,r,e]) %*% proj.mat)
+      post.proj[e,] = as.vector(as.vector(post.split[,,r,e]) %*% proj.mat)
+    }
+    # first find the observed KST statistic
+    kst = sapply(1:proj, function(x) kst.fast(prior.proj[,x], post.proj[,x]))
+    observed.field[r] = mean(kst)
+    
+    # Second find the permutation distribution
+    for(p in 1:perms) {
+      swap = matrix(rbinom(ens*proj, 1, 0.5), ens, proj)
+      prior.perm = prior.proj * (1 - swap) + post.proj * swap
+      post.perm = prior.proj * swap + post.proj * (1 - swap)
+      
+      kst = sapply(1:proj, function(x) kst.fast(prior.perm[,x], post.perm[,x]))
+      permuted.fields[r,p] = mean(kst)
+    }
+  }
+  return(list(obs = observed.field,
+              perm = permuted.fields))
+}
+
 kst.permute = function(prior.split, post.split, perms = 100, iter = 100) {
   # generates the permutation distribution for the kst field.
   

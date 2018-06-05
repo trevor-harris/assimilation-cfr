@@ -28,6 +28,7 @@ post_mu = as.vector(post_mu)
 cat("#### Starting Simulation \n")
 diffs_de = matrix(0, regions, simulations)
 diffs_bf = matrix(0, regions, simulations)
+diffs_pw = matrix(0, regions, simulations)
 
 for (i in 1:simulations) {
   t0 = Sys.time()
@@ -51,6 +52,7 @@ for (i in 1:simulations) {
   # Bonferroni central regions
   bf_val = (1-(0.05/regions))
   diffs_bf[,i] = sapply(1:length(kol.field), function(r) as.integer(kol.field[r] > quantile(perm.fields[r,], bf_val)))
+  diffs_pw[,i] = sapply(1:length(kol.field), function(r) as.integer(kol.field[r] > quantile(perm.fields[r,], 0.95)))
   
   # Depth central regions
   perm.ed = edepth_set(perm.fields, depth_function = "rank")
@@ -64,5 +66,6 @@ for (i in 1:simulations) {
 cat("#### Saving Data \n")
 saveRDS(diffs_de, file = paste0("../../simdata/run", run,"/Depth", batch_no, ".rds"))
 saveRDS(diffs_bf, file = paste0("../../simdata/run", run,"/Bonferroni", batch_no, ".rds"))
+saveRDS(diffs_pw, file = paste0("../../simdata/run", run,"/Pointwise", batch_no, ".rds"))
 
 

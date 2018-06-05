@@ -1,5 +1,5 @@
-rm(list = ls())
-gc()
+# rm(list = ls())
+# gc()
 
 library(extdepth)
 library(ncdf4)
@@ -7,7 +7,7 @@ library(dplyr)
 library(reshape2)
 library(plotly)
 
-source('code/functions.R')
+source('code/prep_functions.R')
 
 ##### CONNECT TO DATA #####
 # read ensembles and prior ncdf4 objects
@@ -22,8 +22,8 @@ nc.prior = nc_open('/Users/trevh/Research/assimilation-cfr/data/tas_prior_da_hyd
 lat.basis = 40
 lon.basis = 26
 
-basis = create_basis(lat.basis, lon.basis, nc.prior)
-proj = solve(t(basis) %*% basis) %*% t(basis)
+# basis = create_basis(lat.basis, lon.basis, nc.prior)
+# proj = solve(t(basis) %*% basis) %*% t(basis)
 
 # prep prior
 prior.sub = read.csv("data/prior_ens.txt", header = F)
