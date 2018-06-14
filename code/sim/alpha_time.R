@@ -1,15 +1,14 @@
 rm(list = ls()); gc()
 
 # get args
-simulations = 1
+args = commandArgs(TRUE)
+batch_no = as.double(args[1])
+simulations = as.integer(args[2])
 
 library(extdepth)
-library(plgp)
 
-# source('/home/trevorh2/assimilation-cfr/code/ks_field_functions.R')
-# source('/home/trevorh2/assimilation-cfr/code/sim_functions.R')
-source('code/ks_field_functions.R')
-source('code/sim_functions.R')
+source('/home/trevorh2/assimilation-cfr/code/ks_field_functions.R')
+source('/home/trevorh2/assimilation-cfr/code/sim_functions.R')
 
 # marginal number of points in the field (field is pts x pts)
 pts = 40
