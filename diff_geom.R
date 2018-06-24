@@ -17,7 +17,7 @@ inv_psi = function(psi) {
 
 
 # generate some gamma functions5
-gams = t(rgam(100, 5, 100))
+gams = t(rgam(100, 5, 200))
 
 # convert to psi and tangent space
 gams.srsf = SqrtMean(gams)
