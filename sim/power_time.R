@@ -21,7 +21,7 @@ time_points = 10
 
 # standard flat prior mean
 prior_mu = matrix(0, pts, pts)
-post_mu = matrix(0, pts, pts)
+post_mu = readRDS("power/post_mu.rds")
 
 prior_mu = as.vector(prior_mu)
 post_mu = as.vector(post_mu)
@@ -81,9 +81,8 @@ for (i in 1:simulations) {
 }
 
 cat("#### Saving Data \n")
-saveRDS(upper_de, file = paste0("/home/trevorh2/scratch/simdata/alpha/Depth", batch_no, ".rds"))
-saveRDS(upper_bf, file = paste0("/home/trevorh2/scratch/simdata/alpha/Bonferroni", batch_no, ".rds"))
-saveRDS(upper_pw, file = paste0("/home/trevorh2/scratch/simdata/alpha/Pointwise", batch_no, ".rds"))
-saveRDS(ks_value, file = paste0("/home/trevorh2/scratch/simdata/alpha/Values", batch_no, ".rds"))
-saveRDS(pval_de, file = paste0("/home/trevorh2/scratch/simdata/alpha/pvals", batch_no, ".rds"))
-
+saveRDS(upper_de, file = paste0("/home/trevorh2/scratch/simdata/power/Depth", batch_no, ".rds"))
+saveRDS(upper_bf, file = paste0("/home/trevorh2/scratch/simdata/power/Bonferroni", batch_no, ".rds"))
+saveRDS(upper_pw, file = paste0("/home/trevorh2/scratch/simdata/power/Pointwise", batch_no, ".rds"))
+saveRDS(ks_value, file = paste0("/home/trevorh2/scratch/simdata/power/Values", batch_no, ".rds"))
+saveRDS(pval_de, file = paste0("/home/trevorh2/scratch/simdata/power/pvals", batch_no, ".rds"))
