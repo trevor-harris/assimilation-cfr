@@ -7,8 +7,8 @@ simulations = as.integer(args[2])
 
 library(extdepth)
 
-source('/home/trevorh2/assimilation-cfr/code/ks_field_functions.R')
-source('/home/trevorh2/assimilation-cfr/code/sim_functions.R')
+source('/home/trevorh2/assimilation-cfr/sim_study/shared_code/kst.R')
+source('/home/trevorh2/assimilation-cfr/sim_study/shared_code/gaussian_process.R')
 
 # marginal number of points in the field (field is pts x pts)
 pts = 40
@@ -21,7 +21,7 @@ time_points = 10
 
 # standard flat prior mean
 prior_mu = matrix(0, pts, pts)
-post_mu = readRDS("power/post_mu.rds")
+post_mu = readRDS('/home/trevorh2/assimilation-cfr/sim_study/power/mean/data/post_mu.R')
 
 prior_mu = as.vector(prior_mu)
 post_mu = as.vector(post_mu)
@@ -31,7 +31,6 @@ upper_de = matrix(0, regions*time_points, simulations)
 upper_bf = matrix(0, regions*time_points, simulations)
 upper_pw = matrix(0, regions*time_points, simulations)
 ks_value = matrix(0, regions*time_points, simulations)
-pval_de = rep(0, simulations)
 
 for (i in 1:simulations) {
   t0 = Sys.time()
@@ -74,8 +73,6 @@ for (i in 1:simulations) {
   # save ks values
   ks_value[,i] = kst
   
-  # save ks p values
-  pval_de[i] = kst.ed
   
   cat(paste0("sim ", i, "\t", Sys.time()-t0, "\n"))
 }
@@ -85,4 +82,3 @@ saveRDS(upper_de, file = paste0("/home/trevorh2/scratch/simdata/power/Depth", ba
 saveRDS(upper_bf, file = paste0("/home/trevorh2/scratch/simdata/power/Bonferroni", batch_no, ".rds"))
 saveRDS(upper_pw, file = paste0("/home/trevorh2/scratch/simdata/power/Pointwise", batch_no, ".rds"))
 saveRDS(ks_value, file = paste0("/home/trevorh2/scratch/simdata/power/Values", batch_no, ".rds"))
-saveRDS(pval_de, file = paste0("/home/trevorh2/scratch/simdata/power/pvals", batch_no, ".rds"))
