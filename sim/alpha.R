@@ -6,6 +6,7 @@ batch_no = as.double(args[1])
 simulations = as.integer(args[2])
 
 library(extdepth)
+library(plgp)
 
 source('/home/trevorh2/assimilation-cfr/code/ks_field_functions.R')
 source('/home/trevorh2/assimilation-cfr/code/sim_functions.R')
@@ -16,9 +17,6 @@ pts = 40
 # number of regions to subdivide the fields into
 regions = 64
 
-# number of time points
-time_points = 10
-
 # standard flat prior mean
 prior_mu = matrix(0, pts, pts)
 post_mu = matrix(0, pts, pts)
@@ -27,38 +25,31 @@ prior_mu = as.vector(prior_mu)
 post_mu = as.vector(post_mu)
 
 cat("#### Starting Simulation \n")
-upper_de = matrix(0, regions*time_points, simulations)
-upper_bf = matrix(0, regions*time_points, simulations)
-upper_pw = matrix(0, regions*time_points, simulations)
-ks_value = matrix(0, regions*time_points, simulations)
+upper_de = matrix(0, regions, simulations)
+upper_bf = matrix(0, regions, simulations)
+upper_pw = matrix(0, regions, simulations)
+ks_value = matrix(0, regions, simulations)
 pval_de = rep(0, simulations)
 
 for (i in 1:simulations) {
   t0 = Sys.time()
   
-  kst = rep(0, regions*time_points)
-  ksp = matrix(0, regions*time_points, 1000)
+  prior = sim_gp(100, mu = prior_mu, l = 5, pts = pts)
+  post = sim_gp(100, mu = post_mu, l = 5, pts = pts)
   
-  for (t in 1:time_points) {
-    
-    prior = sim_gp(100, mu = prior_mu, l = 5, pts = pts)
-    post = sim_gp(100, mu = post_mu, l = 5, pts = pts)
-    
-    # split em all
-    prior.split = vapply(1:100, function(x) matsplitter(prior[,,x], 5, 5),
+  # split em all
+  prior.split = vapply(1:100, function(x) matsplitter(prior[,,x], 5, 5),
+                          FUN.VALUE = array(0, dim = c(5, 5, regions)))
+  
+  post.split = vapply(1:100, function(x) matsplitter(post[,,x], 5, 5),
                          FUN.VALUE = array(0, dim = c(5, 5, regions)))
-    
-    post.split = vapply(1:100, function(x) matsplitter(post[,,x], 5, 5),
-                        FUN.VALUE = array(0, dim = c(5, 5, regions)))
-    
-    # find the observed kst field
-    kst[1:regions + regions*(t - 1)] = kst.field(prior.split, post.split, 100)
-    ksp[1:regions + regions*(t - 1),] = kst.permute(prior.split, post.split, 1000, 1)
-    
-  }
+  
+  # find the observed kst field
+  kst = kst.field(prior.split, post.split, 100)
+  ksp = kst.permute(prior.split, post.split, 2000, 3)
   
   # Bonferroni central regions
-  bf_val = (1-(0.05/(regions*time_points)))
+  bf_val = (1-(0.05/regions))
   
   # Depth central regions
   perm.ed = edepth_set(ksp, depth_function = "rank")
@@ -86,4 +77,5 @@ saveRDS(upper_bf, file = paste0("/home/trevorh2/scratch/simdata/alpha/Bonferroni
 saveRDS(upper_pw, file = paste0("/home/trevorh2/scratch/simdata/alpha/Pointwise", batch_no, ".rds"))
 saveRDS(ks_value, file = paste0("/home/trevorh2/scratch/simdata/alpha/Values", batch_no, ".rds"))
 saveRDS(pval_de, file = paste0("/home/trevorh2/scratch/simdata/alpha/pvals", batch_no, ".rds"))
+
 
