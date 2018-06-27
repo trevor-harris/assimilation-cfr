@@ -1,27 +1,21 @@
-library(plotly)
+library(ggplot2)
+library(reshape2)
+source('code/sim_functions.R')
 
-pts = 40
+set.seed(420)
+post_mu = sim_gp(1, mu = 0, l = 1, 40)
 
-remove_IQR = function(x, range = 0.5) {
-  lower = 0.5 - range/2
-  upper = 0.5 + range/2
-  thresh = max(abs(quantile(gp_mu, lower)), abs(quantile(gp_mu, upper)))
-  ifelse(abs(x) < thresh, 0, ifelse(x < 0, x+thresh, x-thresh))
-}
+mu_df = melt(post_mu)
+ggplot(data = mu_df, aes(x = Var2, y = Var1)) +
+  geom_raster(aes(fill = value), interpolate = T) +
+  scale_fill_distiller(palette="Spectral") +
+  labs(title = "Simulated Posterior Mean Field") +
+  theme_void() +
+  theme(plot.title = element_text(hjust = 0.5))
 
-set.seed(102393)
-gp_mu = matrix(sim_gp(fields = 1, mu = 0, l = 1, pts = 40, ker = "exp"), 40, 40)
-gp_mu = gp_mu - mean(gp_mu)
-gp_mu_thre = remove_IQR(gp_mu, 0.1) / 2
+ggsave(paste0("sim_study/power/post_mu.png"), width = 5, height = 3.2)
 
-summary(as.vector(gp_mu_thre))
-
-plot_ly(showscale = F) %>%
-  add_surface(z = ~gp_mu_thre)
-
-
-saveRDS(matrix(gp_mu_thre, pts, pts), file = paste0("/Users/trevh/research/assimilation-cfr/simdata/run3/post_mu.rds"))
-# image(gp_mu_thre)
+saveRDS(matrix(post_mu, 40, 40), file = paste0("/Users/trevh/research/assimilation-cfr/sim_study/power/post_mu.rds"))
 
 
 
