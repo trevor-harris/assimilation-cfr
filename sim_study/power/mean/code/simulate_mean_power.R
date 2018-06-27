@@ -78,7 +78,7 @@ for (i in 1:simulations) {
 }
 
 cat("#### Saving Data \n")
-saveRDS(upper_de, file = paste0("/home/trevorh2/scratch/simdata/power/Depth", batch_no, ".rds"))
-saveRDS(upper_bf, file = paste0("/home/trevorh2/scratch/simdata/power/Bonferroni", batch_no, ".rds"))
-saveRDS(upper_pw, file = paste0("/home/trevorh2/scratch/simdata/power/Pointwise", batch_no, ".rds"))
-saveRDS(ks_value, file = paste0("/home/trevorh2/scratch/simdata/power/Values", batch_no, ".rds"))
+saveRDS(upper_de, file = paste0("/home/trevorh2/assimilation-cfr/sim_study/power/mean/simulations/Depth", batch_no, ".rds"))
+saveRDS(upper_bf, file = paste0("/home/trevorh2/assimilation-cfr/sim_study/power/mean/simulations/Bonferroni", batch_no, ".rds"))
+saveRDS(upper_pw, file = paste0("/home/trevorh2/assimilation-cfr/sim_study/power/mean/simulations/Pointwise", batch_no, ".rds"))
+saveRDS(ks_value, file = paste0("/home/trevorh2/assimilation-cfr/sim_study/power/mean/simulations/KST", batch_no, ".rds"))
