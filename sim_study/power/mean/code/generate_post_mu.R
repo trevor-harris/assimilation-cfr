@@ -1,11 +1,11 @@
 library(ggplot2)
 library(reshape2)
-source('code/sim_functions.R')
+source('research/assimilation-cfr/sim_study/shared_code/gaussian_process.R')
 
 set.seed(420)
-post_mu = sim_gp(1, mu = 0, l = 1, 40)
+post_mu = sim_gp(1, mu = 0, l = 10, 40)
 
-mu_df = melt(post_mu)
+mu_df = melt(post_mu*2)
 ggplot(data = mu_df, aes(x = Var2, y = Var1)) +
   geom_raster(aes(fill = value), interpolate = T) +
   scale_fill_distiller(palette="Spectral") +

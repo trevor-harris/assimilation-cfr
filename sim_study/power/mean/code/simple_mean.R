@@ -19,13 +19,6 @@ regions = 64
 # number of time points
 time_points = 10
 
-# standard flat prior mean
-prior_mu = matrix(0, pts, pts)
-post_mu = readRDS('/home/trevorh2/assimilation-cfr/sim_study/power/mean/data/post_mu.rds')
-
-prior_mu = as.vector(prior_mu)
-post_mu = as.vector(post_mu)
-
 cat("#### Starting Simulation \n")
 upper_de = matrix(0, regions*time_points, simulations)
 upper_bf = matrix(0, regions*time_points, simulations)
@@ -37,6 +30,13 @@ for (i in 1:simulations) {
   
   kst = rep(0, regions*time_points)
   ksp = matrix(0, regions*time_points, 1000)
+  
+  # standard flat prior mean. Shift posterior mean by i/5
+  prior_mu = matrix(0, pts, pts)
+  post_mu = matrix(i/5, pts, pts)
+  
+  prior_mu = as.vector(prior_mu)
+  post_mu = as.vector(post_mu)
   
   for (t in 1:time_points) {
     
@@ -78,7 +78,7 @@ for (i in 1:simulations) {
 }
 
 cat("#### Saving Data \n")
-saveRDS(upper_de, file = paste0("/home/trevorh2/assimilation-cfr/sim_study/power/mean/simulations/Depth", batch_no, ".rds"))
-saveRDS(upper_bf, file = paste0("/home/trevorh2/assimilation-cfr/sim_study/power/mean/simulations/Bonferroni", batch_no, ".rds"))
-saveRDS(upper_pw, file = paste0("/home/trevorh2/assimilation-cfr/sim_study/power/mean/simulations/Pointwise", batch_no, ".rds"))
-saveRDS(ks_value, file = paste0("/home/trevorh2/assimilation-cfr/sim_study/power/mean/simulations/KST", batch_no, ".rds"))
+saveRDS(upper_de, file = paste0("/home/trevorh2/assimilation-cfr/sim_study/power/mean/simulations/simple_depth", batch_no, ".rds"))
+saveRDS(upper_bf, file = paste0("/home/trevorh2/assimilation-cfr/sim_study/power/mean/simulations/simple_bonferroni", batch_no, ".rds"))
+saveRDS(upper_pw, file = paste0("/home/trevorh2/assimilation-cfr/sim_study/power/mean/simulations/simple_pointwise", batch_no, ".rds"))
+saveRDS(ks_value, file = paste0("/home/trevorh2/assimilation-cfr/sim_study/power/mean/simulations/simple_KST", batch_no, ".rds"))

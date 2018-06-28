@@ -1,5 +1,5 @@
 #!/bin/bash
 
 for BATCHS in {1..50}; do
-	qsub -v BATCH=$BATCHS,SIMS=10 power.pbs
+	qsub -v BATCH=$BATCHS,SIMS=20 simple.pbs
 done
