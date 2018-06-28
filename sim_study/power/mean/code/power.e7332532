@@ -1,0 +1,26 @@
+----------------------------------------
+Begin Torque Prologue (Wed Jun 27 00:38:11 2018)
+Job ID:           7332532.cc-mgmt1.campuscluster.illinois.edu
+Username:         trevorh2
+Group:            stat
+Job Name:         power
+Limits:           walltime=10:00:00,nodes=1:ppn=1,neednodes=1:ppn=1
+Job Queue:        stat
+Account:          stat
+Nodes:            golub232
+End Torque Prologue
+----------------------------------------
+----------------------------------------
+Begin Torque Epilogue (Wed Jun 27 03:32:10 2018)
+Job ID:           7332532.cc-mgmt1.campuscluster.illinois.edu
+Username:         trevorh2
+Group:            stat
+Job Name:         power
+Session:          178683
+Limits:           walltime=10:00:00,nodes=1:ppn=1,neednodes=1:ppn=1
+Resources:        cput=02:53:28,vmem=419028kb,walltime=02:53:59,mem=318948kb,energy_used=0
+Job Queue:        stat
+Account:          stat
+Nodes:            golub232
+End Torque Epilogue
+----------------------------------------

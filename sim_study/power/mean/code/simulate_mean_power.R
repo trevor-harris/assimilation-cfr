@@ -21,7 +21,7 @@ time_points = 10
 
 # standard flat prior mean
 prior_mu = matrix(0, pts, pts)
-post_mu = readRDS('/home/trevorh2/assimilation-cfr/sim_study/power/mean/data/post_mu.R')
+post_mu = readRDS('/home/trevorh2/assimilation-cfr/sim_study/power/mean/data/post_mu.rds')
 
 prior_mu = as.vector(prior_mu)
 post_mu = as.vector(post_mu)
