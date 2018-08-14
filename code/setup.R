@@ -1,5 +1,5 @@
-# rm(list = ls())
-# gc()
+rm(list = ls())
+gc()
 
 library(extdepth)
 library(ncdf4)
@@ -30,4 +30,6 @@ prior.sub = read.csv("data/prior_ens.txt", header = F)
 prior.sub = as.vector(prior.sub[,1])
 
 prior.ens = prep_prior(nc.prior)
-# prior.ens = prior.ens[,,prior.sub]
+prior.ens = prior.ens[,,prior.sub]
+
+
