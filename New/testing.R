@@ -286,9 +286,21 @@ ks.med = function(x, y) {
 }
 
 
+# expected depth
+meandepth = function(gmat, fmat) {
+  apply(gmat, 2, function(x) mean(depth(x, fmat)))
+}
+ks.mean = function(x, y) {
+  mx = mdepth(x, x)
+  my = mdepth(y, x)
+  
+  ks.test(mx, my)$p.value
+}
+
+
 # get args
-batch = 30
-sims = 40
+batch = 1
+sims = 1000
 set.seed(batch + 1023)
 
 kdist = rep(0, sims)
@@ -296,6 +308,7 @@ kdept = rep(0, sims)
 kinte = rep(0, sims)
 kelas = rep(0, sims)
 kmedi = rep(0, sims)
+kmean = rep(0, sims)
 
 for(s in 1:sims) {
   tic("Total")
@@ -334,6 +347,7 @@ for(s in 1:sims) {
   kinte[s] = ks.int(prior_flat, post_flat)
   kelas[s] = elas.depth(prior_flat, post_flat)
   kmedi[s] = ks.med(post_flat, prior_flat)
+  kmean[s] = ks.mean(post_flat, prior_flat)
   
   toc()
   cat("\n")
@@ -344,11 +358,20 @@ mean(kdept < 0.05)
 mean(kinte < 0.05)
 mean(kelas < 0.05)
 mean(kmedi < 0.05)
+mean(kmean < 0.05)
 
 plot(kdist)
 plot(kdept)
 plot(kinte)
 plot(kelas)
 plot(kmedi)
+plot(kmean)
+
+boxplot(kdist,
+        kdept,
+        kinte,
+        kelas,
+        kmedi,
+        kmean)
 
 
