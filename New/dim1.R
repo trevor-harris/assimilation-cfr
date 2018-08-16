@@ -64,14 +64,20 @@ depth = function(g, fmat) {
   
   return(depth)
 }
-mdepth = function(gmat, fmat) {
+meddepth = function(gmat, fmat) {
   apply(gmat, 2, function(x) median(depth(x, fmat)))
 }
-ks.med = function(x, y) {
-  mx = mdepth(x, x)
-  my = mdepth(y, x)
+ks.med = function(f, g) {
+  fed = meddepth(f, f)
+  ged = meddepth(g, f)
   
-  ks.test(mx, my)$p.value
+  f.surv = rev(c(0, sort(fed)))
+  g.cdf = sapply(1:length(f.surv), function(x) mean(ged >= f.surv[x]))
+  f.cdf = sapply(1:length(f.surv), function(x) mean(fed >= f.surv[x]))
+  
+  ks = max(abs(f.cdf - g.cdf))
+  rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
+  ks_pval(rate*ks)
 }
 
 # ED
@@ -102,7 +108,7 @@ edepth_multi = function(gmat, fmat_sorted) {
   ged
 }
 ks_pval = function(t, n = 10) {
-  2*(sum(sapply(1:n, function(x) (-1)^(x-1) * exp(-2*(x^2)*t))))
+  2*(sum(sapply(1:n, function(x) (-1)^(x-1) * exp(-2*(x^2)*t^2))))
 }
 ks.depth = function(f, g) {
   
@@ -115,54 +121,59 @@ ks.depth = function(f, g) {
   f.cdf = rev(f.surv)
   
   ks = max(abs(f.cdf - g.cdf))
-  ks_pval(sqrt(ncol(g))*ks)
+  rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
+  ks_pval(rate*ks)
 }
 
-# median depth
-ks.mcdf = function(f, g) {
-  fed = mdepth(f, f)
-  ged = mdepth(g, f)
+# mean depth
+meandepth = function(gmat, fmat) {
+  apply(gmat, 2, function(x) mean(depth(x, fmat)))
+}
+ks.mean = function(f, g) {
+  
+  f = gp1d()
+  g = gp1d()
+  
+  fed = meandepth(f, f)
+  ged = meandepth(g, f)
   
   f.surv = rev(c(0, sort(fed)))
   g.cdf = sapply(1:length(f.surv), function(x) mean(ged >= f.surv[x]))
   f.cdf = sapply(1:length(f.surv), function(x) mean(fed >= f.surv[x]))
+
+  # plot(g.cdf, type = "l", col = "blue")
+  # lines(f.cdf, col = "red")
   
   ks = max(abs(f.cdf - g.cdf))
-  ks_pval(sqrt(ncol(g))*ks)
+  rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
+  ks_pval(rate*ks)
 }
 
+set.seed(1)
 
-sims = 100
+sims = 2000
 kdist = rep(0, sims)
-kmedi = rep(0, sims)
-kdept = rep(0, sims)
-kmcdf = rep(0, sims)
+# kdept = rep(0, sims)
+# kmedi = rep(0, sims)
+# kmean = rep(0, sims)
 for(s in 1:sims) {
   tic("Total")
   cat("Simulation ", s, "\n")
   
-  gp1 = gp1d()
-  gp2 = gp1d()
+  gp1 = gp1d(pts = 100)
+  gp2 = gp1d(pts = 100)
   
   kdist[s] = ks.dist(gp1, gp2)
-  kmedi[s] = ks.med(gp1, gp2)
-  kdept[s] = ks.depth(gp1, gp2)
-  kmcdf[s] = ks.mcdf(gp1, gp2)
+  # kdept[s] = ks.depth(gp1, gp2)
+  # kmedi[s] = ks.med(gp1, gp2)
+  # kmean[s] = ks.mean(gp1, gp2)
   
   toc()
   cat("\n")
 }
 
 mean(kdist < 0.05)
-mean(kmedi < 0.05)
-mean(kdept < 0.05)
-mean(kmcdf < 0.05)
-
 plot(kdist)
-plot(kmedi)
-plot(kdept)
-plot(kmcdf)
 
-boxplot(kdist, kmedi, kdept, kmcdf)
-
+boxplot(kdist)
 
