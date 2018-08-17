@@ -1,44 +1,50 @@
-edepth_multi = function(gmat, fmat_sorted) {
-  fmat = fmat_sorted
-  fdepths = depth_set(fmat)
-  gdepths = apply(gmat, 2, function(x) depth(x, fmat))
+library(extdepth)
+library(tictoc)
+
+# sims
+gp1d = function(fields = 100, mu = 0, l = 50, pts = 50) {
   
-  # get the allowed r values (for calculating the dCDF)
-  rvals = sort(unique(c(gdepths, fdepths)))
+  grid = 1:pts
+  distmat = as.matrix(dist(grid))
   
-  ged = rep(1, ncol(gmat))
-  for(g in 1:ncol(gmat)) {
-    for(f in 1:ncol(fmat)) {
-      for(r in rvals) {
-        dg = sum(gdepths[,g] <= r)
-        df = sum(fdepths[,f] <= r)
-        if(dg != df) {
-          break;
-        }
-      }
-      if (dg > df) {
-        ged[g] = (f-1) / ncol(gmat)
-        break;
-      }
-    }
+  # calc sigma with cov kernel
+  sigma = exp(-distmat / l)
+  
+  sigma.eig = eigen(sigma)
+  sigma.half = sigma.eig$vectors %*% diag(sqrt(sigma.eig$values)) %*% t(sigma.eig$vectors)
+  
+  gps = matrix(0, pts, fields)
+  for(f in 1:fields) {
+    gps[,f] = (sigma.half %*% rnorm(pts)) + mu
   }
-  ged
+  return(gps)
 }
-ks.depth = function(f, g) {
-  
-  f = edepth_sort(f)
-  fed = (1:ncol(f)) / ncol(f)
-  ged = edepth_multi(g, f)
-  
-  f.surv = rev(c(0, sort(fed)))
-  g.cdf = sapply(1:length(f.surv), function(x) mean(ged >= f.surv[x]))
-  f.cdf = rev(f.surv)
-  
-  ks = max(abs(f.cdf - g.cdf))
-  rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
-  ks_pval(rate*ks)
+plt_funs = function(f, g) {
+  f = as.matrix(f)
+  g = as.matrix(g)
+  plot(f[,1], type = "l", ylim = c(min(cbind(f, g)), max(cbind(f, g))), col = "red")
+  for(i in 2:ncol(f)) {
+    lines(f[,i], col = "red")
+  }
+  for(i in 1:ncol(g)) {
+    lines(g[,i], col = "blue")
+  }
 }
 
+# depth CDF
+depth = function(g, fmat) {
+  
+  # Computes the depth values of a function with respect to a set of functions (fmat)
+  fn = ncol(fmat)
+  depth = rep(0, length(g))
+  
+  for (row in 1:nrow(fmat)) {
+    diff = abs(sum(sign(g[row] - fmat[row,])))
+    depth[row] = 1 - (diff / fn)
+  }
+  
+  return(depth)
+}
 meandepth = function(gmat, fmat) {
   apply(gmat, 2, function(x) mean(depth(x, fmat)))
 }
@@ -57,28 +63,13 @@ ks.mean = function(f, g) {
   rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
   ks_pval(rate*ks)
 }
-
-cos_mu = cos(seq(-pi, pi, length.out = 50))/2
-sin_mu = sin(seq(-pi, pi, length.out = 50))/2
-
-gp1 = gp1d(mu = sin_mu, pts = 100, l = 500)
-gp2 = gp1d(mu = cos_mu, pts = 100, l = 500)
-
-plt_funs(gp1, gp2)
-ks.dist(gp1, gp2)
+ks_pval = function(t, n = 10) {
+  2*(sum(sapply(1:n, function(x) (-1)^(x-1) * exp(-2*(x^2)*t^2))))
+}
 
 
-
-f = gp1d(500, mu = sin_mu, pts = 100, l = 10)
-g = gp1d(500, mu = sin_mu, pts = 100, l = 10)
-
-plt_funs(f, g)
-ks.dist(f, g)
-ks.med(f, g)
-
-
-cos_mu = cos(seq(-pi, pi, length.out = 50)) / 4
-sin_mu = sin(seq(-pi, pi, length.out = 50)) / 4
+#### SIZE
+set.seed(1)
 
 sims = 1000
 kdist = rep(0, sims)
@@ -86,8 +77,8 @@ for(s in 1:sims) {
   tic("Total")
   cat("Simulation ", s, "\n")
   
-  gp1 = gp1d(500, mu = cos_mu, pts = 50, l = 10)
-  gp2 = gp1d(500, mu = sin_mu, pts = 50, l = 10)
+  gp1 = gp1d(500, mu = 0, pts = 50, l = 10)
+  gp2 = gp1d(500, mu = 0, pts = 50, l = 10)
   
   kdist[s] = ks.mean(gp1, gp2) 
   
@@ -100,3 +91,122 @@ plot(kdist)
 plt_funs(gp1, gp2)
 
 
+
+#### SIN AND COSINE MEANS
+mu1 = cos(seq(-2*pi, 2*pi, length.out = 50)) / 3
+mu2 = sin(seq(-pi, pi, length.out = 50)) / 3
+plot(mu1, type = "l")
+lines(mu2)
+
+set.seed(1)
+
+sims = 1000
+kdist = rep(0, sims)
+for(s in 1:sims) {
+  tic("Total")
+  cat("Simulation ", s, "\n")
+  
+  gp1 = gp1d(500, mu = mu1, pts = 50, l = 10)
+  gp2 = gp1d(500, mu = mu2, pts = 50, l = 10)
+  
+  kdist[s] = ks.mean(gp1, gp2) 
+  
+  toc()
+  cat("\n")
+}
+mean(kdist < 0.05)
+plot(kdist)
+
+plt_funs(gp1, gp2)
+
+
+
+#### TREND MEANS
+mu1 = seq(0, 1, length.out = 50)
+mu2 = seq(0, 0.25, length.out = 50)
+
+plot(mu1, type = "l")
+lines(mu2)
+
+set.seed(1)
+
+sims = 1000
+kdist = rep(0, sims)
+for(s in 1:sims) {
+  tic("Total")
+  cat("Simulation ", s, "\n")
+  
+  gp1 = gp1d(500, mu = mu1, pts = 50, l = 10)
+  gp2 = gp1d(500, mu = mu2, pts = 50, l = 10)
+  
+  kdist[s] = ks.mean(gp1, gp2) 
+  
+  toc()
+  cat("\n")
+}
+mean(kdist < 0.05)
+plot(kdist)
+
+plt_funs(gp1, gp2)
+
+
+
+#### POWER MEANS
+mu1 = (seq(0, 1, length.out = 50))
+mu2 = (seq(0, 1, length.out = 50))^4
+
+plot(mu1, type = "l")
+lines(mu2)
+
+set.seed(1)
+
+sims = 1000
+kdist = rep(0, sims)
+for(s in 1:sims) {
+  tic("Total")
+  cat("Simulation ", s, "\n")
+  
+  gp1 = gp1d(500, mu = mu1, pts = 50, l = 10)
+  gp2 = gp1d(500, mu = mu2, pts = 50, l = 10)
+  
+  kdist[s] = ks.mean(gp1, gp2) 
+  
+  toc()
+  cat("\n")
+}
+mean(kdist < 0.05)
+plot(kdist)
+
+plt_funs(gp1, gp2)
+
+
+
+
+#### GP MEANS
+set.seed(2)
+mu1 = rep(0, 50)
+mu2 = gp1d(fields = 1, l = 500)
+
+plot(mu1, type = "l")
+lines(mu2)
+
+set.seed(1)
+
+sims = 1000
+kdist = rep(0, sims)
+for(s in 1:sims) {
+  tic("Total")
+  cat("Simulation ", s, "\n")
+  
+  gp1 = gp1d(500, mu = mu1, pts = 50, l = 10)
+  gp2 = gp1d(500, mu = mu2, pts = 50, l = 10)
+  
+  kdist[s] = ks.mean(gp1, gp2) 
+  
+  toc()
+  cat("\n")
+}
+mean(kdist < 0.05)
+plot(kdist)
+
+plt_funs(gp1, gp2)
