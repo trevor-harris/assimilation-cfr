@@ -1,3 +1,4 @@
+rm(list = ls()); gc()
 library(extdepth)
 library(tictoc)
 
@@ -53,8 +54,8 @@ ks.mean = function(f, g) {
   ged = meandepth(g, f)
   
   f.surv = rev(c(0, sort(fed)))
-  g.cdf = sapply(1:length(f.surv), function(x) mean(ged >= f.surv[x]))
-  f.cdf = sapply(1:length(f.surv), function(x) mean(fed >= f.surv[x]))
+  g.cdf = sapply(1:length(f.surv), function(x) mean(ged > f.surv[x]))
+  f.cdf = sapply(1:length(f.surv), function(x) mean(fed > f.surv[x]))
   
   # plot(g.cdf, type = "l", col = "blue")
   # lines(f.cdf, col = "red")
@@ -63,8 +64,25 @@ ks.mean = function(f, g) {
   rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
   ks_pval(rate*ks)
 }
-ks_pval = function(t, n = 10) {
+ks_pval = function(t, n = 20) {
   2*(sum(sapply(1:n, function(x) (-1)^(x-1) * exp(-2*(x^2)*t^2))))
+}
+
+
+ks1.mean = function(f, g) {
+  fed = meandepth(f, f)
+  ged = meandepth(g, f)
+  
+  f.surv = rev(c(0, sort(fed)))
+  g.cdf = sapply(1:length(f.surv), function(x) mean(ged >= f.surv[x]))
+  f.cdf = seq(0, 1, length.out = length(g.cdf))
+  
+  # plot(g.cdf, type = "l", col = "blue")
+  # lines(f.cdf, col = "red")
+  
+  ks = max(abs(f.cdf - g.cdf))
+  rate = sqrt(ncol(g))
+  ks_pval(rate*ks)
 }
 
 
@@ -93,8 +111,8 @@ plt_funs(gp1, gp2)
 
 
 #### SIN AND COSINE MEANS
-mu1 = cos(seq(-2*pi, 2*pi, length.out = 50)) / 3
-mu2 = sin(seq(-pi, pi, length.out = 50)) / 3
+mu1 = cos(seq(-2*pi, 2*pi, length.out = 50))
+mu2 = sin(seq(-pi, pi, length.out = 50))
 plot(mu1, type = "l")
 lines(mu2)
 
@@ -114,7 +132,7 @@ for(s in 1:sims) {
   toc()
   cat("\n")
 }
-mean(kdist < 0.05)
+wave = mean(kdist < 0.05)
 plot(kdist)
 
 plt_funs(gp1, gp2)
@@ -144,7 +162,7 @@ for(s in 1:sims) {
   toc()
   cat("\n")
 }
-mean(kdist < 0.05)
+trend = mean(kdist < 0.05)
 plot(kdist)
 
 plt_funs(gp1, gp2)
@@ -183,23 +201,25 @@ plt_funs(gp1, gp2)
 
 
 #### GP MEANS
-set.seed(2)
-mu1 = rep(0, 50)
-mu2 = gp1d(fields = 1, l = 500)
+pts = 1000
+set.seed(5)
+mu1 = rep(0, pts)
+mu2 = gp1d(fields = 1, pts = pts, l = 500)
+mu2 = rep(0, pts)
 
 plot(mu1, type = "l")
 lines(mu2)
 
 set.seed(1)
 
-sims = 1000
+sims = 100
 kdist = rep(0, sims)
 for(s in 1:sims) {
   tic("Total")
   cat("Simulation ", s, "\n")
   
-  gp1 = gp1d(500, mu = mu1, pts = 50, l = 10)
-  gp2 = gp1d(500, mu = mu2, pts = 50, l = 10)
+  gp1 = gp1d(100, mu = mu1, pts = pts, l = 10)
+  gp2 = gp1d(100, mu = mu2, pts = pts, l = 10)
   
   kdist[s] = ks.mean(gp1, gp2) 
   
