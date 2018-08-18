@@ -5,8 +5,7 @@ library(extdepth)
 library(ncdf4)
 library(dplyr)
 library(reshape2)
-library(plotly)
-library(irlba)
+library(OpenImageR)
 
 # prepare data
 prep_prior = function(nc.prior) {
@@ -96,12 +95,17 @@ ks_pval = function(t, n = 20) {
 }
 
 # read ensembles and prior ncdf4 objects
-nc.post = nc_open('/Users/trevh/research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-nc.prior = nc_open('/Users/trevh/research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+# nc.post = nc_open('/Users/trevh/research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+# nc.prior = nc_open('/Users/trevh/research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+
+
+nc.post = nc_open('../research/climate_data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.prior = nc_open('../research/climate_data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 
 prior = prep_prior(nc.prior)
 
-times = as.integer(seq(1, 998, length.out = 20))
+# times = as.integer(seq(1, 998, length.out = 20))
+times = 1:998
 ksp = rep(0, length(times))
 
 for(t in 1:length(times)) {
@@ -116,4 +120,4 @@ for(t in 1:length(times)) {
   cat(times[t], ":", ksp[t], "\n")
 }
 
-p.adjust(ksp, n = 998, method = )
+ksp.adj = p.adjust(ksp, n = 998)
