@@ -94,8 +94,41 @@ ks_pval = function(t, n = 20) {
   2*(sum(sapply(1:n, function(x) (-1)^(x-1) * exp(-2*(x^2)*t^2))))
 }
 
-# pvals = read.csv("../research/assimilation-cfr/cfr/adjusted_pvals")$x
-pvals = read.csv("research/assimilation-cfr/cfr/adjusted_pvals")$x
+# plots
+remove_cr = function(cr, gmat) {
+  lower = cr$lower
+  upper = cr$upper
+  out = rowMeans((gmat - lower)*(lower > gmat) + (gmat - upper)*(upper < gmat))
+  matrix(out, 48, 72)
+}
+field_plot <- function(field, nc, main = "", downsamp = 2, zlim = c(-max(abs(field)), max(abs(field)))) {
+
+  lats = as.vector(nc$dim$lat$vals)[seq(1, 96, by=downsamp)]
+  lons = as.vector(nc$dim$lon$vals)[seq(1, 144, by=downsamp)]
+  dimnames(field) = list(lats, lons-180)
+  
+  field.gg = melt(field)
+  colnames(field.gg) = c("lat", "lon", "value")
+  
+  world = map_data("world")
+  world = world[world$long <= 178, ]
+  
+  zlim = c(-max(abs(field)), max(abs(field)))
+  
+  ggplot() +
+    geom_raster(data = field.gg, aes(x=lon, y=lat, fill=value)) +
+    # geom_contour(data = field.gg, aes(x=lon, y=lat, z=value)) +
+    geom_polygon(data = world, aes(x=long, y=lat, group=group), fill = NA, color="black") +
+    coord_cartesian() +
+    # scale_fill_distiller(palette = "Spectral", limits = zlim) +
+    scale_fill_gradient2(midpoint=0, low="blue", mid="white", high="red") +
+    theme_void() +
+    ggtitle(main) +
+    theme(plot.title = element_text(hjust = 0.5))
+}
+
+pvals = read.csv("../research/assimilation-cfr/cfr/adjusted_pvals")$x
+# pvals = read.csv("research/assimilation-cfr/cfr/adjusted_pvals")$x
 
 signif = as.numeric(pvals < 0.05)
 time = 1:998
@@ -108,12 +141,65 @@ plot(pexp)
 
 
 # inspect some of the times with the bigggest differences
-# nc.post = nc_open('../research/climate_data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-# nc.prior = nc_open('../research/climate_data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.post = nc_open('../research/climate_data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.prior = nc_open('../research/climate_data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 
-nc.post = nc_open('research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-nc.prior = nc_open('research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+# nc.post = nc_open('research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+# nc.prior = nc_open('research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 
+prior = prep_prior(nc.prior)
+prior = sapply(1:dim(prior)[3], function(x) down_sample_image(prior[,,x], 2))
+
+prior.depths = meandepth(prior, prior)
+
+prior.surv = rev(c(0, sort(prior.depths)))
+prior.cdf = sapply(1:length(prior.surv), function(x) mean(prior.depths > prior.surv[x]))
+
+
+##### CDF plots #####
+times = c(1, 300, 600, 998)
+for(t in times) {
+  
+  post = prep_post(nc.post, t)
+  post = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], 2))
+  
+  post.depths = meandepth(post, prior)
+  post.cdf = sapply(1:length(prior.surv), function(x) mean(post.depths > prior.surv[x]))
+  
+  cdfgg = data.frame(prior = prior.cdf, posterior = post.cdf)
+  cdfgg = melt(cdfgg)
+  cdfgg["depth"] = rep(seq(0, 1, length.out = 999), 2)
+  
+  plt.t = ggplot(cdfgg) +
+    geom_line(
+      aes(
+        x = depth,
+        y = value,
+        color = variable),
+      size = 0.9) +
+    theme_classic() +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    ggtitle(paste("Year ", t)) +
+    xlab("1 - Depth") + 
+    ylab("CDF")
+  print(plt.t)
+}
+
+# CDF of prior to get central regions
+prior.ranks = rank(prior.depths) / length(prior.depths)
+cr = central_region(prior, prior.ranks, 0.05)
+
+times = as.integer(seq(1, 998, length.out = 10))
+for(t in times) {
+  
+  post = prep_post(nc.post, t)
+  post = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], 2))
+  post.depths = meandepth(post, prior)
+  
+  print(field_plot(remove_cr(cr, post), nc.prior, main = paste0("Year ", t)))
+}
+
+##### MISC #####
 # smallest differences
 time = 2
 prior = prep_prior(nc.prior)
@@ -145,32 +231,6 @@ ggplot(cdfgg) +
   ggtitle(paste("Year ", time)) +
   xlab("1 - Depth")
 
-
-# medium differences
-time = 100
-post = prep_post(nc.post, time)
-post = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], 2))
-
-post.depths = meandepth(post, prior)
-post.cdf = sapply(1:length(prior.surv), function(x) mean(post.depths > prior.surv[x]))
-
-cdfgg = data.frame(prior = prior.cdf, posterior = post.cdf)
-cdfgg = melt(cdfgg)
-cdfgg["depth"] = rep(seq(0, 1, length.out = 999), 2)
-
-ggplot(cdfgg) +
-  geom_line(
-    aes(
-      x = depth,
-      y = value,
-      color = variable),
-    size = 0.9) +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  ggtitle(paste("Year ", time)) +
-  xlab("1 - Depth")
-
-
 # biggest difference
 time = which.min(pvals)
 post = prep_post(nc.post, time)
@@ -194,5 +254,12 @@ ggplot(cdfgg) +
   theme(plot.title = element_text(hjust = 0.5)) +
   ggtitle(paste("Year ", time)) +
   xlab("1 - Depth")
-  
 
+# image way
+remove_cr = function(lower, upper, gmat) {
+  out = rowMeans((gmat - lower)*(lower > gmat) + (gmat - upper)*(upper < gmat))
+  apply(matrix(out, 48, 72), 2, rev)
+}
+
+library(fields)
+image.plot(remove_cr(cr$lower, cr$upper, post))
