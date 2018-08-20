@@ -94,7 +94,8 @@ ks_pval = function(t, n = 20) {
   2*(sum(sapply(1:n, function(x) (-1)^(x-1) * exp(-2*(x^2)*t^2))))
 }
 
-pvals = read.csv("../research/assimilation-cfr/cfr/adjusted_pvals")$x
+# pvals = read.csv("../research/assimilation-cfr/cfr/adjusted_pvals")$x
+pvals = read.csv("research/assimilation-cfr/cfr/adjusted_pvals")$x
 
 signif = as.numeric(pvals < 0.05)
 time = 1:998
@@ -107,8 +108,11 @@ plot(pexp)
 
 
 # inspect some of the times with the bigggest differences
-nc.post = nc_open('../research/climate_data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-nc.prior = nc_open('../research/climate_data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+# nc.post = nc_open('../research/climate_data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+# nc.prior = nc_open('../research/climate_data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+
+nc.post = nc_open('research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.prior = nc_open('research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 
 # smallest differences
 time = 2
