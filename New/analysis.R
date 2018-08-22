@@ -95,13 +95,24 @@ ks_pval = function(t, n = 20) {
 }
 
 # plots
-remove_cr = function(cr, gmat) {
+remove_cr = function(cr, gmat, downsamp=1) {
   lower = cr$lower
   upper = cr$upper
   out = rowMeans((gmat - lower)*(lower > gmat) + (gmat - upper)*(upper < gmat))
-  matrix(out, 48, 72)
+
+  matrix(out, 96/downsamp, 144/downsamp)
 }
-field_plot <- function(field, nc, main = "", downsamp = 2, zlim = c(-max(abs(field)), max(abs(field)))) {
+remove_cr2 = function(cr, gmat, downsamp=1) {
+  gmat = post
+  lower = cr$lower
+  upper = cr$upper
+  out = (gmat - lower)*(lower > gmat) + (gmat - upper)*(upper < gmat)
+  out[out == 0] = NA
+  out = rowMeans(out, na.rm = TRUE)
+  out[is.nan(out)] = 0
+  matrix(out, 96/downsamp, 144/downsamp)
+}
+field_plot <- function(field, nc, main = "", downsamp = 1, zlim = c(-max(abs(field)), max(abs(field)))) {
 
   lats = as.vector(nc$dim$lat$vals)[seq(1, 96, by=downsamp)]
   lons = as.vector(nc$dim$lon$vals)[seq(1, 144, by=downsamp)]
@@ -116,7 +127,7 @@ field_plot <- function(field, nc, main = "", downsamp = 2, zlim = c(-max(abs(fie
   zlim = c(-max(abs(field)), max(abs(field)))
   
   ggplot() +
-    geom_raster(data = field.gg, aes(x=lon, y=lat, fill=value)) +
+    geom_raster(data = field.gg, aes(x=lon, y=lat, fill=value), interpolate = FALSE) +
     # geom_contour(data = field.gg, aes(x=lon, y=lat, z=value)) +
     geom_polygon(data = world, aes(x=long, y=lat, group=group), fill = NA, color="black") +
     coord_cartesian() +
@@ -127,41 +138,56 @@ field_plot <- function(field, nc, main = "", downsamp = 2, zlim = c(-max(abs(fie
     theme(plot.title = element_text(hjust = 0.5))
 }
 
-pvals = read.csv("../research/assimilation-cfr/cfr/adjusted_pvals")$x
-# pvals = read.csv("research/assimilation-cfr/cfr/adjusted_pvals")$x
+# pvals = read.csv("../research/assimilation-cfr/cfr/adjusted_pvals")$x
+pvals = read.csv("research/assimilation-cfr/cfr/adjusted_pvals")$x
 
 signif = as.numeric(pvals < 0.05)
 time = 1:998
 signif.model = glm(signif ~ time, family="binomial")
 
-plot(signif)
-lines(signif.model$fitted.values)
-pexp = -log10(pvals)
-plot(pexp)
+sig.logit = data.frame(time = time, sig = signif)
+ggplot(sig.logit, aes(x = time, y = sig)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(method = "glm", 
+              method.args = list(family = "binomial"), 
+              se = TRUE) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ylab("Significant") +
+  ggtitle("Significance over time")
+
+sig.exp = data.frame(time = time, pexp = -log10(pvals))
+ggplot(sig.exp, aes(x = time, y = pexp)) +
+  geom_point(alpha = 0.2) +
+  # geom_smooth() +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ylab("-log(pvalue)") +
+  ggtitle("Significance over time") 
 
 
 # inspect some of the times with the bigggest differences
-nc.post = nc_open('../research/climate_data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-nc.prior = nc_open('../research/climate_data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+# nc.post = nc_open('../research/climate_data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+# nc.prior = nc_open('../research/climate_data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 
-# nc.post = nc_open('research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-# nc.prior = nc_open('research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.post = nc_open('research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.prior = nc_open('research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+
+downsamp = 1
 
 prior = prep_prior(nc.prior)
-prior = sapply(1:dim(prior)[3], function(x) down_sample_image(prior[,,x], 2))
+prior = sapply(1:dim(prior)[3], function(x) down_sample_image(prior[,,x], downsamp))
 
 prior.depths = meandepth(prior, prior)
 
 prior.surv = rev(c(0, sort(prior.depths)))
 prior.cdf = sapply(1:length(prior.surv), function(x) mean(prior.depths > prior.surv[x]))
 
-
 ##### CDF plots #####
 times = c(1, 300, 600, 998)
 for(t in times) {
-  
   post = prep_post(nc.post, t)
-  post = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], 2))
+  post = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], downsamp))
   
   post.depths = meandepth(post, prior)
   post.cdf = sapply(1:length(prior.surv), function(x) mean(post.depths > prior.surv[x]))
@@ -169,6 +195,8 @@ for(t in times) {
   cdfgg = data.frame(prior = prior.cdf, posterior = post.cdf)
   cdfgg = melt(cdfgg)
   cdfgg["depth"] = rep(seq(0, 1, length.out = 999), 2)
+  
+  pval.t = formatC(pvals[t], format = "e", digits = 1)
   
   plt.t = ggplot(cdfgg) +
     geom_line(
@@ -179,87 +207,100 @@ for(t in times) {
       size = 0.9) +
     theme_classic() +
     theme(plot.title = element_text(hjust = 0.5)) +
-    ggtitle(paste("Year ", t)) +
+    ggtitle(paste0("Year ", t, " (p = ", pval.t, ")")) +
     xlab("1 - Depth") + 
     ylab("CDF")
   print(plt.t)
 }
 
+
+##### DIVERGENCE plots #####
 # CDF of prior to get central regions
 prior.ranks = rank(prior.depths) / length(prior.depths)
 cr = central_region(prior, prior.ranks, 0.05)
 
-times = as.integer(seq(1, 998, length.out = 10))
+# times = as.integer(seq(1, 998, length.out = 5))
+# times = c(1, 300, 600, 998)
 for(t in times) {
   
   post = prep_post(nc.post, t)
-  post = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], 2))
+  post = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], downsamp))
   post.depths = meandepth(post, prior)
   
-  print(field_plot(remove_cr(cr, post), nc.prior, main = paste0("Year ", t)))
+  pval.t = formatC(pvals[t], format = "e", digits = 1)
+  print(field_plot(remove_cr(cr, post, downsamp),
+                   nc.prior,
+                   downsamp = downsamp,
+                   main = paste0("Year ", t, " (p = ", pval.t, ")")))
 }
 
-##### MISC #####
-# smallest differences
-time = 2
-prior = prep_prior(nc.prior)
-post = prep_post(nc.post, time)
 
-prior = sapply(1:dim(prior)[3], function(x) down_sample_image(prior[,,x], 2))
-post = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], 2))
+##### AVERAGE ALL
+times = 1:998
+downsamp = 4
+
+# resetup prior
+prior = prep_prior(nc.prior)
+prior = sapply(1:dim(prior)[3], function(x) down_sample_image(prior[,,x], downsamp))
 
 prior.depths = meandepth(prior, prior)
-post.depths = meandepth(post, prior)
+prior.ranks = rank(prior.depths) / length(prior.depths)
+cr = central_region(prior, prior.ranks, 0.05)
 
-prior.surv = rev(c(0, sort(prior.depths)))
-post.cdf = sapply(1:length(prior.surv), function(x) mean(post.depths > prior.surv[x]))
-prior.cdf = sapply(1:length(prior.surv), function(x) mean(prior.depths > prior.surv[x]))
-
-cdfgg = data.frame(prior = prior.cdf, posterior = post.cdf)
-cdfgg = melt(cdfgg)
-cdfgg["depth"] = rep(seq(0, 1, length.out = 999), 2)
-
-ggplot(cdfgg) +
-  geom_line(
-    aes(
-      x = depth,
-      y = value,
-      color = variable),
-    size = 0.9) +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  ggtitle(paste("Year ", time)) +
-  xlab("1 - Depth")
-
-# biggest difference
-time = which.min(pvals)
-post = prep_post(nc.post, time)
-post = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], 2))
-
-post.depths = meandepth(post, prior)
-post.cdf = sapply(1:length(prior.surv), function(x) mean(post.depths > prior.surv[x]))
-
-cdfgg = data.frame(prior = prior.cdf, posterior = post.cdf)
-cdfgg = melt(cdfgg)
-cdfgg["depth"] = rep(seq(0, 1, length.out = 999), 2)
-
-ggplot(cdfgg) +
-  geom_line(
-    aes(
-      x = depth,
-      y = value,
-      color = variable),
-    size = 0.9) +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  ggtitle(paste("Year ", time)) +
-  xlab("1 - Depth")
-
-# image way
-remove_cr = function(lower, upper, gmat) {
-  out = rowMeans((gmat - lower)*(lower > gmat) + (gmat - upper)*(upper < gmat))
-  apply(matrix(out, 48, 72), 2, rev)
+temp = matrix(0, (96/downsamp)*(144/downsamp), length(times))
+for(t in 1:length(times)) {
+  post = prep_post(nc.post, times[t])
+  post = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], downsamp))
+  temp[,t] = as.vector(remove_cr(cr, post, downsamp))
+  
+  cat("Time ", times[t], "\n")
 }
 
-library(fields)
-image.plot(remove_cr(cr$lower, cr$upper, post))
+temp = matrix(rowMeans(temp), (96/downsamp), (144/downsamp))
+field_plot(temp, nc.post, main = "Average temperature difference", downsamp = 4)
+
+
+#### AVERAGE ANCIENT
+times = 1:200
+temp = matrix(0, (96/downsamp)*(144/downsamp), length(times))
+for(t in 1:length(times)) {
+  post = prep_post(nc.post, times[t])
+  post = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], downsamp))
+  temp[,t] = as.vector(remove_cr(cr, post, downsamp))
+  
+  cat("Time ", times[t], "\n")
+}
+
+temp = matrix(rowMeans(temp), (96/downsamp), (144/downsamp))
+field_plot(temp, nc.post, main = "Average temperature difference (First 200 Years)", downsamp = 4)
+
+
+#### AVERAGE MODERN
+times = 798:998
+temp = matrix(0, (96/downsamp)*(144/downsamp), length(times))
+for(t in 1:length(times)) {
+  post = prep_post(nc.post, times[t])
+  post = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], downsamp))
+  temp[,t] = as.vector(remove_cr(cr, post, downsamp))
+  
+  cat("Time ", times[t], "\n")
+}
+
+temp = matrix(rowMeans(temp), (96/downsamp), (144/downsamp))
+field_plot(temp, nc.post, main = "Average temperature difference (Last 200 Years)", downsamp = 4)
+
+
+#### AVERAGE SIGNIFICANT
+times = (1:998)[as.logical(signif)]
+temp = matrix(0, (96/downsamp)*(144/downsamp), length(times))
+for(t in 1:length(times)) {
+  post = prep_post(nc.post, times[t])
+  post = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], downsamp))
+  temp[,t] = as.vector(remove_cr(cr, post, downsamp))
+  
+  cat("Time ", times[t], "\n")
+}
+
+temp = matrix(rowMeans(temp), (96/downsamp), (144/downsamp))
+field_plot(temp, nc.post, main = "Average temperature difference (Significant Years)", downsamp = 4)
+
