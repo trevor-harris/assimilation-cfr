@@ -1,0 +1,12 @@
+# inputs
+
+#PBS -l walltime=20:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l naccesspolicy=shared
+#PBS -N ci2018
+#PBS -q stat
+
+cd $PBS_O_WORKDIR
+
+# Run the simulation for the given params
+Rscript cdf_2d.R ${F1} ${F2} ${D} ${L} ${I} 117 1000

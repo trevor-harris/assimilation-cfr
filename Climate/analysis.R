@@ -127,7 +127,7 @@ field_plot <- function(field, nc, main = "", downsamp = 1, zlim = c(-max(abs(fie
   zlim = c(-max(abs(field)), max(abs(field)))
   
   ggplot() +
-    geom_raster(data = field.gg, aes(x=lon, y=lat, fill=value), interpolate = FALSE) +
+    geom_raster(data = field.gg, aes(x=lon, y=lat, fill=value), interpolate = TRUE) +
     # geom_contour(data = field.gg, aes(x=lon, y=lat, z=value)) +
     geom_polygon(data = world, aes(x=long, y=lat, group=group), fill = NA, color="black") +
     coord_cartesian() +
@@ -139,7 +139,7 @@ field_plot <- function(field, nc, main = "", downsamp = 1, zlim = c(-max(abs(fie
 }
 
 # pvals = read.csv("../research/assimilation-cfr/cfr/adjusted_pvals")$x
-pvals = read.csv("research/assimilation-cfr/cfr/adjusted_pvals")$x
+pvals = read.csv("Climate/adjusted_pvals")$x
 
 signif = as.numeric(pvals < 0.05)
 time = 1:998
@@ -170,8 +170,8 @@ ggplot(sig.exp, aes(x = time, y = pexp)) +
 # nc.post = nc_open('../research/climate_data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 # nc.prior = nc_open('../research/climate_data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 
-nc.post = nc_open('research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-nc.prior = nc_open('research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.post = nc_open('data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.prior = nc_open('data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 
 downsamp = 1
 
@@ -237,7 +237,7 @@ for(t in times) {
 
 ##### AVERAGE ALL
 times = 1:998
-downsamp = 4
+downsamp = 1
 
 # resetup prior
 prior = prep_prior(nc.prior)
@@ -257,7 +257,7 @@ for(t in 1:length(times)) {
 }
 
 temp = matrix(rowMeans(temp), (96/downsamp), (144/downsamp))
-field_plot(temp, nc.post, main = "Average temperature difference", downsamp = 4)
+field_plot(temp, nc.post, main = "Average temperature difference", downsamp = downsamp)
 
 
 #### AVERAGE ANCIENT
@@ -272,7 +272,7 @@ for(t in 1:length(times)) {
 }
 
 temp = matrix(rowMeans(temp), (96/downsamp), (144/downsamp))
-field_plot(temp, nc.post, main = "Average temperature difference (First 200 Years)", downsamp = 4)
+field_plot(temp, nc.post, main = "Average temperature difference (First 200 Years)", downsamp = downsamp)
 
 
 #### AVERAGE MODERN
@@ -287,7 +287,7 @@ for(t in 1:length(times)) {
 }
 
 temp = matrix(rowMeans(temp), (96/downsamp), (144/downsamp))
-field_plot(temp, nc.post, main = "Average temperature difference (Last 200 Years)", downsamp = 4)
+field_plot(temp, nc.post, main = "Average temperature difference (Last 200 Years)", downsamp = downsamp)
 
 
 #### AVERAGE SIGNIFICANT
@@ -302,5 +302,5 @@ for(t in 1:length(times)) {
 }
 
 temp = matrix(rowMeans(temp), (96/downsamp), (144/downsamp))
-field_plot(temp, nc.post, main = "Average temperature difference (Significant Years)", downsamp = 4)
+field_plot(temp, nc.post, main = "Average temperature difference (Significant Years)", downsamp = downsamp)
 
