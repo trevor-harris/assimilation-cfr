@@ -130,15 +130,15 @@ field_plot <- function(field, nc, main = "", downsamp = 1, zlim = c(-max(abs(fie
 
 # function for creating file name with leading zeros
 # makes it easier to process them sequentially
-rename <- function(x){
+rename <- function(x, txt=''){
   if (x < 10) {
-    return(name <- paste('000',x,'plot.png',sep=''))
+    return(name <- paste('000',x, txt, 'plot.png',sep=''))
   }
   if (x < 100 && x >= 10) {
-    return(name <- paste('00',x,'plot.png', sep=''))
+    return(name <- paste('00',x, txt, 'plot.png', sep=''))
   }
   if (x >= 100) {
-    return(name <- paste('0', x,'plot.png', sep=''))
+    return(name <- paste('0', x, txt, 'plot.png', sep=''))
   }
 }
 
@@ -159,7 +159,7 @@ prior.ranks = rank(prior.depths) / length(prior.depths)
 cr = central_region(prior, prior.ranks, 0.05)
 
 #### AVERAGE SIGNIFICANT GIF
-times = (1:998)
+times = (201:998)
 # times = as.integer(seq(1, 998, length.out = 100))
 
 for(t in times) {
@@ -183,4 +183,34 @@ setwd("animation/")
 my_command <- 'convert *.png -delay 10 -loop 0 climate.gif'
 system(my_command)
 setwd(home)
+
+##### Separate section
+library(fda)
+library(extdepth)
+
+cw = CanadianWeather
+
+temps = unname(as.matrix(cw$dailyAv[,,1]))
+temps = cbind(temps, temps + 5, temps - 5)
+
+plot_cr(temps, alpha = 0.95, main = "5% CR")
+ggsave(paste0("animation2/", rename(1, "_cr_")), width = 5, height = 3.2)
+
+plot_cr(temps, alpha = 0.75, main = "25% CR")
+ggsave(paste0("animation2/", rename(2, "_cr_")), width = 5, height = 3.2)
+
+plot_cr(temps, alpha = 0.50, main = "50% CR")
+ggsave(paste0("animation2/", rename(3, "_cr_")), width = 5, height = 3.2)
+
+plot_cr(temps, alpha = 0.25, main = "75% CR")
+ggsave(paste0("animation2/", rename(4, "_cr_")), width = 5, height = 3.2)
+
+plot_cr(temps, alpha = 0.05, main = "95% CR")
+ggsave(paste0("animation2/", rename(5, "_cr_")), width = 5, height = 3.2)
+
+# home = getwd()
+# setwd("animation2/")
+# my_command <- 'convert *.png -delay 1000 cr.gif'
+# system(my_command)
+# setwd(home)
 

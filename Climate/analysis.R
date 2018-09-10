@@ -113,10 +113,10 @@ remove_cr2 = function(cr, gmat, downsamp=1) {
   matrix(out, 96/downsamp, 144/downsamp)
 }
 field_plot <- function(field, nc, main = "", downsamp = 1, zlim = c(-max(abs(field)), max(abs(field)))) {
-
+  
   lats = as.vector(nc$dim$lat$vals)[seq(1, 96, by=downsamp)]
   lons = as.vector(nc$dim$lon$vals)[seq(1, 144, by=downsamp)]
-  dimnames(field) = list(lats, lons-180)
+  dimnames(field) = list(lats, ifelse(lons >= 180, lons - 360, lons))
   
   field.gg = melt(field)
   colnames(field.gg) = c("lat", "lon", "value")
@@ -128,18 +128,17 @@ field_plot <- function(field, nc, main = "", downsamp = 1, zlim = c(-max(abs(fie
   
   ggplot() +
     geom_raster(data = field.gg, aes(x=lon, y=lat, fill=value), interpolate = TRUE) +
-    # geom_contour(data = field.gg, aes(x=lon, y=lat, z=value)) +
     geom_polygon(data = world, aes(x=long, y=lat, group=group), fill = NA, color="black") +
     coord_cartesian() +
-    # scale_fill_distiller(palette = "Spectral", limits = zlim) +
     scale_fill_gradient2(midpoint=0, low="blue", mid="white", high="red") +
     theme_void() +
     ggtitle(main) +
     theme(plot.title = element_text(hjust = 0.5))
 }
+save_dir = "../Presentation/results/"
 
 # pvals = read.csv("../research/assimilation-cfr/cfr/adjusted_pvals")$x
-pvals = read.csv("Climate/adjusted_pvals")$x
+pvals = read.csv("adjusted_pvals")$x
 
 signif = as.numeric(pvals < 0.05)
 time = 1:998
@@ -155,6 +154,8 @@ ggplot(sig.logit, aes(x = time, y = sig)) +
   theme(plot.title = element_text(hjust = 0.5)) +
   ylab("Significant") +
   ggtitle("Significance over time")
+ggsave(paste0(save_dir, "sig_time.png"), width = 5, height = 3.2)
+
 
 sig.exp = data.frame(time = time, pexp = -log10(pvals))
 ggplot(sig.exp, aes(x = time, y = pexp)) +
@@ -163,15 +164,15 @@ ggplot(sig.exp, aes(x = time, y = pexp)) +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
   ylab("-log(pvalue)") +
-  ggtitle("Significance over time") 
-
+  ggtitle("p-values over time")
+ggsave(paste0(save_dir, "pval_time.png"), width = 5, height = 3.2)
 
 # inspect some of the times with the bigggest differences
 # nc.post = nc_open('../research/climate_data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 # nc.prior = nc_open('../research/climate_data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 
-nc.post = nc_open('data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-nc.prior = nc_open('data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.post = nc_open('../data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.prior = nc_open('../data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 
 downsamp = 1
 
@@ -211,6 +212,8 @@ for(t in times) {
     xlab("1 - Depth") + 
     ylab("CDF")
   print(plt.t)
+  ggsave(paste0(save_dir, "year", t, "cdf.png"), width = 5, height = 3.2)
+  
 }
 
 
@@ -220,7 +223,7 @@ prior.ranks = rank(prior.depths) / length(prior.depths)
 cr = central_region(prior, prior.ranks, 0.05)
 
 # times = as.integer(seq(1, 998, length.out = 5))
-# times = c(1, 300, 600, 998)
+times = c(1, 300, 600, 998)
 for(t in times) {
   
   post = prep_post(nc.post, t)
@@ -232,6 +235,7 @@ for(t in times) {
                    nc.prior,
                    downsamp = downsamp,
                    main = paste0("Year ", t, " (p = ", pval.t, ")")))
+  ggsave(paste0(save_dir, "year", t, "div.png"), width = 5, height = 3.2)
 }
 
 
@@ -247,21 +251,21 @@ prior.depths = meandepth(prior, prior)
 prior.ranks = rank(prior.depths) / length(prior.depths)
 cr = central_region(prior, prior.ranks, 0.05)
 
-temp = matrix(0, (96/downsamp)*(144/downsamp), length(times))
-for(t in 1:length(times)) {
-  post = prep_post(nc.post, times[t])
-  post = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], downsamp))
-  temp[,t] = as.vector(remove_cr(cr, post, downsamp))
-  
-  cat("Time ", times[t], "\n")
-}
-
-temp = matrix(rowMeans(temp), (96/downsamp), (144/downsamp))
-field_plot(temp, nc.post, main = "Average temperature difference", downsamp = downsamp)
+# temp = matrix(0, (96/downsamp)*(144/downsamp), length(times))
+# for(t in 1:length(times)) {
+#   post = prep_post(nc.post, times[t])
+#   post = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], downsamp))
+#   temp[,t] = as.vector(remove_cr(cr, post, downsamp))
+#   
+#   cat("Time ", times[t], "\n")
+# }
+# 
+# temp = matrix(rowMeans(temp), (96/downsamp), (144/downsamp))
+# field_plot(temp, nc.post, main = "Average temperature difference", downsamp = downsamp)
 
 
 #### AVERAGE ANCIENT
-times = 1:200
+times = (1:200)[as.logical(signif[1:200])]
 temp = matrix(0, (96/downsamp)*(144/downsamp), length(times))
 for(t in 1:length(times)) {
   post = prep_post(nc.post, times[t])
@@ -273,10 +277,11 @@ for(t in 1:length(times)) {
 
 temp = matrix(rowMeans(temp), (96/downsamp), (144/downsamp))
 field_plot(temp, nc.post, main = "Average temperature difference (First 200 Years)", downsamp = downsamp)
+ggsave(paste0(save_dir, "ancient.png"), width = 5, height = 3.2)
 
 
 #### AVERAGE MODERN
-times = 798:998
+times = (798:998)[as.logical(signif[798:998])]
 temp = matrix(0, (96/downsamp)*(144/downsamp), length(times))
 for(t in 1:length(times)) {
   post = prep_post(nc.post, times[t])
@@ -288,6 +293,7 @@ for(t in 1:length(times)) {
 
 temp = matrix(rowMeans(temp), (96/downsamp), (144/downsamp))
 field_plot(temp, nc.post, main = "Average temperature difference (Last 200 Years)", downsamp = downsamp)
+ggsave(paste0(save_dir, "modern.png"), width = 5, height = 3.2)
 
 
 #### AVERAGE SIGNIFICANT
@@ -303,4 +309,39 @@ for(t in 1:length(times)) {
 
 temp = matrix(rowMeans(temp), (96/downsamp), (144/downsamp))
 field_plot(temp, nc.post, main = "Average temperature difference (Significant Years)", downsamp = downsamp)
+ggsave(paste0(save_dir, "average.png"), width = 5, height = 3.2)
 
+
+
+##### ACTUAL CLIMATE
+field_plot2 <- function(field, nc, main = "", downsamp = 1, zlim = c(-max(abs(field)), max(abs(field)))) {
+  
+  lats = as.vector(nc$dim$lat$vals)[seq(1, 96, by=downsamp)]
+  lons = as.vector(nc$dim$lon$vals)[seq(1, 144, by=downsamp)]
+  dimnames(field) = list(lats, ifelse(lons >= 180, lons - 360, lons))
+  
+  field.gg = melt(field)
+  colnames(field.gg) = c("lat", "lon", "value")
+  
+  world = map_data("world")
+  world = world[world$long <= 178, ]
+  
+  zlim = c(-max(abs(field)), max(abs(field)))
+  
+  ggplot() +
+    geom_raster(data = field.gg, aes(x=lon, y=lat, fill=value), interpolate = TRUE) +
+    geom_polygon(data = world, aes(x=long, y=lat, group=group), fill = NA, color="black") +
+    coord_cartesian() +
+    scale_fill_gradient2(midpoint=0, low="blue", mid="white", high="red") +
+    theme_void() +
+    ggtitle(main) +
+    theme(legend.position="none") + 
+    theme(plot.title = element_text(hjust = 0.5))
+}
+
+post = prep_post(nc.post, times[1])
+field_plot2(post[,,1], nc.post, main = "Posterior ensemble member", downsamp = downsamp)
+ggsave(paste0(save_dir, "posterior.png"), width = 5, height = 3.2)
+
+field_plot2(matrix(prior[,1], 96, 144), nc.post, main = "Prior Ensemble member (Year 1)", downsamp = downsamp)
+ggsave(paste0(save_dir, "prior.png"), width = 5, height = 3.2)
