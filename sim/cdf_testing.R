@@ -51,7 +51,7 @@ meandepth = function(gmat, fmat) {
 }
 ks.mean = function(f, g) {
   fed = meandepth(f, f)
-  ged = meandepth(g, f)
+  ged = meandepth(g, g)
   
   f.surv = rev(c(0, sort(fed)))
   g.cdf = sapply(1:length(f.surv), function(x) mean(ged > f.surv[x]))

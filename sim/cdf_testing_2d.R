@@ -55,17 +55,35 @@ depth = function(g, fmat) {
 meandepth = function(gmat, fmat) {
   apply(gmat, 2, function(x) mean(depth(x, fmat)))
 }
+# ks.mean = function(f, g) {
+#   fed = meandepth(f, f)
+#   ged = meandepth(g, f)
+#   
+#   f.surv = rev(c(0, sort(fed)))
+#   g.cdf = sapply(1:length(f.surv), function(x) mean(ged > f.surv[x]))
+#   f.cdf = sapply(1:length(f.surv), function(x) mean(fed > f.surv[x]))
+#   
+#   ks = max(abs(f.cdf - g.cdf))
+#   rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
+#   ks_pval(rate*ks)
+# }
 ks.mean = function(f, g) {
   fed = meandepth(f, f)
-  ged = meandepth(g, f)
+  ged = meandepth(g, g)
   
   f.surv = rev(c(0, sort(fed)))
-  g.cdf = sapply(1:length(f.surv), function(x) mean(ged > f.surv[x]))
-  f.cdf = sapply(1:length(f.surv), function(x) mean(fed > f.surv[x]))
+  gf.cdf = sapply(1:length(f.surv), function(x) mean(ged > f.surv[x]))
   
-  ks = max(abs(f.cdf - g.cdf))
+  g.surv = rev(c(0, sort(ged)))
+  fg.cdf = sapply(1:length(f.surv), function(x) mean(fed > g.surv[x]))
+  
+  uni = seq(0, 1, length.out = length(gf.cdf))
+  
   rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
-  ks_pval(rate*ks)
+  
+  ksf = max(abs(uni - gf.cdf))
+  ksg = max(abs(uni - fg.cdf))
+  ks_pval(rate*max(ksf, ksg))
 }
 ks_pval = function(t, n = 5) {
   2*(sum(sapply(1:n, function(x) (-1)^(x-1) * exp(-2*(x^2)*t^2))))

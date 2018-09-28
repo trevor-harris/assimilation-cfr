@@ -131,6 +131,8 @@ field_plot <- function(field, nc, main = "", downsamp = 1, zlim = c(-max(abs(fie
     geom_polygon(data = world, aes(x=long, y=lat, group=group), fill = NA, color="black") +
     coord_cartesian() +
     scale_fill_gradient2(midpoint=0, low="blue", mid="white", high="red") +
+    # scale_fill_gradient2(midpoint=0, low="#4393c3", mid="white", high="#d6604d") +
+    # scale_fill_gradient2(midpoint=0, low="#2166ac", mid="white", high="#b2182b") +
     theme_void() +
     ggtitle(main) +
     theme(plot.title = element_text(hjust = 0.5))
@@ -164,7 +166,7 @@ ggplot(sig.exp, aes(x = time, y = pexp)) +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
   ylab("-log(pvalue)") +
-  ggtitle("p-values over time")
+  ggtitle("-log(p-values) over time")
 ggsave(paste0(save_dir, "pval_time.png"), width = 5, height = 3.2)
 
 # inspect some of the times with the bigggest differences
@@ -209,8 +211,8 @@ for(t in times) {
     theme_classic() +
     theme(plot.title = element_text(hjust = 0.5)) +
     ggtitle(paste0("Year ", t, " (p = ", pval.t, ")")) +
-    xlab("1 - Depth") + 
-    ylab("CDF")
+    xlab("alpha") + 
+    ylab(paste0("Fraction of Images in C(X)"))
   print(plt.t)
   ggsave(paste0(save_dir, "year", t, "cdf.png"), width = 5, height = 3.2)
   
@@ -239,7 +241,7 @@ for(t in times) {
 }
 
 
-##### AVERAGE ALL
+##### AVERAGE ALL #####
 times = 1:998
 downsamp = 1
 
@@ -276,7 +278,7 @@ for(t in 1:length(times)) {
 }
 
 temp = matrix(rowMeans(temp), (96/downsamp), (144/downsamp))
-field_plot(temp, nc.post, main = "Average temperature difference (First 200 Years)", downsamp = downsamp)
+field_plot(temp, nc.post, main = "Average Exceedence (First 200 Years)", downsamp = downsamp)
 ggsave(paste0(save_dir, "ancient.png"), width = 5, height = 3.2)
 
 
@@ -292,7 +294,7 @@ for(t in 1:length(times)) {
 }
 
 temp = matrix(rowMeans(temp), (96/downsamp), (144/downsamp))
-field_plot(temp, nc.post, main = "Average temperature difference (Last 200 Years)", downsamp = downsamp)
+field_plot(temp, nc.post, main = "Average Exceedence (Last 200 Years)", downsamp = downsamp)
 ggsave(paste0(save_dir, "modern.png"), width = 5, height = 3.2)
 
 
@@ -308,12 +310,26 @@ for(t in 1:length(times)) {
 }
 
 temp = matrix(rowMeans(temp), (96/downsamp), (144/downsamp))
-field_plot(temp, nc.post, main = "Average temperature difference (Significant Years)", downsamp = downsamp)
+field_plot(temp, nc.post, main = "Average Exceedence (All Years)", downsamp = downsamp)
 ggsave(paste0(save_dir, "average.png"), width = 5, height = 3.2)
 
 
+#### AVERAGE SIGNIFICANT TS
+times = (1:998)
+temp = matrix(0, (96/downsamp)*(144/downsamp), length(times))
+for(t in 1:length(times)) {
+  post = prep_post(nc.post, times[t])
+  post = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], downsamp))
+  temp[,t] = as.vector(remove_cr(cr, post, downsamp))
+  
+  cat("Time ", times[t], "\n")
+}
 
-##### ACTUAL CLIMATE
+temp.ts = colMeans(temp)
+plot(temp.ts)
+
+
+##### ACTUAL CLIMATE ##### 
 field_plot2 <- function(field, nc, main = "", downsamp = 1, zlim = c(-max(abs(field)), max(abs(field)))) {
   
   lats = as.vector(nc$dim$lat$vals)[seq(1, 96, by=downsamp)]
@@ -332,7 +348,9 @@ field_plot2 <- function(field, nc, main = "", downsamp = 1, zlim = c(-max(abs(fi
     geom_raster(data = field.gg, aes(x=lon, y=lat, fill=value), interpolate = TRUE) +
     geom_polygon(data = world, aes(x=long, y=lat, group=group), fill = NA, color="black") +
     coord_cartesian() +
-    scale_fill_gradient2(midpoint=0, low="blue", mid="white", high="red") +
+    # scale_fill_gradient2(midpoint=0, low="#4393c3", mid="white", high="#d6604d") +
+    # scale_fill_gradient2(midpoint=0, low="#2166ac", mid="white", high="#b2182b") +
+    scale_fill_distiller(palette = "RdBu") +
     theme_void() +
     ggtitle(main) +
     theme(legend.position="none") + 
@@ -340,8 +358,8 @@ field_plot2 <- function(field, nc, main = "", downsamp = 1, zlim = c(-max(abs(fi
 }
 
 post = prep_post(nc.post, times[1])
-field_plot2(post[,,1], nc.post, main = "Posterior ensemble member", downsamp = downsamp)
+field_plot2(post[,,1], nc.post, main = "Posterior ensemble member (Year 1)", downsamp = downsamp)
 ggsave(paste0(save_dir, "posterior.png"), width = 5, height = 3.2)
 
-field_plot2(matrix(prior[,1], 96, 144), nc.post, main = "Prior Ensemble member (Year 1)", downsamp = downsamp)
+field_plot2(matrix(prior[,1], 96, 144), nc.post, main = "Prior ensemble member", downsamp = downsamp)
 ggsave(paste0(save_dir, "prior.png"), width = 5, height = 3.2)

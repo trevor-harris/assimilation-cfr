@@ -79,14 +79,14 @@ plot_cr_comp = function(fmat1, fmat2, xvals1, xvals2, alpha = 0.9, xlabel = "Tim
 
   cr.plot<- ggplot()
   if(plot.data==T){
-    cr.plot<- cr.plot + geom_point(data = fmat.gg1, #first dataset
+    cr.plot<- cr.plot + geom_line(data = fmat.gg1, #first dataset
                                    aes(x = Var1,
                                        y = value,
                                        group = Var2),
                                    color = "#FFB6C1",
                                    alpha = 0.3,
                                    size = 0.05) +
-      geom_point(data = fmat.gg2, #second dataset
+      geom_line(data = fmat.gg2, #second dataset
                  aes(x = Var1,
                      y = value,
                      group = Var2),
@@ -95,24 +95,24 @@ plot_cr_comp = function(fmat1, fmat2, xvals1, xvals2, alpha = 0.9, xlabel = "Tim
                  size = 0.05)
   }
   cr.plot<- cr.plot+
-    geom_point(data = cr.gg1,
+    geom_line(data = cr.gg1,
                aes(x = Var1,
                    y = value,
                    group = Var2),
                color = "#FF0000",
                size = 0.5) +
-    geom_point(data = med.gg1, #median
+    geom_line(data = med.gg1, #median
                aes(x = Var1,
                    y = value),
                color = "#8B0000",
                size = 0.5) +
-    geom_point(data = cr.gg2,
+    geom_line(data = cr.gg2,
                aes(x = Var1,
                    y = value,
                    group = Var2),
                color = "#0000FF",
                size = 0.5) +
-    geom_point(data = med.gg2,
+    geom_line(data = med.gg2,
                aes(x = Var1,
                    y = value),
                color = "#00008B",

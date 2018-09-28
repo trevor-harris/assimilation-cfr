@@ -9,4 +9,4 @@
 cd $PBS_O_WORKDIR
 
 # Run the simulation for the given params
-Rscript cdf_2d.R ${F1} ${F2} ${D} ${L} ${I} 117 1000
+Rscript cdf_2d.R ${F1} ${F2} ${D} ${L} ${I} 777 5000

@@ -78,17 +78,23 @@ depth = function(g, fmat) {
 meandepth = function(gmat, fmat) {
   apply(gmat, 2, function(x) mean(depth(x, fmat)))
 }
-ks.mean = function(f, g) {
+ks.da = function(f, g, ged) {
   fed = meandepth(f, f)
-  ged = meandepth(g, f)
+  ged = ged
   
   f.surv = rev(c(0, sort(fed)))
-  g.cdf = sapply(1:length(f.surv), function(x) mean(ged > f.surv[x]))
-  f.cdf = sapply(1:length(f.surv), function(x) mean(fed > f.surv[x]))
+  gf.cdf = sapply(1:length(f.surv), function(x) mean(ged > f.surv[x]))
   
-  ks = max(abs(f.cdf - g.cdf))
+  g.surv = rev(c(0, sort(ged)))
+  fg.cdf = sapply(1:length(f.surv), function(x) mean(fed > g.surv[x]))
+  
+  uni = seq(0, 1, length.out = length(gf.cdf))
+  
   rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
-  ks_pval(rate*ks)
+  
+  ksf = max(abs(uni - gf.cdf))
+  ksg = max(abs(uni - fg.cdf))
+  ks_pval(rate*max(ksf, ksg))
 }
 ks_pval = function(t, n = 20) {
   2*(sum(sapply(1:n, function(x) (-1)^(x-1) * exp(-2*(x^2)*t^2))))
@@ -108,6 +114,8 @@ prior = prep_prior(nc.prior)
 times = 1:998
 ksp = rep(0, length(times))
 
+prior.ed = meandepth(prior, prior)
+
 for(t in 1:length(times)) {
   post = prep_post(nc.post, times[t])
   
@@ -116,7 +124,7 @@ for(t in 1:length(times)) {
   post.t = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], 4))
   
   # test
-  ksp[t] = ks.mean(prior.t, post.t)
+  ksp[t] = ks.da(post.t, prior.t, prior.ed)
   cat(times[t], ":", ksp[t], "\n")
 }
 
