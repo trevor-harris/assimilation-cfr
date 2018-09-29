@@ -115,18 +115,19 @@ coverage = function(f, g) {
 ks_cdf = function(x, n = 10) {
   1 - 2*(sum(sapply(1:n, function(k) ((-1)^(k-1)) * exp(-2*(k^2)*(x^2)))))
 }
+
 coverage2 = function(f, g) {
   ffxd = xdepth(f, f)
   gfxd = xdepth(g, f)
   
-  ffr = sort(sapply(ffxd, function(y) mean(y >= ffxd)))
-  gfr = sort(sapply(gfxd, function(y) mean(y >= ffxd)))
+  ffr = sapply(sort(ffxd), function(y) mean(ffxd <= y))
+  gfr = sapply(sort(ffxd), function(y) mean(gfxd <= y))
   
   fgxd = xdepth(f, g)
   ggxd = xdepth(g, g)
   
-  fgr = sort(sapply(fgxd, function(y) mean(y >= ggxd)))
-  ggr = sort(sapply(ggxd, function(y) mean(y >= ggxd)))
+  fgr = sapply(sort(ggxd), function(y) mean(fgxd <= y))
+  ggr = sapply(sort(ggxd), function(y) mean(ggxd <= y))
   
   rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
   ksf = rate*max(abs(ffr - gfr))
