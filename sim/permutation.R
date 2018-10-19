@@ -85,6 +85,9 @@ cvmd.perm = function(f, g, perms=500) {
   cvmd.dist
 }
 
+perm.pval = function(est, table) {
+  mean(est > table)
+}
 
 f = gp1d(50)
 g = gp1d(50)
@@ -92,8 +95,55 @@ g = gp1d(50)
 perm.table = ksd.perm(f, g, 5000)
 hist(perm.table)
 
-cvmd.table = cvmd.perm(f, g, 1000)
+cvmd.table = cvmd.perm(f, g, 2000)
 plot(density(cvmd.table))
+
+xn = 100
+yn = 100
+
+#### SHIFT MEANS
+par1 = rep(0, 10)
+par2 = seq(0, 1, length.out = 10)
+
+set.seed(1)
+
+sims = 500
+trevor = matrix(0, length(par2), sims)
+regina = matrix(0, length(par2), sims)
+
+for(p in 1:length(par2)) {
+  tic("Total")
+  cat("Mean shift: ", par2[p], "\n")
+  for(s in 1:sims) {
+    gp1 = gp1d(xn, mu = par1[p], l = 10)
+    gp2 = gp1d(yn, mu = par2[p], l = 10)
+    
+    trevor[p,s] = perm.pval(ksd(gp1, gp2), ksd.table)
+    regina[p,s] = perm.pval(cvmd(gp1, gp2), cvmd.table)
+    
+  }
+  toc()
+  cat("\n")
+}
+location_summary = data.frame(power = c(rowMeans(regina < 0.05),
+                                        rowMeans(trevor < 0.05)),
+                              method = c(rep("QI", length(par2)), 
+                                         rep("KSD", length(par2))),
+                              meanshift = rep(round(par2, 1), 2))
+
+ggplot(location_summary, aes(meanshift, power, color = method)) +
+  geom_point() +
+  geom_path() +
+  geom_abline(intercept = 0.05, slope  = 0) +
+  theme_classic() +
+  ylab("Power") +
+  xlab("Mean Shift") + 
+  ggtitle("Power against mean changes")
+
+
+
+
+
 
 
 ks_cdf = function(x, n = 20) {
