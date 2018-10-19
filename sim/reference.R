@@ -107,32 +107,11 @@ coverage = function(f, g) {
   
   1 - ks_cdf(max(ksf, ksg))^2
 }
-
-
-dd_coverage = function(f, g) {
-  f = gp1
-  g = gp2
+quality = function(f, g) {
+  fxd = xdepth(f, f)
+  gxd = xdepth(g, f)
   
-  ffxd = xdepth(f, f)
-  gfxd = xdepth(g, f)
-  fgxd = xdepth(f, g)
-  ggxd = xdepth(g, g)
-  
-  tf = seq(0, 1, length.out = max(1000, 3*length(ffxd)))  
-  ffr = sapply(tf, function(y) mean(ffxd <= y))
-  gfr = sapply(tf, function(y) mean(gfxd <= y))
-  
-  tg = seq(0, 1, length.out = max(1000, 3*length(ggxd)))
-  fgr = sapply(tg, function(y) mean(fgxd <= y))
-  ggr = sapply(tg, function(y) mean(ggxd <= y))
-  
-  rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
-  
-  ks1 = rate*max(abs(ffr - fgr))
-  ks2 = rate*max(abs(gfr - ggr))
-  ks3 = rate*max(abs(ffr - gfr))
-  ks4 = rate*max(abs(fgr - ggr))
-  
-  1 - ks_cdf(max(ks1, ks2, ks3, ks4))^4
+  r = sapply(gxd, function(y) mean(y >= fxd))
+  1 - pnorm((mean(r) - 0.5) / sqrt((1/ncol(f) + 1/ncol(g))/12))
 }
 
