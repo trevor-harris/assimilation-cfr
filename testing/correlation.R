@@ -6,7 +6,7 @@ library(extdepth)
 library(tictoc)
 library(ggplot2)
 
-source("../research/assimilation-cfr/sim/reference.R")
+source("research/assimilation-cfr/sim/reference.R")
 
 ksd = function(f, g) {
   ffxd = xdepth(f, f)
@@ -28,7 +28,13 @@ ksd = function(f, g) {
   return(list(ksf = ksf, ksg = ksg))
 }
 
-sims = 2500
+ks_cdf = function(x, n = 20) {
+  if(x < 0.1) return(0)
+  1 - 2*(sum(sapply(1:n, function(k) ((-1)^(k-1)) * exp(-2*(k^2)*(x^2)))))
+}
+
+
+sims = 1000
 
 ksf = rep(0, sims)
 ksg = rep(0, sims)
@@ -37,8 +43,8 @@ for(s in 1:sims) {
   tic("Total")
   cat("Simulation ", s, "\n")
   
-  gp1 = gp1d(500)
-  gp2 = gp1d(500)
+  gp1 = gp1d(1000)
+  gp2 = gp1d(1000)
   
   ks = ksd(gp1, gp2)
   
@@ -49,9 +55,71 @@ for(s in 1:sims) {
   cat("\n")
 }
 
-plot(ksf, ksg)
-equal500 = cor.test(ksf, ksg)
+ksf1 = ksf
+ksg1 = ksg
 
+equal500 = cor.test(ksf, ksg)
+plot(ksf, ksg, main = paste0("Corr: ", round(equal500$estimate, 3)))
+
+f = gp1
+g = gp2
+
+rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
+cover = rate*sapply(1:1000, function(x) max(ksf[x], ksg[x]))
+
+t = seq(0, 2, length.out = 1000)
+cov_cdf = sapply(t, function(x) mean(cover <= x))
+bro_cdf = sapply(t, function(x) (ks_cdf(x)))
+plot(t, cov_cdf, type = "l", main = "Theoretical (red) v.s. Observed (black)")
+lines(t, bro_cdf, col = "red")
+
+
+
+
+
+
+
+ksf = rep(0, sims)
+ksg = rep(0, sims)
+
+for(s in 1:sims) {
+  tic("Total")
+  cat("Simulation ", s, "\n")
+  
+  gp1 = gp1d(1000)
+  gp2 = gp1d(1000)
+  
+  ks = ksd(gp1, gp2)
+  
+  ksf[s] = ks$ksf
+  ksg[s] = ks$ksg
+  
+  toc()
+  cat("\n")
+}
+
+ksf2 = ksf
+ksg2 = ksg
+
+ksfbig = c(ksf1, ksf2)
+ksgbig = c(ksg1, ksg2)
+
+
+
+equal500 = cor.test(ksfbig, ksgbig)
+plot(ksf, ksg, main = paste0("Corr: ", round(equal500$estimate, 3)))
+
+f = gp1
+g = gp2
+
+rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
+cover = rate*sapply(1:2000, function(x) max(ksfbig[x], ksgbig[x]))
+
+t = seq(0, 2, length.out = 1000)
+cov_cdf = sapply(t, function(x) mean(cover <= x))
+bro_cdf = sapply(t, function(x) (ks_cdf(x)))
+plot(t, cov_cdf, type = "l", main = "Theoretical (red) v.s. Observed (black)")
+lines(t, bro_cdf, col = "red")
 
 
 

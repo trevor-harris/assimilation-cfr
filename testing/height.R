@@ -8,7 +8,7 @@ library(reshape2)
 library(ggplot2)
 library(e1071)
 
-source("../research/assimilation-cfr/sim/reference.R")
+source("research/assimilation-cfr/sim/reference.R")
 
 height = function(g, fmat) {
   
@@ -140,26 +140,65 @@ ggplot(location_summary, aes(meanshift, power, color = method)) +
   xlab("Mean Shift") + 
   ggtitle("Power against mean changes")
 
+library(fdasrvf)
 
+coverage = function(f, g) {
+  f = gp1d(xn, sd = 1, l = 30)
+  g = gp1d(yn, sd = 0.1, l = 30)
+  h = gp1d(yn, sd = 10, l = 30)
+  
+  fxd = sort(xheight(f, f))
+  gxd = sort(xheight(g, f))
+  hxd = sort(xheight(h, f))
+  
+  fr = sapply(fxd, function(y) mean(fxd <= y))
+  gr = sapply(fxd, function(y) mean(gxd <= y))
+  hr = sapply(fxd, function(y) mean(hxd <= y))
+  
+  t = seq(0, 1, length.out = max(1000, 3*length(fxd)))
+  fr = sapply(t, function(y) mean(fxd <= y))
+  gr = sapply(t, function(y) mean(gxd <= y))
+  hr = sapply(t, function(y) mean(hxd <= y))
+  
+  plot(fr, type = "l")
+  lines(gr, col = "red")
+  lines(hr, col = "blue")
+  
+  qfr = qnorm(fr)
+  qfr = qfr[is.finite(qfr)]
+  
+  qgr = qnorm(gr)
+  qgr = qgr[is.finite(qgr)]
+  
+  t.test(fr, gr)$p.value
+  
+  ncol(g)*mean((fr - gr)^2)
+  ncol(h)*mean((fr - hr)^2)
+  }  
+  
 
 
 coverage = function(f, g) {
   f = gp1d(xn, sd = 1, l = 30)
   g = gp1d(yn, sd = 0.1, l = 30)
-  
+  h = gp1d(yn, sd = 10, l = 30)
   
   fxd = sort(xheight(f, f))
   gxd = sort(xheight(g, f))
-  
-  gmu = mean(gxd)
-  gsd = sd(gxd)
-  
+  hxd = sort(xheight(h, f))
   
   fr = sapply(fxd, function(y) mean(fxd <= y))
   gr = sapply(fxd, function(y) mean(gxd <= y))
+  hr = sapply(fxd, function(y) mean(hxd <= y))
+  
+  t = seq(0, 1, length.out = max(1000, 3*length(fxd)))
+  fr = sapply(t, function(y) mean(fxd <= y))
+  gr = sapply(t, function(y) mean(gxd <= y))
+  hr = sapply(t, function(y) mean(hxd <= y))
   
   plot(fr, type = "l")
   lines(gr, col = "red")
+  lines(hr, col = "blue")
   
   qfr = qnorm(fr)
   qfr = qfr[is.finite(qfr)]
