@@ -32,6 +32,29 @@ ksd = function(f, g) {
   max(ksf, ksg)
 }
 
+
+cvmd = function(f, g) {
+  ffxd = xdepth(f, f)
+  gfxd = xdepth(g, f)
+  fgxd = xdepth(f, g)
+  ggxd = xdepth(g, g)
+  
+  tf = seq(0, 1, length.out = max(1000, 3*length(ffxd)))  
+  ffr = sapply(tf, function(y) mean(ffxd <= y))
+  gfr = sapply(tf, function(y) mean(gfxd <= y))
+  
+  tg = seq(0, 1, length.out = max(1000, 3*length(ggxd)))
+  fgr = sapply(tg, function(y) mean(fgxd <= y))
+  ggr = sapply(tg, function(y) mean(ggxd <= y))
+  
+  rate = (ncol(g)*ncol(f)) / (ncol(g) + ncol(f))
+  
+  ksf = rate*mean((ffr - gfr)^2)
+  ksg = rate*mean((fgr - ggr)^2)
+  
+  max(ksf, ksg)
+}
+
 ksd.perm = function(f, g, perms=500) {
   h = cbind(f, g)
   
@@ -47,11 +70,30 @@ ksd.perm = function(f, g, perms=500) {
   ksd.dist
 }
 
-f = gp1d(100)
-g = gp1d(100)
+cvmd.perm = function(f, g, perms=500) {
+  h = cbind(f, g)
+  
+  hn = ncol(h)
+  fn = ncol(f)
+  
+  cvmd.dist = rep(0, perms)
+  
+  for(i in 1:perms) {
+    hstar = h[,sample(1:hn, hn)]
+    cvmd.dist[i] = cvmd(hstar[,1:ncol(f)], hstar[,-(1:ncol(f))])
+  }
+  cvmd.dist
+}
+
+
+f = gp1d(50)
+g = gp1d(50)
 
 perm.table = ksd.perm(f, g, 5000)
 hist(perm.table)
+
+cvmd.table = cvmd.perm(f, g, 1000)
+plot(density(cvmd.table))
 
 
 ks_cdf = function(x, n = 20) {
