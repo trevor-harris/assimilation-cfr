@@ -1,5 +1,4 @@
 rm(list = ls()); gc()
-library(extdepth)
 library(tictoc)
 
 # get args
@@ -34,7 +33,6 @@ gp2d = function(fields = 100, mu = 0, l = 30, pts = 30) {
 flatten = function(mat) {
   matrix(mat, prod(dim(mat)[1:2]), dim(mat)[3])
 }
-
 # depth CDF
 depth = function(g, fmat) {
   
@@ -49,36 +47,32 @@ depth = function(g, fmat) {
   
   return(depth)
 }
-meandepth = function(gmat, fmat) {
+xdepth = function(gmat, fmat) {
   apply(gmat, 2, function(x) mean(depth(x, fmat)))
 }
-ks_pval = function(t, n = 5) {
-  2*(sum(sapply(1:n, function(x) (-1)^(x-1) * exp(-2*(x^2)*t^2))))
+ks_cdf = function(x, n = 10) {
+  1 - 2*(sum(sapply(1:n, function(k) ((-1)^(k-1)) * exp(-2*(k^2)*(x^2)))))
 }
-ksd = function(f, g) {
+coverage = function(f, g) {
+  ffxd = xdepth(f, f)
+  gfxd = xdepth(g, f)
+  fgxd = xdepth(f, g)
+  ggxd = xdepth(g, g)
   
-  # how well does g fit in with f?
-  ff.ed = meandepth(f, f)
-  gf.ed = meandepth(g, f)
+  tf = seq(0, 1, length.out = max(1000, 3*length(ffxd)))  
+  ffr = sapply(tf, function(y) mean(ffxd <= y))
+  gfr = sapply(tf, function(y) mean(gfxd <= y))
   
-  # how well does f fit in with g?
-  fg.ed = meandepth(f, g)
-  gg.ed = meandepth(g, g)
-  
-  f.surv = rev(c(0, sort(ff.ed)))
-  gf.cdf = sapply(f.surv, function(x) mean(gf.ed > x))
-  
-  g.surv = rev(c(0, sort(gg.ed)))
-  fg.cdf = sapply(g.surv, function(x) mean(fg.ed > x))
-  
-  # how well do they fit with themselves?
-  uni = seq(0, 1, length.out = length(gf.cdf))
+  tg = seq(0, 1, length.out = max(1000, 3*length(ggxd)))
+  fgr = sapply(tg, function(y) mean(fgxd <= y))
+  ggr = sapply(tg, function(y) mean(ggxd <= y))
   
   rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
   
-  ksf = max(abs(uni - gf.cdf))
-  ksg = max(abs(uni - fg.cdf))
-  ks_pval(rate*max(ksf, ksg))
+  ksf = rate*max(abs(ffr - gfr))
+  ksg = rate*max(abs(fgr - ggr))
+  
+  1 - ks_cdf(max(ksf, ksg))^2
 }
 
 #### SIZE
@@ -95,7 +89,7 @@ for(s in 1:sims) {
   gp1 = flatten(gp1)
   gp2 = flatten(gp2)
 
-  kmain[s] = ksd(gp1, gp2)
+  kmain[s] = coverage(gp1, gp2)
 
   cat("Size: ", mean(kmain[1:s] < 0.05), "\n")
   toc()

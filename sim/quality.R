@@ -53,8 +53,8 @@ xdepth = function(gmat, fmat) {
 }
 
 
-f = gp1d()
-g = gp1d()
+f = gp1d(10)
+g = gp1d(10)
 
 fxd = xdepth(f, f)
 gxd = xdepth(g, f)
@@ -116,7 +116,7 @@ ks_cdf = function(x, n = 10) {
   1 - 2*(sum(sapply(1:n, function(k) ((-1)^(k-1)) * exp(-2*(k^2)*(x^2)))))
 }
 
-coverage2 = function(f, g) {
+coverage = function(f, g) {
   ffxd = xdepth(f, f)
   gfxd = xdepth(g, f)
   
@@ -130,24 +130,48 @@ coverage2 = function(f, g) {
   ggr = sapply(sort(ggxd), function(y) mean(ggxd <= y))
   
   rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
+  
   ksf = rate*max(abs(ffr - gfr))
   ksg = rate*max(abs(fgr - ggr))
   
   1 - ks_cdf(max(ksf, ksg))^2
 }
 
-set.seed(1023)
-sims = 500
+
+coverage2 = function(f, g) {
+  ffxd = xdepth(f, f)
+  gfxd = xdepth(g, f)
+  fgxd = xdepth(f, g)
+  ggxd = xdepth(g, g)
+
+  tf = seq(0, 1, length.out = max(1000, 3*length(ffxd)))  
+  ffr = sapply(tf, function(y) mean(ffxd <= y))
+  gfr = sapply(tf, function(y) mean(gfxd <= y))
+  
+  tg = seq(0, 1, length.out = max(1000, 3*length(ggxd)))
+  fgr = sapply(tf, function(y) mean(fgxd <= y))
+  ggr = sapply(tf, function(y) mean(ggxd <= y))
+  
+  rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
+  
+  ksf = rate*max(abs(ffr - gfr))
+  ksg = rate*max(abs(fgr - ggr))
+  
+  1 - ks_cdf(max(ksf, ksg))^2
+}
+
+set.seed(0723)
+sims = 1000
 regina = rep(0, sims)
 trevor = rep(0, sims)
 for(s in 1:sims) {
   tic("Total")
   cat("Simulation ", s, "\n")
   
-  gp1 = gp1d(l = 10)
-  gp2 = gp1d(l = 10)
+  gp1 = gp1d(50, l = 30)
+  gp2 = gp1d(50, l = 30)
   
-  regina[s] = quality(gp1, gp2) 
+  regina[s] = coverage(gp1, gp2)
   trevor[s] = coverage2(gp1, gp2)
   
   toc()
