@@ -1,0 +1,28 @@
+----------------------------------------
+Begin Torque Prologue (Mon Oct 22 15:14:30 2018)
+Job ID:           7797026.cc-mgmt1.campuscluster.illinois.edu
+Username:         trevorh2
+Group:            stat
+Job Name:         theory_approx
+Limits:           walltime=05:00:00,nodes=1:ppn=1,neednodes=1:ppn=1
+Job Queue:        stat
+Account:          stat
+Nodes:            ccc0036
+End Torque Prologue
+----------------------------------------
+----------------------------------------
+Begin Torque Epilogue (Mon Oct 22 15:32:20 2018)
+Job ID:           7797026.cc-mgmt1.campuscluster.illinois.edu
+Username:         trevorh2
+Group:            stat
+Job Name:         theory_approx
+Session:          85576
+Limits:           walltime=05:00:00,nodes=1:ppn=1,neednodes=1:ppn=1
+Resources:        cput=00:17:50,vmem=251804kb,walltime=00:17:50,mem=113932kb,energy_used=0
+Job Queue:        stat
+Account:          stat
+Nodes:            ccc0036
+rm: cannot remove '/tmp/passwd.tmp': No such file or directory
+rm: cannot remove '/tmp/group.tmp': No such file or directory
+End Torque Epilogue
+----------------------------------------

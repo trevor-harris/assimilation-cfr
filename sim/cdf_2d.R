@@ -8,7 +8,7 @@ f2 = as.integer(args[2])
 d = as.integer(args[3])
 l = as.integer(args[4])
 i = as.integer(args[5])
-seed = as.integer(args[6])
+seed = as.integer(args[6]) + i
 sims = as.integer(args[7])
 
 #### SIMULATION ####
@@ -50,29 +50,31 @@ depth = function(g, fmat) {
 xdepth = function(gmat, fmat) {
   apply(gmat, 2, function(x) mean(depth(x, fmat)))
 }
-ks_cdf = function(x, n = 10) {
+ks_cdf = function(x, n = 100) {
+  if(x < 0.3) return(0)
   1 - 2*(sum(sapply(1:n, function(k) ((-1)^(k-1)) * exp(-2*(k^2)*(x^2)))))
 }
-coverage = function(f, g) {
-  ffxd = xdepth(f, f)
-  gfxd = xdepth(g, f)
-  fgxd = xdepth(f, g)
-  ggxd = xdepth(g, g)
+sk.test = function(f, g) {
+  ff.xd = xdepth(f, f)
+  fg.xd = xdepth(f, g)
   
-  tf = seq(0, 1, length.out = max(1000, 3*length(ffxd)))  
-  ffr = sapply(tf, function(y) mean(ffxd <= y))
-  gfr = sapply(tf, function(y) mean(gfxd <= y))
+  gg.xd = xdepth(g, g)
+  gf.xd = xdepth(g, f)
   
-  tg = seq(0, 1, length.out = max(1000, 3*length(ggxd)))
-  fgr = sapply(tg, function(y) mean(fgxd <= y))
-  ggr = sapply(tg, function(y) mean(ggxd <= y))
+  tf = seq(0, 1, length.out = max(1000, 3*length(ff.xd)))  
+  ff.cdf = sapply(tf, function(y) mean(ff.xd <= y))
+  gf.cdf = sapply(tf, function(y) mean(gf.xd <= y))
+  
+  tg = seq(0, 1, length.out = max(1000, 3*length(gg.xd)))
+  fg.cdf = sapply(tg, function(y) mean(fg.xd <= y))
+  gg.cdf = sapply(tg, function(y) mean(gg.xd <= y))
   
   rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
   
-  ksf = rate*max(abs(ffr - gfr))
-  ksg = rate*max(abs(fgr - ggr))
+  ksf = rate*max(abs(ff.cdf - fg.cdf))
+  ksg = rate*max(abs(gf.cdf - gg.cdf))
   
-  1 - ks_cdf(max(ksf, ksg))^2
+  1 - ks_cdf(max(ksf, ksg))
 }
 
 #### SIZE
@@ -89,7 +91,7 @@ for(s in 1:sims) {
   gp1 = flatten(gp1)
   gp2 = flatten(gp2)
 
-  kmain[s] = coverage(gp1, gp2)
+  kmain[s] = sk.test(gp1, gp2)
 
   cat("Size: ", mean(kmain[1:s] < 0.05), "\n")
   toc()

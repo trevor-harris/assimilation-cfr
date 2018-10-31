@@ -1,0 +1,26 @@
+----------------------------------------
+Begin Torque Prologue (Mon Oct 22 15:54:50 2018)
+Job ID:           7797069.cc-mgmt1.campuscluster.illinois.edu
+Username:         trevorh2
+Group:            stat
+Job Name:         theory_approx
+Limits:           walltime=05:00:00,nodes=1:ppn=1,neednodes=1:ppn=1
+Job Queue:        stat
+Account:          stat
+Nodes:            ccc0036
+End Torque Prologue
+----------------------------------------
+----------------------------------------
+Begin Torque Epilogue (Mon Oct 22 16:12:30 2018)
+Job ID:           7797069.cc-mgmt1.campuscluster.illinois.edu
+Username:         trevorh2
+Group:            stat
+Job Name:         theory_approx
+Session:          95023
+Limits:           walltime=05:00:00,nodes=1:ppn=1,neednodes=1:ppn=1
+Resources:        cput=00:17:39,vmem=251976kb,walltime=00:17:40,mem=112872kb,energy_used=0
+Job Queue:        stat
+Account:          stat
+Nodes:            ccc0036
+End Torque Epilogue
+----------------------------------------

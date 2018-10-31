@@ -1,0 +1,28 @@
+----------------------------------------
+Begin Torque Prologue (Mon Oct 22 14:33:15 2018)
+Job ID:           7796904.cc-mgmt1.campuscluster.illinois.edu
+Username:         trevorh2
+Group:            stat
+Job Name:         perm_test
+Limits:           walltime=04:00:00,nodes=1:ppn=1,neednodes=1:ppn=1
+Job Queue:        stat
+Account:          stat
+Nodes:            golub231
+End Torque Prologue
+----------------------------------------
+----------------------------------------
+Begin Torque Epilogue (Mon Oct 22 16:21:37 2018)
+Job ID:           7796904.cc-mgmt1.campuscluster.illinois.edu
+Username:         trevorh2
+Group:            stat
+Job Name:         perm_test
+Session:          139302
+Limits:           walltime=04:00:00,nodes=1:ppn=1,neednodes=1:ppn=1
+Resources:        cput=01:48:21,vmem=222068kb,walltime=01:48:22,mem=84668kb,energy_used=0
+Job Queue:        stat
+Account:          stat
+Nodes:            golub231
+rm: cannot remove '/tmp/passwd.tmp': No such file or directory
+rm: cannot remove '/tmp/group.tmp': No such file or directory
+End Torque Epilogue
+----------------------------------------

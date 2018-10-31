@@ -21,7 +21,7 @@ gp1d = function(fields = 100, mu = 0, sd = 1, l = 50, pts = 50) {
   }
   return(gps)
 }
-gp2d = function(fields = 100, mu = 0, l = 30, pts = 30) {
+gp2d = function(fields = 100, mu = 0, sd = 1, l = 30, pts = 30) {
   grid = 1:pts
   grid = expand.grid(grid, grid)
   distmat = as.matrix(dist(grid))
@@ -34,14 +34,14 @@ gp2d = function(fields = 100, mu = 0, l = 30, pts = 30) {
   
   gps = array(0, dim=c(pts, pts, fields))
   for(f in 1:fields) {
-    gps[,,f] = (sigma.half %*% rnorm(pts^2)) + mu
+    gps[,,f] = (sigma.half %*% rnorm(pts^2, sd = sd)) + mu
   }
   return(gps)
 }
 flatten = function(mat) {
   matrix(mat, prod(dim(mat)[1:2]), dim(mat)[3])
 }
-plt_funs = function(f, g, main = "Plot") {
+plt_funs = function(f, g, main = "Functions") {
   
   if(missing(g)) {
     f = as.matrix(f)
@@ -82,31 +82,34 @@ xdepth = function(gmat, fmat) {
 }
 
 # SYM KS
-ks_cdf = function(x, n = 10) {
+ks_cdf = function(x, n = 100) {
+  if(x < 0.05) return(0)
   1 - 2*(sum(sapply(1:n, function(k) ((-1)^(k-1)) * exp(-2*(k^2)*(x^2)))))
 }
 
-coverage = function(f, g) {
-  ffxd = xdepth(f, f)
-  gfxd = xdepth(g, f)
-  fgxd = xdepth(f, g)
-  ggxd = xdepth(g, g)
+sk.test = function(f, g) {
+  ff.xd = xdepth(f, f)
+  fg.xd = xdepth(f, g)
   
-  tf = seq(0, 1, length.out = max(1000, 3*length(ffxd)))  
-  ffr = sapply(tf, function(y) mean(ffxd <= y))
-  gfr = sapply(tf, function(y) mean(gfxd <= y))
+  gg.xd = xdepth(g, g)
+  gf.xd = xdepth(g, f)
   
-  tg = seq(0, 1, length.out = max(1000, 3*length(ggxd)))
-  fgr = sapply(tg, function(y) mean(fgxd <= y))
-  ggr = sapply(tg, function(y) mean(ggxd <= y))
+  tf = seq(0, 1, length.out = max(1000, 3*length(ff.xd)))  
+  ff.cdf = sapply(tf, function(y) mean(ff.xd <= y))
+  gf.cdf = sapply(tf, function(y) mean(gf.xd <= y))
+  
+  tg = seq(0, 1, length.out = max(1000, 3*length(gg.xd)))
+  fg.cdf = sapply(tg, function(y) mean(fg.xd <= y))
+  gg.cdf = sapply(tg, function(y) mean(gg.xd <= y))
   
   rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
   
-  ksf = rate*max(abs(ffr - gfr))
-  ksg = rate*max(abs(fgr - ggr))
+  ksf = rate*max(abs(ff.cdf - fg.cdf))
+  ksg = rate*max(abs(gf.cdf - gg.cdf))
   
-  1 - ks_cdf(max(ksf, ksg))^2
+  1 - ks_cdf(max(ksf, ksg))
 }
+
 quality = function(f, g) {
   fxd = xdepth(f, f)
   gxd = xdepth(g, f)

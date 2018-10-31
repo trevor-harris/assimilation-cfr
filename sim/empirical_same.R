@@ -1,46 +1,40 @@
-set.seed(1023)
-sims = 500
-real = rep(0, sims)
-fake = rep(0, sims)
-for(s in 1:sims) {
-  tic("Total")
-  cat("Simulation ", s, "\n")
-  
-  f = gp1d(400)
-  g = gp1d(400)
-  
-  ffxd = rescale(xdepth(f, f))
-  gfxd = rescale(xdepth(g, f))
-  fgxd = rescale(xdepth(f, g))
-  ggxd = rescale(xdepth(g, g))
-  
-  ffr = sapply(sort(ffxd), function(y) mean(ffxd >= y))
-  gfr = sapply(sort(ffxd), function(y) mean(gfxd >= y))
-  fgr = sapply(sort(ggxd), function(y) mean(fgxd >= y))
-  ggr = sapply(sort(ggxd), function(y) mean(ggxd >= y))
-  
-  rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
-  
-  ksf1 = rate*max(abs(ffr - gfr))
-  ksg1 = rate*max(abs(fgr - ggr))
-  
-  real[s] = max(ksf1, ksg1)
-  
-  
-  tf = 1:length(ffxd) / length(ffxd)
-  ffr = sapply(tf, function(y) mean(ffxd >= y))
-  gfr = sapply(tf, function(y) mean(gfxd >= y))
-  
-  tg = 1:length(ggxd) / length(ggxd)
-  fgr = sapply(tg, function(y) mean(fgxd >= y))
-  ggr = sapply(tg, function(y) mean(ggxd >= y))
-  
-  ksf = rate*max(abs(ffr - gfr))
-  ksg = rate*max(abs(fgr - ggr))
-  
-  fake[s] = max(ksf, ksg)
-  
-  toc()
-  cat("Diff: ", mean((real[1:s] - fake[1:s])^2), "\n")
-  cat("\n")
+rm(list = ls()); gc()
+
+library(ggplot2)
+library(dplyr)
+
+getwd()
+
+source("research/assimilation-cfr/sim/reference.R")
+
+# second run (more reliable since higher iterations)
+dir = "research/assimilation-cfr/asymptotic/out/"
+files = list.files(dir)
+
+sims = data.frame()
+for(f in files) {
+  load(paste0(dir, f))
+  sims = rbind(sims, out)
 }
+
+t = seq(0, 2, length.out = 5000)
+perm.cdf = sapply(t, function(x) mean(sims$perms <= x))
+theo.cdf = sapply(t, function(x) (ks_cdf(x)))
+
+cdf.gg = data.frame(Method = rep(c("Permutation", "Kolmogorov"), each=length(t)),
+                    Value = c(t, t),
+                    CDF = c(perm.cdf, theo.cdf))
+
+ggplot(cdf.gg, aes(Value, CDF, color=Method)) +
+  geom_line() +
+  geom_vline(xintercept = t[min(which(perm.cdf > 0.95))], color="#00BFC4") +
+  geom_vline(xintercept = t[min(which(theo.cdf > 0.95))], color="#F8766D") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ggtitle("Kolmogorov Distribution v.s. Permutation Distribution") +
+  xlab("K Value") +
+  ylab("Probability")
+ggsave(paste0("research/assimilation-cfr/paper/misc/", "distribution.png"), width = 5, height = 3.2)
+
+
+t[min(which(perm.cdf > 0.95))] - t[min(which(theo.cdf > 0.95))]

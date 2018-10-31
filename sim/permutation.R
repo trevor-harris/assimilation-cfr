@@ -9,154 +9,84 @@ source("research/assimilation-cfr/sim/reference.R")
 
 library(microbenchmark)
 
+f = gp1d()
+g = gp1d()
+
 #### bootstrap the KS
-ksd = function(f, g) {
-  ffxd = xdepth(f, f)
-  gfxd = xdepth(g, f)
-  fgxd = xdepth(f, g)
-  ggxd = xdepth(g, g)
+sk.test = function(f, g) {
+  ff.xd = xdepth(f, f)
+  fg.xd = xdepth(f, g)
   
-  tf = seq(0, 1, length.out = max(1000, 3*length(ffxd)))  
-  ffr = sapply(tf, function(y) mean(ffxd <= y))
-  gfr = sapply(tf, function(y) mean(gfxd <= y))
+  gg.xd = xdepth(g, g)
+  gf.xd = xdepth(g, f)
   
-  tg = seq(0, 1, length.out = max(1000, 3*length(ggxd)))
-  fgr = sapply(tg, function(y) mean(fgxd <= y))
-  ggr = sapply(tg, function(y) mean(ggxd <= y))
+  tf = seq(0, 1, length.out = max(1000, 3*length(ff.xd)))  
+  ff.cdf = sapply(tf, function(y) mean(ff.xd <= y))
+  gf.cdf = sapply(tf, function(y) mean(gf.xd <= y))
+  
+  tg = seq(0, 1, length.out = max(1000, 3*length(gg.xd)))
+  fg.cdf = sapply(tg, function(y) mean(fg.xd <= y))
+  gg.cdf = sapply(tg, function(y) mean(gg.xd <= y))
   
   rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
   
-  ksf = rate*max(abs(ffr - gfr))
-  ksg = rate*max(abs(fgr - ggr))
+  ksf = rate*max(abs(ff.cdf - fg.cdf))
+  ksg = rate*max(abs(gf.cdf - gg.cdf))
   
   max(ksf, ksg)
 }
 
-
-cvmd = function(f, g) {
-  ffxd = xdepth(f, f)
-  gfxd = xdepth(g, f)
-  fgxd = xdepth(f, g)
-  ggxd = xdepth(g, g)
+skt.boot = function(f, g, perms=500) {
+  prog = as.integer(quantile(1:perms, 1:20/20))
   
-  tf = seq(0, 1, length.out = max(1000, 3*length(ffxd)))  
-  ffr = sapply(tf, function(y) mean(ffxd <= y))
-  gfr = sapply(tf, function(y) mean(gfxd <= y))
-  
-  tg = seq(0, 1, length.out = max(1000, 3*length(ggxd)))
-  fgr = sapply(tg, function(y) mean(fgxd <= y))
-  ggr = sapply(tg, function(y) mean(ggxd <= y))
-  
-  rate = (ncol(g)*ncol(f)) / (ncol(g) + ncol(f))
-  
-  ksf = rate*mean((ffr - gfr)^2)
-  ksg = rate*mean((fgr - ggr)^2)
-  
-  max(ksf, ksg)
-}
-
-ksd.perm = function(f, g, perms=500) {
   h = cbind(f, g)
-  
   hn = ncol(h)
   fn = ncol(f)
   
   ksd.dist = rep(0, perms)
   
+  tic()
   for(i in 1:perms) {
-    hstar = h[,sample(1:hn, hn)]
-    ksd.dist[i] = ksd(hstar[,1:ncol(f)], hstar[,-(1:ncol(f))])
+    hstar = h[,sample(1:hn, hn, replace = T)]
+    ksd.dist[i] = sk.test(hstar[,1:ncol(f)], hstar[,-(1:ncol(f))])
+  
+    if (i %in% prog)  {
+      cat(paste0(100*prog[which(prog == i)]/perms, "% done \n"))
+      toc()
+      cat("\n")
+      tic()
+    }
   }
   ksd.dist
 }
 
-cvmd.perm = function(f, g, perms=500) {
-  h = cbind(f, g)
-  
-  hn = ncol(h)
-  fn = ncol(f)
-  
-  cvmd.dist = rep(0, perms)
-  
-  for(i in 1:perms) {
-    hstar = h[,sample(1:hn, hn)]
-    cvmd.dist[i] = cvmd(hstar[,1:ncol(f)], hstar[,-(1:ncol(f))])
-  }
-  cvmd.dist
-}
-
-perm.pval = function(est, table) {
+boot.pval = function(est, table) {
   mean(est > table)
 }
 
-f = gp1d(50)
-g = gp1d(50)
+f = gp1d(500, pts = 500)
+g = gp1d(500, pts = 500)
 
-perm.table = ksd.perm(f, g, 5000)
-hist(perm.table)
-
-cvmd.table = cvmd.perm(f, g, 2000)
-plot(density(cvmd.table))
-
-xn = 100
-yn = 100
-
-#### SHIFT MEANS
-par1 = rep(0, 10)
-par2 = seq(0, 1, length.out = 10)
-
-set.seed(1)
-
-sims = 500
-trevor = matrix(0, length(par2), sims)
-regina = matrix(0, length(par2), sims)
-
-for(p in 1:length(par2)) {
-  tic("Total")
-  cat("Mean shift: ", par2[p], "\n")
-  for(s in 1:sims) {
-    gp1 = gp1d(xn, mu = par1[p], l = 10)
-    gp2 = gp1d(yn, mu = par2[p], l = 10)
-    
-    trevor[p,s] = perm.pval(ksd(gp1, gp2), ksd.table)
-    regina[p,s] = perm.pval(cvmd(gp1, gp2), cvmd.table)
-    
-  }
-  toc()
-  cat("\n")
-}
-location_summary = data.frame(power = c(rowMeans(regina < 0.05),
-                                        rowMeans(trevor < 0.05)),
-                              method = c(rep("QI", length(par2)), 
-                                         rep("KSD", length(par2))),
-                              meanshift = rep(round(par2, 1), 2))
-
-ggplot(location_summary, aes(meanshift, power, color = method)) +
-  geom_point() +
-  geom_path() +
-  geom_abline(intercept = 0.05, slope  = 0) +
-  theme_classic() +
-  ylab("Power") +
-  xlab("Mean Shift") + 
-  ggtitle("Power against mean changes")
-
-
-
-
-
-
-
-ks_cdf = function(x, n = 20) {
-  if(x < 0.1) return(0)
-  1 - 2*(sum(sapply(1:n, function(k) ((-1)^(k-1)) * exp(-2*(k^2)*(x^2)))))
-}
+boot.table = skt.boot(f, g, 1000)
+hist(boot.table, breaks = 20)
 
 t = seq(0, 2.1, length.out = 1000)
-cov_cdf = sapply(t, function(x) mean(perm.table < x))
+cov_cdf = sapply(t, function(x) mean(boot.table < x))
 bro_cdf = sapply(t, function(x) (ks_cdf(x)))
 
-plot(t, cov_cdf, type = "l", main = "Theoretical (red) v.s. Observed (black)")
-lines(t, bro_cdf, col = "red")
+cdf.gg = data.frame(Method = rep(c("Bootstrap", "Kolmogorov"), each=length(t)),
+                    Value = c(t, t),
+                    CDF = c(cov_cdf, bro_cdf))
+
+ggplot(cdf.gg, aes(Value, CDF, color=Method)) +
+  geom_line() +
+  geom_vline(xintercept = t[min(which(perm.cdf > 0.95))], color="#00BFC4") +
+  geom_vline(xintercept = t[min(which(theo.cdf > 0.95))], color="#F8766D") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ggtitle("Kolmogorov Distribution v.s. Permutation Distribution") +
+  xlab("K Value") +
+  ylab("Probability")
 
 
 

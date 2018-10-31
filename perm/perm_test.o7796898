@@ -1,0 +1,503 @@
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 256189 13.7     627482 33.6   418013 22.4
+Vcells 445434  3.4    8388608 64.0  1759046 13.5
+Simulation  1 
+Emprically:  0 
+Asymptotic:  0 
+Total: 88.476 sec elapsed
+
+Simulation  2 
+Emprically:  0 
+Asymptotic:  0 
+Total: 88.094 sec elapsed
+
+Simulation  3 
+Emprically:  0 
+Asymptotic:  0 
+Total: 86.892 sec elapsed
+
+Simulation  4 
+Emprically:  0 
+Asymptotic:  0 
+Total: 84.625 sec elapsed
+
+Simulation  5 
+Emprically:  0 
+Asymptotic:  0 
+Total: 84.919 sec elapsed
+
+Simulation  6 
+Emprically:  0 
+Asymptotic:  0 
+Total: 84.941 sec elapsed
+
+Simulation  7 
+Emprically:  0 
+Asymptotic:  0 
+Total: 84.777 sec elapsed
+
+Simulation  8 
+Emprically:  0 
+Asymptotic:  0 
+Total: 84.754 sec elapsed
+
+Simulation  9 
+Emprically:  0 
+Asymptotic:  0 
+Total: 84.819 sec elapsed
+
+Simulation  10 
+Emprically:  0 
+Asymptotic:  0 
+Total: 85.079 sec elapsed
+
+Simulation  11 
+Emprically:  0 
+Asymptotic:  0 
+Total: 84.781 sec elapsed
+
+Simulation  12 
+Emprically:  0 
+Asymptotic:  0 
+Total: 84.955 sec elapsed
+
+Simulation  13 
+Emprically:  0 
+Asymptotic:  0 
+Total: 84.983 sec elapsed
+
+Simulation  14 
+Emprically:  0 
+Asymptotic:  0 
+Total: 84.836 sec elapsed
+
+Simulation  15 
+Emprically:  0.06666667 
+Asymptotic:  0 
+Total: 84.889 sec elapsed
+
+Simulation  16 
+Emprically:  0.0625 
+Asymptotic:  0 
+Total: 84.653 sec elapsed
+
+Simulation  17 
+Emprically:  0.05882353 
+Asymptotic:  0 
+Total: 84.665 sec elapsed
+
+Simulation  18 
+Emprically:  0.05555556 
+Asymptotic:  0 
+Total: 84.851 sec elapsed
+
+Simulation  19 
+Emprically:  0.05263158 
+Asymptotic:  0 
+Total: 84.742 sec elapsed
+
+Simulation  20 
+Emprically:  0.05 
+Asymptotic:  0 
+Total: 84.558 sec elapsed
+
+Simulation  21 
+Emprically:  0.04761905 
+Asymptotic:  0 
+Total: 84.942 sec elapsed
+
+Simulation  22 
+Emprically:  0.04545455 
+Asymptotic:  0 
+Total: 84.808 sec elapsed
+
+Simulation  23 
+Emprically:  0.04347826 
+Asymptotic:  0 
+Total: 84.884 sec elapsed
+
+Simulation  24 
+Emprically:  0.04166667 
+Asymptotic:  0 
+Total: 84.889 sec elapsed
+
+Simulation  25 
+Emprically:  0.04 
+Asymptotic:  0 
+Total: 84.752 sec elapsed
+
+Simulation  26 
+Emprically:  0.03846154 
+Asymptotic:  0.03846154 
+Total: 84.685 sec elapsed
+
+Simulation  27 
+Emprically:  0.03703704 
+Asymptotic:  0.07407407 
+Total: 84.766 sec elapsed
+
+Simulation  28 
+Emprically:  0.03571429 
+Asymptotic:  0.07142857 
+Total: 84.748 sec elapsed
+
+Simulation  29 
+Emprically:  0.03448276 
+Asymptotic:  0.1034483 
+Total: 84.928 sec elapsed
+
+Simulation  30 
+Emprically:  0.03333333 
+Asymptotic:  0.1 
+Total: 84.886 sec elapsed
+
+Simulation  31 
+Emprically:  0.03225806 
+Asymptotic:  0.09677419 
+Total: 85.083 sec elapsed
+
+Simulation  32 
+Emprically:  0.03125 
+Asymptotic:  0.09375 
+Total: 84.888 sec elapsed
+
+Simulation  33 
+Emprically:  0.03030303 
+Asymptotic:  0.1212121 
+Total: 84.821 sec elapsed
+
+Simulation  34 
+Emprically:  0.02941176 
+Asymptotic:  0.1176471 
+Total: 84.975 sec elapsed
+
+Simulation  35 
+Emprically:  0.02857143 
+Asymptotic:  0.1142857 
+Total: 84.833 sec elapsed
+
+Simulation  36 
+Emprically:  0.02777778 
+Asymptotic:  0.1111111 
+Total: 84.659 sec elapsed
+
+Simulation  37 
+Emprically:  0.05405405 
+Asymptotic:  0.1081081 
+Total: 84.576 sec elapsed
+
+Simulation  38 
+Emprically:  0.05263158 
+Asymptotic:  0.1052632 
+Total: 84.622 sec elapsed
+
+Simulation  39 
+Emprically:  0.07692308 
+Asymptotic:  0.1025641 
+Total: 84.728 sec elapsed
+
+Simulation  40 
+Emprically:  0.075 
+Asymptotic:  0.1 
+Total: 84.495 sec elapsed
+
+Simulation  41 
+Emprically:  0.07317073 
+Asymptotic:  0.09756098 
+Total: 84.713 sec elapsed
+
+Simulation  42 
+Emprically:  0.07142857 
+Asymptotic:  0.0952381 
+Total: 84.735 sec elapsed
+
+Simulation  43 
+Emprically:  0.06976744 
+Asymptotic:  0.09302326 
+Total: 84.763 sec elapsed
+
+Simulation  44 
+Emprically:  0.06818182 
+Asymptotic:  0.09090909 
+Total: 84.717 sec elapsed
+
+Simulation  45 
+Emprically:  0.06666667 
+Asymptotic:  0.08888889 
+Total: 84.908 sec elapsed
+
+Simulation  46 
+Emprically:  0.06521739 
+Asymptotic:  0.08695652 
+Total: 84.722 sec elapsed
+
+Simulation  47 
+Emprically:  0.06382979 
+Asymptotic:  0.08510638 
+Total: 84.125 sec elapsed
+
+Simulation  48 
+Emprically:  0.0625 
+Asymptotic:  0.08333333 
+Total: 83.126 sec elapsed
+
+Simulation  49 
+Emprically:  0.06122449 
+Asymptotic:  0.08163265 
+Total: 83.173 sec elapsed
+
+Simulation  50 
+Emprically:  0.06 
+Asymptotic:  0.08 
+Total: 83.273 sec elapsed
+
+Simulation  51 
+Emprically:  0.05882353 
+Asymptotic:  0.07843137 
+Total: 83.103 sec elapsed
+
+Simulation  52 
+Emprically:  0.05769231 
+Asymptotic:  0.07692308 
+Total: 83.038 sec elapsed
+
+Simulation  53 
+Emprically:  0.05660377 
+Asymptotic:  0.0754717 
+Total: 83.22 sec elapsed
+
+Simulation  54 
+Emprically:  0.05555556 
+Asymptotic:  0.07407407 
+Total: 82.822 sec elapsed
+
+Simulation  55 
+Emprically:  0.05454545 
+Asymptotic:  0.07272727 
+Total: 82.74 sec elapsed
+
+Simulation  56 
+Emprically:  0.05357143 
+Asymptotic:  0.07142857 
+Total: 82.998 sec elapsed
+
+Simulation  57 
+Emprically:  0.05263158 
+Asymptotic:  0.07017544 
+Total: 82.972 sec elapsed
+
+Simulation  58 
+Emprically:  0.05172414 
+Asymptotic:  0.06896552 
+Total: 82.864 sec elapsed
+
+Simulation  59 
+Emprically:  0.05084746 
+Asymptotic:  0.06779661 
+Total: 82.995 sec elapsed
+
+Simulation  60 
+Emprically:  0.06666667 
+Asymptotic:  0.06666667 
+Total: 82.945 sec elapsed
+
+Simulation  61 
+Emprically:  0.06557377 
+Asymptotic:  0.06557377 
+Total: 83.02 sec elapsed
+
+Simulation  62 
+Emprically:  0.06451613 
+Asymptotic:  0.08064516 
+Total: 83.054 sec elapsed
+
+Simulation  63 
+Emprically:  0.07936508 
+Asymptotic:  0.07936508 
+Total: 83.017 sec elapsed
+
+Simulation  64 
+Emprically:  0.09375 
+Asymptotic:  0.078125 
+Total: 82.949 sec elapsed
+
+Simulation  65 
+Emprically:  0.09230769 
+Asymptotic:  0.09230769 
+Total: 82.935 sec elapsed
+
+Simulation  66 
+Emprically:  0.09090909 
+Asymptotic:  0.09090909 
+Total: 82.939 sec elapsed
+
+Simulation  67 
+Emprically:  0.08955224 
+Asymptotic:  0.08955224 
+Total: 82.953 sec elapsed
+
+Simulation  68 
+Emprically:  0.08823529 
+Asymptotic:  0.08823529 
+Total: 83.12 sec elapsed
+
+Simulation  69 
+Emprically:  0.08695652 
+Asymptotic:  0.08695652 
+Total: 83.086 sec elapsed
+
+Simulation  70 
+Emprically:  0.08571429 
+Asymptotic:  0.08571429 
+Total: 83.025 sec elapsed
+
+Simulation  71 
+Emprically:  0.08450704 
+Asymptotic:  0.08450704 
+Total: 83.172 sec elapsed
+
+Simulation  72 
+Emprically:  0.09722222 
+Asymptotic:  0.08333333 
+Total: 83.223 sec elapsed
+
+Simulation  73 
+Emprically:  0.09589041 
+Asymptotic:  0.08219178 
+Total: 83.14 sec elapsed
+
+Simulation  74 
+Emprically:  0.09459459 
+Asymptotic:  0.08108108 
+Total: 83.308 sec elapsed
+
+Simulation  75 
+Emprically:  0.1066667 
+Asymptotic:  0.08 
+Total: 83.037 sec elapsed
+
+Simulation  76 
+Emprically:  0.1052632 
+Asymptotic:  0.07894737 
+Total: 83.256 sec elapsed
+
+Simulation  77 
+Emprically:  0.1038961 
+Asymptotic:  0.07792208 
+Total: 83.428 sec elapsed
+
+Simulation  78 
+Emprically:  0.1025641 
+Asymptotic:  0.07692308 
+Total: 83.377 sec elapsed
+
+Simulation  79 
+Emprically:  0.1012658 
+Asymptotic:  0.07594937 
+Total: 83.125 sec elapsed
+
+Simulation  80 
+Emprically:  0.1 
+Asymptotic:  0.075 
+Total: 83.035 sec elapsed
+
+Simulation  81 
+Emprically:  0.09876543 
+Asymptotic:  0.07407407 
+Total: 82.948 sec elapsed
+
+Simulation  82 
+Emprically:  0.09756098 
+Asymptotic:  0.07317073 
+Total: 82.866 sec elapsed
+
+Simulation  83 
+Emprically:  0.09638554 
+Asymptotic:  0.07228916 
+Total: 83.041 sec elapsed
+
+Simulation  84 
+Emprically:  0.0952381 
+Asymptotic:  0.07142857 
+Total: 82.958 sec elapsed
+
+Simulation  85 
+Emprically:  0.09411765 
+Asymptotic:  0.07058824 
+Total: 83.058 sec elapsed
+
+Simulation  86 
+Emprically:  0.09302326 
+Asymptotic:  0.06976744 
+Total: 82.932 sec elapsed
+
+Simulation  87 
+Emprically:  0.09195402 
+Asymptotic:  0.06896552 
+Total: 82.884 sec elapsed
+
+Simulation  88 
+Emprically:  0.09090909 
+Asymptotic:  0.06818182 
+Total: 82.875 sec elapsed
+
+Simulation  89 
+Emprically:  0.08988764 
+Asymptotic:  0.06741573 
+Total: 83.028 sec elapsed
+
+Simulation  90 
+Emprically:  0.08888889 
+Asymptotic:  0.06666667 
+Total: 83.038 sec elapsed
+
+Simulation  91 
+Emprically:  0.08791209 
+Asymptotic:  0.06593407 
+Total: 83.032 sec elapsed
+
+Simulation  92 
+Emprically:  0.08695652 
+Asymptotic:  0.06521739 
+Total: 83.003 sec elapsed
+
+Simulation  93 
+Emprically:  0.08602151 
+Asymptotic:  0.06451613 
+Total: 82.966 sec elapsed
+
+Simulation  94 
+Emprically:  0.08510638 
+Asymptotic:  0.06382979 
+Total: 82.866 sec elapsed
+
+Simulation  95 
+Emprically:  0.08421053 
+Asymptotic:  0.06315789 
+Total: 82.83 sec elapsed
+
+Simulation  96 
+Emprically:  0.08333333 
+Asymptotic:  0.0625 
+Total: 83.047 sec elapsed
+
+Simulation  97 
+Emprically:  0.08247423 
+Asymptotic:  0.06185567 
+Total: 82.965 sec elapsed
+
+Simulation  98 
+Emprically:  0.08163265 
+Asymptotic:  0.06122449 
+Total: 83.071 sec elapsed
+
+Simulation  99 
+Emprically:  0.08080808 
+Asymptotic:  0.06060606 
+Total: 83.067 sec elapsed
+
+Simulation  100 
+Emprically:  0.08 
+Asymptotic:  0.06 
+Total: 83.215 sec elapsed
+
