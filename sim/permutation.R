@@ -5,7 +5,8 @@ library(extdepth)
 library(tictoc)
 library(ggplot2)
 
-source("research/assimilation-cfr/sim/reference.R")
+# source("research/assimilation-cfr/sim/reference.R")
+source("../research/assimilation-cfr/sim/reference.R")
 
 library(microbenchmark)
 
@@ -64,8 +65,8 @@ boot.pval = function(est, table) {
   mean(est > table)
 }
 
-f = gp1d(500, pts = 500)
-g = gp1d(500, pts = 500)
+f = gp1d(1000, pts = 500)
+g = gp1d(1000, pts = 500)
 
 boot.table = skt.boot(f, g, 1000)
 hist(boot.table, breaks = 20)
@@ -80,14 +81,14 @@ cdf.gg = data.frame(Method = rep(c("Bootstrap", "Kolmogorov"), each=length(t)),
 
 ggplot(cdf.gg, aes(Value, CDF, color=Method)) +
   geom_line() +
-  geom_vline(xintercept = t[min(which(perm.cdf > 0.95))], color="#00BFC4") +
-  geom_vline(xintercept = t[min(which(theo.cdf > 0.95))], color="#F8766D") +
+  geom_vline(xintercept = t[min(which(cov_cdf > 0.95))], color="#00BFC4") +
+  geom_vline(xintercept = t[min(which(bro_cdf > 0.95))], color="#F8766D") +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
-  ggtitle("Kolmogorov Distribution v.s. Permutation Distribution") +
+  ggtitle("Kolmogorov Distribution v.s. Bootstrap Distribution") +
   xlab("K Value") +
   ylab("Probability")
-
+ggsave(paste0("../research/assimilation-cfr/paper/misc/", "bootstrap.png"), width = 5, height = 3.2)
 
 
 

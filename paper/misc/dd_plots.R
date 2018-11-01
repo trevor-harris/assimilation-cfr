@@ -3,12 +3,36 @@ rm(list = ls()); gc()
 library(ggplot2)
 library(reshape2)
 library(extdepth)
-source('../assimilation-cfr/sim/reference.R')
+# source('../assimilation-cfr/sim/reference.R')
+source("../research/assimilation-cfr/sim/reference.R")
+
+xdepth = function(gmat, fmat) {
+  apply(gmat, 2, function(x) mean(depth(x, fmat)))
+}
+
+gmat = gp1d()
+fmat = gp1d()
+proj = 10
+
+pdepth = function(gmat, fmat, proj = 5000) {
+  u = matrix(rnorm(nrow(gmat) * proj), nrow(gmat), proj)
+  u = apply(u, 2, function(x) x / sqrt(sum(x^2)))
+  
+  Fu = t(u) %*% fmat
+  Gu = t(u) %*% gmat
+  
+  Fu.mu = apply(Fu, 1, median)
+  Fu.sig = apply(Fu, 1, mad)
+  
+  out = t(abs(t(Gu) - Fu.mu) / Fu.sig)
+
+  return(1 / (1 + apply(out, 2, max)))
+}
 
 set.seed(0426)
-mu = 2
-std = 2
-rng = 2
+mu = 0
+std = 1
+rng = 50
 pts = 100
 
 f = gp1d(pts = pts)
@@ -35,6 +59,12 @@ ggplot(dd, aes(Reference, Proposed, color = Group)) +
   xlab("Reference Depths") +
   ggtitle(paste0("DD-plot with G ~ GP(mu=", mu, ", sd=", std, ", l=", rng, ")"))
 
+
+mean(fgxd)
+mean(gfxd)
+
+sd(fgxd)
+sd(gfxd)
 
 # ggplot(dd, aes(Reference, Proposed, color = Group)) +
 #   geom_abline(intercept = 0, slope = 1, alpha = 0.7) +
