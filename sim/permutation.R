@@ -5,13 +5,10 @@ library(extdepth)
 library(tictoc)
 library(ggplot2)
 
-# source("research/assimilation-cfr/sim/reference.R")
-source("../research/assimilation-cfr/sim/reference.R")
+source("research/assimilation-cfr/sim/reference.R")
+# source("../research/assimilation-cfr/sim/reference.R")
 
 library(microbenchmark)
-
-f = gp1d()
-g = gp1d()
 
 #### bootstrap the KS
 sk.test = function(f, g) {
@@ -31,13 +28,20 @@ sk.test = function(f, g) {
   
   rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
   
-  ksf = rate*max(abs(ff.cdf - fg.cdf))
-  ksg = rate*max(abs(gf.cdf - gg.cdf))
+  # ks1 = max(abs(ff.cdf - fg.cdf))
+  # ks2 = max(abs(gf.cdf - gg.cdf))
+  # ks3 = rate*max(abs(ff.cdf - gf.cdf))
+  # ks4 = rate*max(abs(gg.cdf - fg.cdf))
   
-  max(ksf, ksg)
+  ks3 = rate*max(abs(ff.cdf - gf.cdf))
+  ks4 = rate*max(abs(gg.cdf - fg.cdf))
+  
+  # ks1 = sqrt(ncol(f))*max(abs(ff.cdf - fg.cdf))
+  # ks2 = sqrt(ncol(g))*max(abs(gf.cdf - gg.cdf))
+  
+  max(ks3, ks4)
 }
-
-skt.boot = function(f, g, perms=500) {
+skt.perm = function(f, g, perms=500) {
   prog = as.integer(quantile(1:perms, 1:20/20))
   
   h = cbind(f, g)
@@ -48,9 +52,9 @@ skt.boot = function(f, g, perms=500) {
   
   tic()
   for(i in 1:perms) {
-    hstar = h[,sample(1:hn, hn, replace = T)]
+    hstar = h[,sample(1:hn, hn, replace = F)]
     ksd.dist[i] = sk.test(hstar[,1:ncol(f)], hstar[,-(1:ncol(f))])
-  
+    
     if (i %in% prog)  {
       cat(paste0(100*prog[which(prog == i)]/perms, "% done \n"))
       toc()
@@ -61,34 +65,51 @@ skt.boot = function(f, g, perms=500) {
   ksd.dist
 }
 
-boot.pval = function(est, table) {
-  mean(est > table)
-}
 
-f = gp1d(1000, pts = 500)
-g = gp1d(1000, pts = 500)
+set.seed(1023)
+n = 400
+pts = 10
+infil = 5
+mu = 0
+sd = 1
+rng = 10
+f = gp1d(fields = n, mu = 0, sd = 1, pts = pts, l = rng)
+g = gp1d(fields = n, mu = mu, sd = sd, pts = pts, l = rng)
 
-boot.table = skt.boot(f, g, 1000)
-hist(boot.table, breaks = 20)
+f = apply(f, 2, function(x) smooth.spline(x, nknots = 10)$y)
+g = apply(g, 2, function(x) smooth.spline(x, nknots = 10)$y)
+
+f = apply(f, 2, function(x) spline(1:pts, x, n = infil*pts)$y)
+g = apply(g, 2, function(x) spline(1:pts, x, n = infil*pts)$y)
+
+# plt_funs(f, g)
+
+perm.table = skt.perm(f, g, 1000)
+
+# rate1 = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
+# rate2 = sqrt(ncol(f))
+# perm.table2 = rate1*perm.table
 
 t = seq(0, 2.1, length.out = 1000)
-cov_cdf = sapply(t, function(x) mean(boot.table < x))
-bro_cdf = sapply(t, function(x) (ks_cdf(x)))
+perm_cdf = sapply(t, function(x) mean(perm.table < x))
+asym_cdf = sapply(t, function(x) (ks_cdf(x)))
 
-cdf.gg = data.frame(Method = rep(c("Bootstrap", "Kolmogorov"), each=length(t)),
+cdf.gg = data.frame(Method = rep(c("Permutation", "Kolmogorov"), each=length(t)),
                     Value = c(t, t),
-                    CDF = c(cov_cdf, bro_cdf))
+                    CDF = c(perm_cdf, asym_cdf))
 
 ggplot(cdf.gg, aes(Value, CDF, color=Method)) +
   geom_line() +
-  geom_vline(xintercept = t[min(which(cov_cdf > 0.95))], color="#00BFC4") +
-  geom_vline(xintercept = t[min(which(bro_cdf > 0.95))], color="#F8766D") +
+  geom_vline(xintercept = t[min(which(perm_cdf > 0.95))], color="#00BFC4") +
+  geom_vline(xintercept = t[min(which(asym_cdf > 0.95))], color="#F8766D") +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
-  ggtitle("Kolmogorov Distribution v.s. Bootstrap Distribution") +
-  xlab("K Value") +
-  ylab("Probability")
-ggsave(paste0("../research/assimilation-cfr/paper/misc/", "bootstrap.png"), width = 5, height = 3.2)
+  ggtitle("Kolmogorov Distribution v.s. Permutation Distribution") +
+  xlab("t") +
+  ylab("P(K < t)")
+
+# ggsave(paste0("../research/assimilation-cfr/paper/misc/", "bootstrap.png"), width = 5, height = 3.2)
+
 
 
 

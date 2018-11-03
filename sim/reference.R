@@ -104,10 +104,12 @@ sk.test = function(f, g) {
   
   rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
   
-  ksf = rate*max(abs(ff.cdf - fg.cdf))
-  ksg = rate*max(abs(gf.cdf - gg.cdf))
+  ks1 = rate*max(abs(ff.cdf - fg.cdf))
+  ks2 = rate*max(abs(gf.cdf - gg.cdf))
+  ks3 = rate*max(abs(ff.cdf - gg.cdf))
+  ks4 = rate*max(abs(fg.cdf - gf.cdf))
   
-  1 - ks_cdf(max(ksf, ksg))
+  1 - ks_cdf(max(ks1, ks2, ks3, ks4))
 }
 
 quality = function(f, g) {
