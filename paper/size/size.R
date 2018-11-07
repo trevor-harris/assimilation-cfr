@@ -1,84 +1,57 @@
 rm(list = ls()); gc()
+library(tictoc)
 
-library(ggplot2)
-library(dplyr)
+# get args
+args = commandArgs(TRUE)
+n = as.double(args[1])
+d = as.integer(args[2])
+l = as.integer(args[3])
+i = as.integer(args[4])
+seed = as.integer(args[5]) + i
+pts = as.integer(args[6])
+sims = as.integer(args[7])
 
-getwd()
+source("/home/trevorh2/assimilation-cfr/code/depth_tests.R")
+source("/home/trevorh2/assimilation-cfr/code/depths.R")
+source("/home/trevorh2/assimilation-cfr/code/simulation.R")
 
-# second run (more reliable since higher iterations)
-dir = "../paper/size/out/"
-files = list.files(dir)
-sims = matrix(0, length(files), 7)
-for(f in files) {
-  load(paste0(dir, f))
-  sims[which(files == f),] = out
+#### SIZE
+set.seed(seed)
+
+k.xd = matrix(0, sims, 2)
+k.pd = matrix(0, sims, 2)
+
+q.xd = matrix(0, sims, 2)
+q.pd = matrix(0, sims, 2)
+
+
+for(s in 1:sims) {
+  tic("Total")
+  cat("Simulation ", s, "\n")
+  
+  f = gp1d(fields = n, pts = pts, l = l)
+  g = gp1d(fields = n+1, pts = pts, l = l)
+  
+  f = apply(f, 2, function(x) spline(1:pts, x, n = d*pts)$y)
+  g = apply(g, 2, function(x) spline(1:pts, x, n = d*pts)$y)
+  
+  k.xd[s,] = kolm.xd(f, g)
+  k.pd[s,] = kolm.pd(f, g)
+  
+  q.xd[s,] = quality.xd(f, g)
+  q.pd[s,] = quality.pd(f, g)
+  
+  toc()
 }
 
-sims = as.data.frame(sims)
-names(sims) = c("Seed", "Sims", "PriorFields", "PostFields", "Dimension", "Range", "Size")
+size = data.frame(stat = c(k.xd[,1], k.pd[,1], q.xd[,1], q.pd[,1]),
+                  pval = c(k.xd[,2], k.pd[,2], q.xd[,2], q.pd[,2]),
+		  method = rep(c("K_XD", "K_PD", "Q_XD", "Q_PD"), each=500),
+                  sims = sims,
+                  pts = pts,
+                  functions = n,
+                  range = l,
+                  seed = seed)
 
-save_dir = "../paper/size/"
-
-sims = sims %>%
-  mutate(Range = as.factor(Range),
-         Dimension = as.factor(Dimension),
-         PriorFields = as.factor(PriorFields),
-         PostFields = as.factor(PostFields))
-
-names(sims) = c("Seed", "Sims", "XFields", "YFields","Dimension", "Smoothness", "Size")
-levels(sims$Dimension) = c("10 x 10","20 x 20", "30 x 30")
-sims$XFields = factor(sims$XFields, levels = c("100", "500", "1000"), ordered = TRUE)
-sims$Smoothness = factor(sims$Smoothness, levels = c("1", "5", "10"), ordered = TRUE)
-
-# Dim vs Range
-ggplot(data = sims, aes(x = Dimension, y = Size, color = Smoothness)) +
-  # geom_point() +
-  geom_boxplot() +
-  geom_abline(intercept = 0.05, slope = 0) +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  ggtitle("Size v.s. Dimension and Range")
-ggsave(paste0(save_dir, "size1.png"), width = 5, height = 3.2)
-
-# Dim vs Prior
-ggplot(data = sims, aes(x = Dimension, y = Size, color = XFields)) +
-  # geom_point() +
-  geom_boxplot() +
-  geom_abline(intercept = 0.05, slope = 0) +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  ggtitle("Size v.s. Dimension and #X Fields")
-ggsave(paste0(save_dir, "size2.png"), width = 5, height = 3.2)
-
-# Prior vs Range
-ggplot(data = sims, aes(x = XFields, y = Size, color = Smoothness)) +
-  # geom_point() +
-  geom_boxplot() +
-  geom_abline(intercept = 0.05, slope = 0) +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  ggtitle("Size by Number of fields in X and Smoothness") +
-  xlab("Number of fields in X")
-ggsave(paste0(save_dir, "size3.png"), width = 5, height = 3.2)
-
-# Prior vs Range
-ggplot(data = sims[sims["XFields"] != "100",], aes(x = XFields, y = Size, color = Smoothness)) +
-  # geom_point() +
-  geom_boxplot() +
-  geom_abline(intercept = 0.05, slope = 0) +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  ggtitle("Size by Number of fields in X and Smoothness") +
-  xlab("Number of fields in X")
-ggsave(paste0(save_dir, "size3b.png"), width = 5, height = 3.2)
-
-# Prior vs Post
-ggplot(data = sims, aes(x = XFields, y = Size, color = YFields)) +
-  # geom_point() +
-  geom_boxplot() +
-  geom_abline(intercept = 0.05, slope = 0) +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  ggtitle("Size v.s. #X Fields and #Y Fields")
-ggsave(paste0(save_dir, "size4.png"), width = 5, height = 3.2)
+saveRDS(size, file = paste0("/home/trevorh2/size/output/sim",i,".RDS"))
 

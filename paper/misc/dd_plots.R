@@ -7,7 +7,7 @@ source('../assimilation-cfr/sim/reference.R')
 # source("../research/assimilation-cfr/sim/reference.R")
 
 xdepth = function(gmat, fmat) {
-  apply(gmat, 2, function(x) mean(depth(x, fmat)))
+  sapply(gmat, function(x) mean(depth(x, fmat)))
 }
 
 gmat = gp1d()
