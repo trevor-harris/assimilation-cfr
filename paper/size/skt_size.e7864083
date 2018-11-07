@@ -1,0 +1,12 @@
+----------------------------------------
+Begin Torque Prologue (Wed Nov  7 16:29:23 2018)
+Job ID:           7864083.cc-mgmt1.campuscluster.illinois.edu
+Username:         trevorh2
+Group:            stat
+Job Name:         skt_size
+Limits:           walltime=20:00:00,nodes=1:ppn=1,neednodes=1:ppn=1
+Job Queue:        stat
+Account:          stat
+Nodes:            golub231
+End Torque Prologue
+----------------------------------------

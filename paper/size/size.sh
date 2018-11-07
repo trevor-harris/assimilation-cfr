@@ -1,15 +1,16 @@
 #!/bin/bash
 
 i=1
-for s in {66220,84710,93477,69707,95547,4581,53132,64050,70638,51740}; do
-for n in {100,250,500}; do
-for l in {5,10,20}; do
-for d in {5,5,5}; do 
+s=0426
+d=1
+
+for n in {50,100,300}; do
+for l in {20,30,40,50}; do
 
 qsub -v N=$n,D=$d,L=$l,S=$s,I=$((i++)) size.pbs
 
-done
-done
+# echo $n $d $l $s $((i++))
+
 done
 done
 

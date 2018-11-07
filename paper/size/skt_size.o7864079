@@ -1,0 +1,1752 @@
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 256189 13.7     627482 33.6   418013 22.4
+Vcells 445434  3.4    8388608 64.0  1759046 13.5
+Simulation  1 
+Total: 1.101 sec elapsed
+Simulation  2 
+Total: 1.032 sec elapsed
+Simulation  3 
+Total: 1.008 sec elapsed
+Simulation  4 
+Total: 1.01 sec elapsed
+Simulation  5 
+Total: 1.002 sec elapsed
+Simulation  6 
+Total: 0.997 sec elapsed
+Simulation  7 
+Total: 0.995 sec elapsed
+Simulation  8 
+Total: 1.011 sec elapsed
+Simulation  9 
+Total: 0.999 sec elapsed
+Simulation  10 
+Total: 0.994 sec elapsed
+Simulation  11 
+Total: 0.99 sec elapsed
+Simulation  12 
+Total: 0.991 sec elapsed
+Simulation  13 
+Total: 1.008 sec elapsed
+Simulation  14 
+Total: 1.004 sec elapsed
+Simulation  15 
+Total: 0.983 sec elapsed
+Simulation  16 
+Total: 0.995 sec elapsed
+Simulation  17 
+Total: 0.986 sec elapsed
+Simulation  18 
+Total: 1.022 sec elapsed
+Simulation  19 
+Total: 0.996 sec elapsed
+Simulation  20 
+Total: 0.983 sec elapsed
+Simulation  21 
+Total: 0.977 sec elapsed
+Simulation  22 
+Total: 0.989 sec elapsed
+Simulation  23 
+Total: 1 sec elapsed
+Simulation  24 
+Total: 0.991 sec elapsed
+Simulation  25 
+Total: 0.985 sec elapsed
+Simulation  26 
+Total: 0.984 sec elapsed
+Simulation  27 
+Total: 0.99 sec elapsed
+Simulation  28 
+Total: 0.984 sec elapsed
+Simulation  29 
+Total: 0.982 sec elapsed
+Simulation  30 
+Total: 0.984 sec elapsed
+Simulation  31 
+Total: 0.986 sec elapsed
+Simulation  32 
+Total: 0.984 sec elapsed
+Simulation  33 
+Total: 0.986 sec elapsed
+Simulation  34 
+Total: 0.989 sec elapsed
+Simulation  35 
+Total: 0.983 sec elapsed
+Simulation  36 
+Total: 1.014 sec elapsed
+Simulation  37 
+Total: 0.987 sec elapsed
+Simulation  38 
+Total: 0.981 sec elapsed
+Simulation  39 
+Total: 0.982 sec elapsed
+Simulation  40 
+Total: 0.997 sec elapsed
+Simulation  41 
+Total: 0.998 sec elapsed
+Simulation  42 
+Total: 0.99 sec elapsed
+Simulation  43 
+Total: 0.99 sec elapsed
+Simulation  44 
+Total: 0.981 sec elapsed
+Simulation  45 
+Total: 0.987 sec elapsed
+Simulation  46 
+Total: 0.984 sec elapsed
+Simulation  47 
+Total: 0.984 sec elapsed
+Simulation  48 
+Total: 0.982 sec elapsed
+Simulation  49 
+Total: 0.988 sec elapsed
+Simulation  50 
+Total: 0.984 sec elapsed
+Simulation  51 
+Total: 0.988 sec elapsed
+Simulation  52 
+Total: 0.991 sec elapsed
+Simulation  53 
+Total: 0.98 sec elapsed
+Simulation  54 
+Total: 1.019 sec elapsed
+Simulation  55 
+Total: 0.989 sec elapsed
+Simulation  56 
+Total: 0.977 sec elapsed
+Simulation  57 
+Total: 0.981 sec elapsed
+Simulation  58 
+Total: 0.986 sec elapsed
+Simulation  59 
+Total: 0.986 sec elapsed
+Simulation  60 
+Total: 0.986 sec elapsed
+Simulation  61 
+Total: 0.99 sec elapsed
+Simulation  62 
+Total: 0.987 sec elapsed
+Simulation  63 
+Total: 0.989 sec elapsed
+Simulation  64 
+Total: 0.983 sec elapsed
+Simulation  65 
+Total: 0.982 sec elapsed
+Simulation  66 
+Total: 0.982 sec elapsed
+Simulation  67 
+Total: 0.986 sec elapsed
+Simulation  68 
+Total: 0.988 sec elapsed
+Simulation  69 
+Total: 1.005 sec elapsed
+Simulation  70 
+Total: 0.998 sec elapsed
+Simulation  71 
+Total: 0.992 sec elapsed
+Simulation  72 
+Total: 1.01 sec elapsed
+Simulation  73 
+Total: 0.984 sec elapsed
+Simulation  74 
+Total: 0.977 sec elapsed
+Simulation  75 
+Total: 0.982 sec elapsed
+Simulation  76 
+Total: 0.999 sec elapsed
+Simulation  77 
+Total: 0.979 sec elapsed
+Simulation  78 
+Total: 0.981 sec elapsed
+Simulation  79 
+Total: 0.982 sec elapsed
+Simulation  80 
+Total: 0.99 sec elapsed
+Simulation  81 
+Total: 0.984 sec elapsed
+Simulation  82 
+Total: 0.986 sec elapsed
+Simulation  83 
+Total: 0.981 sec elapsed
+Simulation  84 
+Total: 0.991 sec elapsed
+Simulation  85 
+Total: 0.993 sec elapsed
+Simulation  86 
+Total: 0.984 sec elapsed
+Simulation  87 
+Total: 0.988 sec elapsed
+Simulation  88 
+Total: 0.986 sec elapsed
+Simulation  89 
+Total: 0.988 sec elapsed
+Simulation  90 
+Total: 1.011 sec elapsed
+Simulation  91 
+Total: 0.983 sec elapsed
+Simulation  92 
+Total: 0.98 sec elapsed
+Simulation  93 
+Total: 0.98 sec elapsed
+Simulation  94 
+Total: 0.993 sec elapsed
+Simulation  95 
+Total: 0.986 sec elapsed
+Simulation  96 
+Total: 0.986 sec elapsed
+Simulation  97 
+Total: 0.989 sec elapsed
+Simulation  98 
+Total: 0.986 sec elapsed
+Simulation  99 
+Total: 0.982 sec elapsed
+Simulation  100 
+Total: 0.986 sec elapsed
+Simulation  101 
+Total: 0.987 sec elapsed
+Simulation  102 
+Total: 0.985 sec elapsed
+Simulation  103 
+Total: 0.98 sec elapsed
+Simulation  104 
+Total: 0.985 sec elapsed
+Simulation  105 
+Total: 0.986 sec elapsed
+Simulation  106 
+Total: 0.987 sec elapsed
+Simulation  107 
+Total: 0.985 sec elapsed
+Simulation  108 
+Total: 1.008 sec elapsed
+Simulation  109 
+Total: 0.992 sec elapsed
+Simulation  110 
+Total: 0.986 sec elapsed
+Simulation  111 
+Total: 0.98 sec elapsed
+Simulation  112 
+Total: 0.982 sec elapsed
+Simulation  113 
+Total: 0.978 sec elapsed
+Simulation  114 
+Total: 0.983 sec elapsed
+Simulation  115 
+Total: 0.99 sec elapsed
+Simulation  116 
+Total: 0.989 sec elapsed
+Simulation  117 
+Total: 0.985 sec elapsed
+Simulation  118 
+Total: 1.006 sec elapsed
+Simulation  119 
+Total: 0.988 sec elapsed
+Simulation  120 
+Total: 0.981 sec elapsed
+Simulation  121 
+Total: 0.987 sec elapsed
+Simulation  122 
+Total: 0.988 sec elapsed
+Simulation  123 
+Total: 0.989 sec elapsed
+Simulation  124 
+Total: 0.99 sec elapsed
+Simulation  125 
+Total: 0.986 sec elapsed
+Simulation  126 
+Total: 1.01 sec elapsed
+Simulation  127 
+Total: 0.979 sec elapsed
+Simulation  128 
+Total: 0.985 sec elapsed
+Simulation  129 
+Total: 0.974 sec elapsed
+Simulation  130 
+Total: 0.983 sec elapsed
+Simulation  131 
+Total: 0.987 sec elapsed
+Simulation  132 
+Total: 0.988 sec elapsed
+Simulation  133 
+Total: 1.016 sec elapsed
+Simulation  134 
+Total: 1.016 sec elapsed
+Simulation  135 
+Total: 1.01 sec elapsed
+Simulation  136 
+Total: 0.996 sec elapsed
+Simulation  137 
+Total: 0.982 sec elapsed
+Simulation  138 
+Total: 0.984 sec elapsed
+Simulation  139 
+Total: 0.985 sec elapsed
+Simulation  140 
+Total: 0.983 sec elapsed
+Simulation  141 
+Total: 0.985 sec elapsed
+Simulation  142 
+Total: 1 sec elapsed
+Simulation  143 
+Total: 0.983 sec elapsed
+Simulation  144 
+Total: 1.012 sec elapsed
+Simulation  145 
+Total: 0.99 sec elapsed
+Simulation  146 
+Total: 0.974 sec elapsed
+Simulation  147 
+Total: 0.973 sec elapsed
+Simulation  148 
+Total: 0.99 sec elapsed
+Simulation  149 
+Total: 0.983 sec elapsed
+Simulation  150 
+Total: 0.991 sec elapsed
+Simulation  151 
+Total: 0.985 sec elapsed
+Simulation  152 
+Total: 0.983 sec elapsed
+Simulation  153 
+Total: 0.98 sec elapsed
+Simulation  154 
+Total: 0.984 sec elapsed
+Simulation  155 
+Total: 0.982 sec elapsed
+Simulation  156 
+Total: 0.981 sec elapsed
+Simulation  157 
+Total: 0.987 sec elapsed
+Simulation  158 
+Total: 0.987 sec elapsed
+Simulation  159 
+Total: 0.991 sec elapsed
+Simulation  160 
+Total: 0.991 sec elapsed
+Simulation  161 
+Total: 0.985 sec elapsed
+Simulation  162 
+Total: 1.006 sec elapsed
+Simulation  163 
+Total: 0.975 sec elapsed
+Simulation  164 
+Total: 0.983 sec elapsed
+Simulation  165 
+Total: 0.974 sec elapsed
+Simulation  166 
+Total: 0.987 sec elapsed
+Simulation  167 
+Total: 0.985 sec elapsed
+Simulation  168 
+Total: 0.983 sec elapsed
+Simulation  169 
+Total: 0.983 sec elapsed
+Simulation  170 
+Total: 0.978 sec elapsed
+Simulation  171 
+Total: 0.98 sec elapsed
+Simulation  172 
+Total: 0.986 sec elapsed
+Simulation  173 
+Total: 0.984 sec elapsed
+Simulation  174 
+Total: 0.984 sec elapsed
+Simulation  175 
+Total: 0.98 sec elapsed
+Simulation  176 
+Total: 0.984 sec elapsed
+Simulation  177 
+Total: 0.985 sec elapsed
+Simulation  178 
+Total: 0.99 sec elapsed
+Simulation  179 
+Total: 1.004 sec elapsed
+Simulation  180 
+Total: 1.014 sec elapsed
+Simulation  181 
+Total: 0.987 sec elapsed
+Simulation  182 
+Total: 0.984 sec elapsed
+Simulation  183 
+Total: 0.978 sec elapsed
+Simulation  184 
+Total: 0.977 sec elapsed
+Simulation  185 
+Total: 0.979 sec elapsed
+Simulation  186 
+Total: 0.984 sec elapsed
+Simulation  187 
+Total: 0.993 sec elapsed
+Simulation  188 
+Total: 0.989 sec elapsed
+Simulation  189 
+Total: 0.983 sec elapsed
+Simulation  190 
+Total: 0.988 sec elapsed
+Simulation  191 
+Total: 0.981 sec elapsed
+Simulation  192 
+Total: 0.98 sec elapsed
+Simulation  193 
+Total: 0.985 sec elapsed
+Simulation  194 
+Total: 0.981 sec elapsed
+Simulation  195 
+Total: 0.993 sec elapsed
+Simulation  196 
+Total: 0.992 sec elapsed
+Simulation  197 
+Total: 0.982 sec elapsed
+Simulation  198 
+Total: 1.014 sec elapsed
+Simulation  199 
+Total: 0.975 sec elapsed
+Simulation  200 
+Total: 0.977 sec elapsed
+Simulation  201 
+Total: 0.976 sec elapsed
+Simulation  202 
+Total: 0.988 sec elapsed
+Simulation  203 
+Total: 0.979 sec elapsed
+Simulation  204 
+Total: 0.982 sec elapsed
+Simulation  205 
+Total: 0.989 sec elapsed
+Simulation  206 
+Total: 0.979 sec elapsed
+Simulation  207 
+Total: 0.98 sec elapsed
+Simulation  208 
+Total: 0.985 sec elapsed
+Simulation  209 
+Total: 0.988 sec elapsed
+Simulation  210 
+Total: 0.986 sec elapsed
+Simulation  211 
+Total: 0.987 sec elapsed
+Simulation  212 
+Total: 0.988 sec elapsed
+Simulation  213 
+Total: 0.989 sec elapsed
+Simulation  214 
+Total: 0.993 sec elapsed
+Simulation  215 
+Total: 0.977 sec elapsed
+Simulation  216 
+Total: 1.004 sec elapsed
+Simulation  217 
+Total: 0.98 sec elapsed
+Simulation  218 
+Total: 0.976 sec elapsed
+Simulation  219 
+Total: 0.985 sec elapsed
+Simulation  220 
+Total: 0.985 sec elapsed
+Simulation  221 
+Total: 0.977 sec elapsed
+Simulation  222 
+Total: 0.978 sec elapsed
+Simulation  223 
+Total: 0.987 sec elapsed
+Simulation  224 
+Total: 0.987 sec elapsed
+Simulation  225 
+Total: 0.978 sec elapsed
+Simulation  226 
+Total: 0.987 sec elapsed
+Simulation  227 
+Total: 0.983 sec elapsed
+Simulation  228 
+Total: 0.991 sec elapsed
+Simulation  229 
+Total: 0.985 sec elapsed
+Simulation  230 
+Total: 0.983 sec elapsed
+Simulation  231 
+Total: 0.986 sec elapsed
+Simulation  232 
+Total: 0.992 sec elapsed
+Simulation  233 
+Total: 0.99 sec elapsed
+Simulation  234 
+Total: 1.008 sec elapsed
+Simulation  235 
+Total: 0.981 sec elapsed
+Simulation  236 
+Total: 0.987 sec elapsed
+Simulation  237 
+Total: 0.982 sec elapsed
+Simulation  238 
+Total: 0.989 sec elapsed
+Simulation  239 
+Total: 0.98 sec elapsed
+Simulation  240 
+Total: 1.003 sec elapsed
+Simulation  241 
+Total: 0.997 sec elapsed
+Simulation  242 
+Total: 0.986 sec elapsed
+Simulation  243 
+Total: 0.984 sec elapsed
+Simulation  244 
+Total: 0.992 sec elapsed
+Simulation  245 
+Total: 0.978 sec elapsed
+Simulation  246 
+Total: 0.986 sec elapsed
+Simulation  247 
+Total: 0.989 sec elapsed
+Simulation  248 
+Total: 0.982 sec elapsed
+Simulation  249 
+Total: 0.979 sec elapsed
+Simulation  250 
+Total: 0.987 sec elapsed
+Simulation  251 
+Total: 0.985 sec elapsed
+Simulation  252 
+Total: 1.013 sec elapsed
+Simulation  253 
+Total: 0.982 sec elapsed
+Simulation  254 
+Total: 0.979 sec elapsed
+Simulation  255 
+Total: 0.979 sec elapsed
+Simulation  256 
+Total: 0.995 sec elapsed
+Simulation  257 
+Total: 0.988 sec elapsed
+Simulation  258 
+Total: 0.982 sec elapsed
+Simulation  259 
+Total: 0.994 sec elapsed
+Simulation  260 
+Total: 0.98 sec elapsed
+Simulation  261 
+Total: 0.988 sec elapsed
+Simulation  262 
+Total: 0.989 sec elapsed
+Simulation  263 
+Total: 0.983 sec elapsed
+Simulation  264 
+Total: 0.981 sec elapsed
+Simulation  265 
+Total: 0.987 sec elapsed
+Simulation  266 
+Total: 0.989 sec elapsed
+Simulation  267 
+Total: 0.989 sec elapsed
+Simulation  268 
+Total: 0.991 sec elapsed
+Simulation  269 
+Total: 0.985 sec elapsed
+Simulation  270 
+Total: 1.008 sec elapsed
+Simulation  271 
+Total: 0.986 sec elapsed
+Simulation  272 
+Total: 0.976 sec elapsed
+Simulation  273 
+Total: 0.991 sec elapsed
+Simulation  274 
+Total: 0.991 sec elapsed
+Simulation  275 
+Total: 0.984 sec elapsed
+Simulation  276 
+Total: 0.983 sec elapsed
+Simulation  277 
+Total: 0.989 sec elapsed
+Simulation  278 
+Total: 0.982 sec elapsed
+Simulation  279 
+Total: 0.985 sec elapsed
+Simulation  280 
+Total: 0.989 sec elapsed
+Simulation  281 
+Total: 0.982 sec elapsed
+Simulation  282 
+Total: 0.987 sec elapsed
+Simulation  283 
+Total: 0.991 sec elapsed
+Simulation  284 
+Total: 0.98 sec elapsed
+Simulation  285 
+Total: 0.983 sec elapsed
+Simulation  286 
+Total: 0.985 sec elapsed
+Simulation  287 
+Total: 0.989 sec elapsed
+Simulation  288 
+Total: 1.011 sec elapsed
+Simulation  289 
+Total: 0.989 sec elapsed
+Simulation  290 
+Total: 0.986 sec elapsed
+Simulation  291 
+Total: 0.991 sec elapsed
+Simulation  292 
+Total: 0.989 sec elapsed
+Simulation  293 
+Total: 0.975 sec elapsed
+Simulation  294 
+Total: 0.981 sec elapsed
+Simulation  295 
+Total: 0.988 sec elapsed
+Simulation  296 
+Total: 0.983 sec elapsed
+Simulation  297 
+Total: 0.988 sec elapsed
+Simulation  298 
+Total: 0.985 sec elapsed
+Simulation  299 
+Total: 0.985 sec elapsed
+Simulation  300 
+Total: 0.994 sec elapsed
+Simulation  301 
+Total: 0.997 sec elapsed
+Simulation  302 
+Total: 0.984 sec elapsed
+Simulation  303 
+Total: 0.986 sec elapsed
+Simulation  304 
+Total: 0.997 sec elapsed
+Simulation  305 
+Total: 0.985 sec elapsed
+Simulation  306 
+Total: 1.017 sec elapsed
+Simulation  307 
+Total: 0.987 sec elapsed
+Simulation  308 
+Total: 0.979 sec elapsed
+Simulation  309 
+Total: 0.981 sec elapsed
+Simulation  310 
+Total: 0.986 sec elapsed
+Simulation  311 
+Total: 0.979 sec elapsed
+Simulation  312 
+Total: 0.993 sec elapsed
+Simulation  313 
+Total: 0.987 sec elapsed
+Simulation  314 
+Total: 0.985 sec elapsed
+Simulation  315 
+Total: 0.982 sec elapsed
+Simulation  316 
+Total: 0.987 sec elapsed
+Simulation  317 
+Total: 0.99 sec elapsed
+Simulation  318 
+Total: 0.979 sec elapsed
+Simulation  319 
+Total: 0.99 sec elapsed
+Simulation  320 
+Total: 0.986 sec elapsed
+Simulation  321 
+Total: 0.99 sec elapsed
+Simulation  322 
+Total: 0.988 sec elapsed
+Simulation  323 
+Total: 0.976 sec elapsed
+Simulation  324 
+Total: 1.008 sec elapsed
+Simulation  325 
+Total: 0.977 sec elapsed
+Simulation  326 
+Total: 0.979 sec elapsed
+Simulation  327 
+Total: 0.987 sec elapsed
+Simulation  328 
+Total: 0.981 sec elapsed
+Simulation  329 
+Total: 0.985 sec elapsed
+Simulation  330 
+Total: 0.982 sec elapsed
+Simulation  331 
+Total: 0.986 sec elapsed
+Simulation  332 
+Total: 0.987 sec elapsed
+Simulation  333 
+Total: 0.978 sec elapsed
+Simulation  334 
+Total: 0.982 sec elapsed
+Simulation  335 
+Total: 0.98 sec elapsed
+Simulation  336 
+Total: 0.983 sec elapsed
+Simulation  337 
+Total: 0.995 sec elapsed
+Simulation  338 
+Total: 0.993 sec elapsed
+Simulation  339 
+Total: 0.995 sec elapsed
+Simulation  340 
+Total: 0.99 sec elapsed
+Simulation  341 
+Total: 0.987 sec elapsed
+Simulation  342 
+Total: 1.012 sec elapsed
+Simulation  343 
+Total: 0.981 sec elapsed
+Simulation  344 
+Total: 0.98 sec elapsed
+Simulation  345 
+Total: 0.979 sec elapsed
+Simulation  346 
+Total: 0.984 sec elapsed
+Simulation  347 
+Total: 0.985 sec elapsed
+Simulation  348 
+Total: 0.984 sec elapsed
+Simulation  349 
+Total: 0.987 sec elapsed
+Simulation  350 
+Total: 0.992 sec elapsed
+Simulation  351 
+Total: 0.982 sec elapsed
+Simulation  352 
+Total: 0.987 sec elapsed
+Simulation  353 
+Total: 0.981 sec elapsed
+Simulation  354 
+Total: 0.986 sec elapsed
+Simulation  355 
+Total: 0.983 sec elapsed
+Simulation  356 
+Total: 0.982 sec elapsed
+Simulation  357 
+Total: 0.988 sec elapsed
+Simulation  358 
+Total: 0.984 sec elapsed
+Simulation  359 
+Total: 0.99 sec elapsed
+Simulation  360 
+Total: 1.012 sec elapsed
+Simulation  361 
+Total: 0.994 sec elapsed
+Simulation  362 
+Total: 0.993 sec elapsed
+Simulation  363 
+Total: 0.985 sec elapsed
+Simulation  364 
+Total: 0.987 sec elapsed
+Simulation  365 
+Total: 0.979 sec elapsed
+Simulation  366 
+Total: 0.985 sec elapsed
+Simulation  367 
+Total: 0.988 sec elapsed
+Simulation  368 
+Total: 0.979 sec elapsed
+Simulation  369 
+Total: 0.979 sec elapsed
+Simulation  370 
+Total: 0.989 sec elapsed
+Simulation  371 
+Total: 0.992 sec elapsed
+Simulation  372 
+Total: 0.983 sec elapsed
+Simulation  373 
+Total: 0.988 sec elapsed
+Simulation  374 
+Total: 0.984 sec elapsed
+Simulation  375 
+Total: 0.99 sec elapsed
+Simulation  376 
+Total: 0.993 sec elapsed
+Simulation  377 
+Total: 0.983 sec elapsed
+Simulation  378 
+Total: 1.01 sec elapsed
+Simulation  379 
+Total: 0.985 sec elapsed
+Simulation  380 
+Total: 0.983 sec elapsed
+Simulation  381 
+Total: 0.975 sec elapsed
+Simulation  382 
+Total: 0.987 sec elapsed
+Simulation  383 
+Total: 0.984 sec elapsed
+Simulation  384 
+Total: 0.984 sec elapsed
+Simulation  385 
+Total: 0.989 sec elapsed
+Simulation  386 
+Total: 0.983 sec elapsed
+Simulation  387 
+Total: 0.987 sec elapsed
+Simulation  388 
+Total: 0.993 sec elapsed
+Simulation  389 
+Total: 0.98 sec elapsed
+Simulation  390 
+Total: 0.98 sec elapsed
+Simulation  391 
+Total: 0.981 sec elapsed
+Simulation  392 
+Total: 0.981 sec elapsed
+Simulation  393 
+Total: 0.977 sec elapsed
+Simulation  394 
+Total: 0.984 sec elapsed
+Simulation  395 
+Total: 0.992 sec elapsed
+Simulation  396 
+Total: 1.007 sec elapsed
+Simulation  397 
+Total: 0.978 sec elapsed
+Simulation  398 
+Total: 0.983 sec elapsed
+Simulation  399 
+Total: 0.984 sec elapsed
+Simulation  400 
+Total: 0.99 sec elapsed
+Simulation  401 
+Total: 0.988 sec elapsed
+Simulation  402 
+Total: 0.986 sec elapsed
+Simulation  403 
+Total: 0.982 sec elapsed
+Simulation  404 
+Total: 0.983 sec elapsed
+Simulation  405 
+Total: 0.986 sec elapsed
+Simulation  406 
+Total: 0.987 sec elapsed
+Simulation  407 
+Total: 0.986 sec elapsed
+Simulation  408 
+Total: 0.985 sec elapsed
+Simulation  409 
+Total: 0.984 sec elapsed
+Simulation  410 
+Total: 0.987 sec elapsed
+Simulation  411 
+Total: 0.992 sec elapsed
+Simulation  412 
+Total: 0.988 sec elapsed
+Simulation  413 
+Total: 0.983 sec elapsed
+Simulation  414 
+Total: 1.014 sec elapsed
+Simulation  415 
+Total: 0.982 sec elapsed
+Simulation  416 
+Total: 0.994 sec elapsed
+Simulation  417 
+Total: 0.977 sec elapsed
+Simulation  418 
+Total: 0.985 sec elapsed
+Simulation  419 
+Total: 0.988 sec elapsed
+Simulation  420 
+Total: 0.988 sec elapsed
+Simulation  421 
+Total: 0.986 sec elapsed
+Simulation  422 
+Total: 1 sec elapsed
+Simulation  423 
+Total: 0.998 sec elapsed
+Simulation  424 
+Total: 0.985 sec elapsed
+Simulation  425 
+Total: 0.988 sec elapsed
+Simulation  426 
+Total: 0.994 sec elapsed
+Simulation  427 
+Total: 0.986 sec elapsed
+Simulation  428 
+Total: 0.983 sec elapsed
+Simulation  429 
+Total: 0.98 sec elapsed
+Simulation  430 
+Total: 0.987 sec elapsed
+Simulation  431 
+Total: 0.98 sec elapsed
+Simulation  432 
+Total: 1.014 sec elapsed
+Simulation  433 
+Total: 0.985 sec elapsed
+Simulation  434 
+Total: 0.977 sec elapsed
+Simulation  435 
+Total: 0.984 sec elapsed
+Simulation  436 
+Total: 1.004 sec elapsed
+Simulation  437 
+Total: 0.982 sec elapsed
+Simulation  438 
+Total: 0.988 sec elapsed
+Simulation  439 
+Total: 0.987 sec elapsed
+Simulation  440 
+Total: 0.981 sec elapsed
+Simulation  441 
+Total: 0.986 sec elapsed
+Simulation  442 
+Total: 0.988 sec elapsed
+Simulation  443 
+Total: 0.986 sec elapsed
+Simulation  444 
+Total: 0.986 sec elapsed
+Simulation  445 
+Total: 0.983 sec elapsed
+Simulation  446 
+Total: 0.988 sec elapsed
+Simulation  447 
+Total: 0.986 sec elapsed
+Simulation  448 
+Total: 0.993 sec elapsed
+Simulation  449 
+Total: 0.983 sec elapsed
+Simulation  450 
+Total: 1.01 sec elapsed
+Simulation  451 
+Total: 0.981 sec elapsed
+Simulation  452 
+Total: 0.981 sec elapsed
+Simulation  453 
+Total: 0.984 sec elapsed
+Simulation  454 
+Total: 0.98 sec elapsed
+Simulation  455 
+Total: 0.982 sec elapsed
+Simulation  456 
+Total: 0.986 sec elapsed
+Simulation  457 
+Total: 0.987 sec elapsed
+Simulation  458 
+Total: 0.986 sec elapsed
+Simulation  459 
+Total: 0.981 sec elapsed
+Simulation  460 
+Total: 0.99 sec elapsed
+Simulation  461 
+Total: 0.985 sec elapsed
+Simulation  462 
+Total: 0.98 sec elapsed
+Simulation  463 
+Total: 0.986 sec elapsed
+Simulation  464 
+Total: 0.982 sec elapsed
+Simulation  465 
+Total: 0.989 sec elapsed
+Simulation  466 
+Total: 0.981 sec elapsed
+Simulation  467 
+Total: 0.978 sec elapsed
+Simulation  468 
+Total: 1.008 sec elapsed
+Simulation  469 
+Total: 0.984 sec elapsed
+Simulation  470 
+Total: 0.98 sec elapsed
+Simulation  471 
+Total: 0.98 sec elapsed
+Simulation  472 
+Total: 0.986 sec elapsed
+Simulation  473 
+Total: 0.985 sec elapsed
+Simulation  474 
+Total: 0.98 sec elapsed
+Simulation  475 
+Total: 0.987 sec elapsed
+Simulation  476 
+Total: 0.982 sec elapsed
+Simulation  477 
+Total: 0.984 sec elapsed
+Simulation  478 
+Total: 0.977 sec elapsed
+Simulation  479 
+Total: 0.974 sec elapsed
+Simulation  480 
+Total: 0.984 sec elapsed
+Simulation  481 
+Total: 0.986 sec elapsed
+Simulation  482 
+Total: 0.977 sec elapsed
+Simulation  483 
+Total: 1.006 sec elapsed
+Simulation  484 
+Total: 0.992 sec elapsed
+Simulation  485 
+Total: 0.988 sec elapsed
+Simulation  486 
+Total: 1.008 sec elapsed
+Simulation  487 
+Total: 0.98 sec elapsed
+Simulation  488 
+Total: 0.982 sec elapsed
+Simulation  489 
+Total: 0.986 sec elapsed
+Simulation  490 
+Total: 0.98 sec elapsed
+Simulation  491 
+Total: 0.988 sec elapsed
+Simulation  492 
+Total: 0.983 sec elapsed
+Simulation  493 
+Total: 0.987 sec elapsed
+Simulation  494 
+Total: 0.982 sec elapsed
+Simulation  495 
+Total: 0.985 sec elapsed
+Simulation  496 
+Total: 0.986 sec elapsed
+Simulation  497 
+Total: 0.987 sec elapsed
+Simulation  498 
+Total: 0.987 sec elapsed
+Simulation  499 
+Total: 0.985 sec elapsed
+Simulation  500 
+Total: 0.987 sec elapsed
+Simulation  501 
+Total: 0.987 sec elapsed
+Simulation  502 
+Total: 0.99 sec elapsed
+Simulation  503 
+Total: 0.981 sec elapsed
+Simulation  504 
+Total: 1.009 sec elapsed
+Simulation  505 
+Total: 0.983 sec elapsed
+Simulation  506 
+Total: 0.978 sec elapsed
+Simulation  507 
+Total: 0.981 sec elapsed
+Simulation  508 
+Total: 0.983 sec elapsed
+Simulation  509 
+Total: 0.985 sec elapsed
+Simulation  510 
+Total: 0.981 sec elapsed
+Simulation  511 
+Total: 0.986 sec elapsed
+Simulation  512 
+Total: 0.985 sec elapsed
+Simulation  513 
+Total: 0.988 sec elapsed
+Simulation  514 
+Total: 0.983 sec elapsed
+Simulation  515 
+Total: 0.979 sec elapsed
+Simulation  516 
+Total: 0.982 sec elapsed
+Simulation  517 
+Total: 0.991 sec elapsed
+Simulation  518 
+Total: 0.983 sec elapsed
+Simulation  519 
+Total: 0.985 sec elapsed
+Simulation  520 
+Total: 0.99 sec elapsed
+Simulation  521 
+Total: 0.977 sec elapsed
+Simulation  522 
+Total: 1.005 sec elapsed
+Simulation  523 
+Total: 0.984 sec elapsed
+Simulation  524 
+Total: 0.98 sec elapsed
+Simulation  525 
+Total: 0.986 sec elapsed
+Simulation  526 
+Total: 0.973 sec elapsed
+Simulation  527 
+Total: 0.985 sec elapsed
+Simulation  528 
+Total: 0.984 sec elapsed
+Simulation  529 
+Total: 0.979 sec elapsed
+Simulation  530 
+Total: 0.984 sec elapsed
+Simulation  531 
+Total: 0.988 sec elapsed
+Simulation  532 
+Total: 0.993 sec elapsed
+Simulation  533 
+Total: 0.984 sec elapsed
+Simulation  534 
+Total: 0.986 sec elapsed
+Simulation  535 
+Total: 0.992 sec elapsed
+Simulation  536 
+Total: 0.986 sec elapsed
+Simulation  537 
+Total: 0.988 sec elapsed
+Simulation  538 
+Total: 0.978 sec elapsed
+Simulation  539 
+Total: 0.981 sec elapsed
+Simulation  540 
+Total: 1.013 sec elapsed
+Simulation  541 
+Total: 0.98 sec elapsed
+Simulation  542 
+Total: 0.979 sec elapsed
+Simulation  543 
+Total: 0.984 sec elapsed
+Simulation  544 
+Total: 1.004 sec elapsed
+Simulation  545 
+Total: 1.002 sec elapsed
+Simulation  546 
+Total: 0.98 sec elapsed
+Simulation  547 
+Total: 0.989 sec elapsed
+Simulation  548 
+Total: 0.977 sec elapsed
+Simulation  549 
+Total: 0.988 sec elapsed
+Simulation  550 
+Total: 0.984 sec elapsed
+Simulation  551 
+Total: 0.98 sec elapsed
+Simulation  552 
+Total: 0.99 sec elapsed
+Simulation  553 
+Total: 0.992 sec elapsed
+Simulation  554 
+Total: 0.984 sec elapsed
+Simulation  555 
+Total: 0.987 sec elapsed
+Simulation  556 
+Total: 0.983 sec elapsed
+Simulation  557 
+Total: 0.992 sec elapsed
+Simulation  558 
+Total: 1.016 sec elapsed
+Simulation  559 
+Total: 0.982 sec elapsed
+Simulation  560 
+Total: 0.983 sec elapsed
+Simulation  561 
+Total: 0.98 sec elapsed
+Simulation  562 
+Total: 0.989 sec elapsed
+Simulation  563 
+Total: 0.982 sec elapsed
+Simulation  564 
+Total: 0.982 sec elapsed
+Simulation  565 
+Total: 0.992 sec elapsed
+Simulation  566 
+Total: 0.986 sec elapsed
+Simulation  567 
+Total: 0.986 sec elapsed
+Simulation  568 
+Total: 0.984 sec elapsed
+Simulation  569 
+Total: 0.989 sec elapsed
+Simulation  570 
+Total: 0.988 sec elapsed
+Simulation  571 
+Total: 0.991 sec elapsed
+Simulation  572 
+Total: 0.985 sec elapsed
+Simulation  573 
+Total: 0.985 sec elapsed
+Simulation  574 
+Total: 0.99 sec elapsed
+Simulation  575 
+Total: 0.98 sec elapsed
+Simulation  576 
+Total: 1.008 sec elapsed
+Simulation  577 
+Total: 0.977 sec elapsed
+Simulation  578 
+Total: 0.979 sec elapsed
+Simulation  579 
+Total: 0.978 sec elapsed
+Simulation  580 
+Total: 0.992 sec elapsed
+Simulation  581 
+Total: 0.984 sec elapsed
+Simulation  582 
+Total: 0.986 sec elapsed
+Simulation  583 
+Total: 0.994 sec elapsed
+Simulation  584 
+Total: 0.983 sec elapsed
+Simulation  585 
+Total: 0.988 sec elapsed
+Simulation  586 
+Total: 0.984 sec elapsed
+Simulation  587 
+Total: 0.979 sec elapsed
+Simulation  588 
+Total: 0.989 sec elapsed
+Simulation  589 
+Total: 0.991 sec elapsed
+Simulation  590 
+Total: 0.989 sec elapsed
+Simulation  591 
+Total: 0.99 sec elapsed
+Simulation  592 
+Total: 0.99 sec elapsed
+Simulation  593 
+Total: 0.981 sec elapsed
+Simulation  594 
+Total: 1.013 sec elapsed
+Simulation  595 
+Total: 0.978 sec elapsed
+Simulation  596 
+Total: 0.985 sec elapsed
+Simulation  597 
+Total: 0.986 sec elapsed
+Simulation  598 
+Total: 0.985 sec elapsed
+Simulation  599 
+Total: 0.982 sec elapsed
+Simulation  600 
+Total: 0.982 sec elapsed
+Simulation  601 
+Total: 0.984 sec elapsed
+Simulation  602 
+Total: 0.979 sec elapsed
+Simulation  603 
+Total: 0.98 sec elapsed
+Simulation  604 
+Total: 0.985 sec elapsed
+Simulation  605 
+Total: 1.003 sec elapsed
+Simulation  606 
+Total: 0.989 sec elapsed
+Simulation  607 
+Total: 0.985 sec elapsed
+Simulation  608 
+Total: 0.984 sec elapsed
+Simulation  609 
+Total: 0.985 sec elapsed
+Simulation  610 
+Total: 0.983 sec elapsed
+Simulation  611 
+Total: 0.979 sec elapsed
+Simulation  612 
+Total: 1.013 sec elapsed
+Simulation  613 
+Total: 0.975 sec elapsed
+Simulation  614 
+Total: 0.976 sec elapsed
+Simulation  615 
+Total: 0.983 sec elapsed
+Simulation  616 
+Total: 0.984 sec elapsed
+Simulation  617 
+Total: 0.99 sec elapsed
+Simulation  618 
+Total: 0.983 sec elapsed
+Simulation  619 
+Total: 0.989 sec elapsed
+Simulation  620 
+Total: 0.98 sec elapsed
+Simulation  621 
+Total: 0.984 sec elapsed
+Simulation  622 
+Total: 0.991 sec elapsed
+Simulation  623 
+Total: 0.975 sec elapsed
+Simulation  624 
+Total: 0.979 sec elapsed
+Simulation  625 
+Total: 0.99 sec elapsed
+Simulation  626 
+Total: 0.994 sec elapsed
+Simulation  627 
+Total: 0.984 sec elapsed
+Simulation  628 
+Total: 0.995 sec elapsed
+Simulation  629 
+Total: 0.982 sec elapsed
+Simulation  630 
+Total: 1.003 sec elapsed
+Simulation  631 
+Total: 0.981 sec elapsed
+Simulation  632 
+Total: 0.98 sec elapsed
+Simulation  633 
+Total: 0.98 sec elapsed
+Simulation  634 
+Total: 0.981 sec elapsed
+Simulation  635 
+Total: 0.978 sec elapsed
+Simulation  636 
+Total: 0.984 sec elapsed
+Simulation  637 
+Total: 0.983 sec elapsed
+Simulation  638 
+Total: 0.987 sec elapsed
+Simulation  639 
+Total: 0.989 sec elapsed
+Simulation  640 
+Total: 0.987 sec elapsed
+Simulation  641 
+Total: 0.984 sec elapsed
+Simulation  642 
+Total: 0.978 sec elapsed
+Simulation  643 
+Total: 0.981 sec elapsed
+Simulation  644 
+Total: 0.981 sec elapsed
+Simulation  645 
+Total: 0.999 sec elapsed
+Simulation  646 
+Total: 0.988 sec elapsed
+Simulation  647 
+Total: 0.977 sec elapsed
+Simulation  648 
+Total: 1.007 sec elapsed
+Simulation  649 
+Total: 0.983 sec elapsed
+Simulation  650 
+Total: 0.981 sec elapsed
+Simulation  651 
+Total: 0.984 sec elapsed
+Simulation  652 
+Total: 0.981 sec elapsed
+Simulation  653 
+Total: 0.983 sec elapsed
+Simulation  654 
+Total: 0.985 sec elapsed
+Simulation  655 
+Total: 0.99 sec elapsed
+Simulation  656 
+Total: 0.98 sec elapsed
+Simulation  657 
+Total: 0.985 sec elapsed
+Simulation  658 
+Total: 0.977 sec elapsed
+Simulation  659 
+Total: 0.986 sec elapsed
+Simulation  660 
+Total: 0.978 sec elapsed
+Simulation  661 
+Total: 0.993 sec elapsed
+Simulation  662 
+Total: 0.981 sec elapsed
+Simulation  663 
+Total: 0.984 sec elapsed
+Simulation  664 
+Total: 0.984 sec elapsed
+Simulation  665 
+Total: 0.979 sec elapsed
+Simulation  666 
+Total: 1.032 sec elapsed
+Simulation  667 
+Total: 0.979 sec elapsed
+Simulation  668 
+Total: 0.978 sec elapsed
+Simulation  669 
+Total: 0.986 sec elapsed
+Simulation  670 
+Total: 0.979 sec elapsed
+Simulation  671 
+Total: 0.981 sec elapsed
+Simulation  672 
+Total: 0.98 sec elapsed
+Simulation  673 
+Total: 0.983 sec elapsed
+Simulation  674 
+Total: 0.988 sec elapsed
+Simulation  675 
+Total: 0.981 sec elapsed
+Simulation  676 
+Total: 0.983 sec elapsed
+Simulation  677 
+Total: 0.977 sec elapsed
+Simulation  678 
+Total: 0.984 sec elapsed
+Simulation  679 
+Total: 0.985 sec elapsed
+Simulation  680 
+Total: 0.981 sec elapsed
+Simulation  681 
+Total: 0.984 sec elapsed
+Simulation  682 
+Total: 0.988 sec elapsed
+Simulation  683 
+Total: 0.989 sec elapsed
+Simulation  684 
+Total: 1.008 sec elapsed
+Simulation  685 
+Total: 0.985 sec elapsed
+Simulation  686 
+Total: 0.98 sec elapsed
+Simulation  687 
+Total: 0.98 sec elapsed
+Simulation  688 
+Total: 0.982 sec elapsed
+Simulation  689 
+Total: 0.989 sec elapsed
+Simulation  690 
+Total: 0.987 sec elapsed
+Simulation  691 
+Total: 0.986 sec elapsed
+Simulation  692 
+Total: 0.983 sec elapsed
+Simulation  693 
+Total: 0.986 sec elapsed
+Simulation  694 
+Total: 0.978 sec elapsed
+Simulation  695 
+Total: 0.983 sec elapsed
+Simulation  696 
+Total: 0.982 sec elapsed
+Simulation  697 
+Total: 0.995 sec elapsed
+Simulation  698 
+Total: 1 sec elapsed
+Simulation  699 
+Total: 0.987 sec elapsed
+Simulation  700 
+Total: 0.988 sec elapsed
+Simulation  701 
+Total: 0.982 sec elapsed
+Simulation  702 
+Total: 1.01 sec elapsed
+Simulation  703 
+Total: 0.991 sec elapsed
+Simulation  704 
+Total: 0.984 sec elapsed
+Simulation  705 
+Total: 0.973 sec elapsed
+Simulation  706 
+Total: 0.989 sec elapsed
+Simulation  707 
+Total: 0.992 sec elapsed
+Simulation  708 
+Total: 0.982 sec elapsed
+Simulation  709 
+Total: 0.989 sec elapsed
+Simulation  710 
+Total: 0.988 sec elapsed
+Simulation  711 
+Total: 0.992 sec elapsed
+Simulation  712 
+Total: 0.991 sec elapsed
+Simulation  713 
+Total: 0.99 sec elapsed
+Simulation  714 
+Total: 0.991 sec elapsed
+Simulation  715 
+Total: 0.997 sec elapsed
+Simulation  716 
+Total: 0.989 sec elapsed
+Simulation  717 
+Total: 0.99 sec elapsed
+Simulation  718 
+Total: 0.983 sec elapsed
+Simulation  719 
+Total: 0.978 sec elapsed
+Simulation  720 
+Total: 1.007 sec elapsed
+Simulation  721 
+Total: 0.98 sec elapsed
+Simulation  722 
+Total: 0.984 sec elapsed
+Simulation  723 
+Total: 0.98 sec elapsed
+Simulation  724 
+Total: 0.986 sec elapsed
+Simulation  725 
+Total: 0.984 sec elapsed
+Simulation  726 
+Total: 1.006 sec elapsed
+Simulation  727 
+Total: 1 sec elapsed
+Simulation  728 
+Total: 0.98 sec elapsed
+Simulation  729 
+Total: 0.981 sec elapsed
+Simulation  730 
+Total: 0.984 sec elapsed
+Simulation  731 
+Total: 0.988 sec elapsed
+Simulation  732 
+Total: 0.984 sec elapsed
+Simulation  733 
+Total: 0.983 sec elapsed
+Simulation  734 
+Total: 0.984 sec elapsed
+Simulation  735 
+Total: 0.987 sec elapsed
+Simulation  736 
+Total: 0.985 sec elapsed
+Simulation  737 
+Total: 0.981 sec elapsed
+Simulation  738 
+Total: 1.012 sec elapsed
+Simulation  739 
+Total: 0.977 sec elapsed
+Simulation  740 
+Total: 0.984 sec elapsed
+Simulation  741 
+Total: 0.976 sec elapsed
+Simulation  742 
+Total: 0.991 sec elapsed
+Simulation  743 
+Total: 0.983 sec elapsed
+Simulation  744 
+Total: 0.989 sec elapsed
+Simulation  745 
+Total: 0.989 sec elapsed
+Simulation  746 
+Total: 0.981 sec elapsed
+Simulation  747 
+Total: 0.982 sec elapsed
+Simulation  748 
+Total: 0.99 sec elapsed
+Simulation  749 
+Total: 0.988 sec elapsed
+Simulation  750 
+Total: 0.984 sec elapsed
+Simulation  751 
+Total: 0.982 sec elapsed
+Simulation  752 
+Total: 0.98 sec elapsed
+Simulation  753 
+Total: 0.984 sec elapsed
+Simulation  754 
+Total: 0.996 sec elapsed
+Simulation  755 
+Total: 0.983 sec elapsed
+Simulation  756 
+Total: 1.006 sec elapsed
+Simulation  757 
+Total: 0.982 sec elapsed
+Simulation  758 
+Total: 0.985 sec elapsed
+Simulation  759 
+Total: 0.98 sec elapsed
+Simulation  760 
+Total: 0.987 sec elapsed
+Simulation  761 
+Total: 0.981 sec elapsed
+Simulation  762 
+Total: 0.988 sec elapsed
+Simulation  763 
+Total: 0.992 sec elapsed
+Simulation  764 
+Total: 0.987 sec elapsed
+Simulation  765 
+Total: 0.98 sec elapsed
+Simulation  766 
+Total: 0.986 sec elapsed
+Simulation  767 
+Total: 0.991 sec elapsed
+Simulation  768 
+Total: 0.983 sec elapsed
+Simulation  769 
+Total: 0.995 sec elapsed
+Simulation  770 
+Total: 0.983 sec elapsed
+Simulation  771 
+Total: 0.981 sec elapsed
+Simulation  772 
+Total: 0.983 sec elapsed
+Simulation  773 
+Total: 0.986 sec elapsed
+Simulation  774 
+Total: 1.014 sec elapsed
+Simulation  775 
+Total: 0.978 sec elapsed
+Simulation  776 
+Total: 0.981 sec elapsed
+Simulation  777 
+Total: 0.971 sec elapsed
+Simulation  778 
+Total: 0.987 sec elapsed
+Simulation  779 
+Total: 0.979 sec elapsed
+Simulation  780 
+Total: 0.983 sec elapsed
+Simulation  781 
+Total: 0.981 sec elapsed
+Simulation  782 
+Total: 0.99 sec elapsed
+Simulation  783 
+Total: 0.985 sec elapsed
+Simulation  784 
+Total: 0.985 sec elapsed
+Simulation  785 
+Total: 0.984 sec elapsed
+Simulation  786 
+Total: 0.978 sec elapsed
+Simulation  787 
+Total: 0.998 sec elapsed
+Simulation  788 
+Total: 1.006 sec elapsed
+Simulation  789 
+Total: 0.978 sec elapsed
+Simulation  790 
+Total: 0.994 sec elapsed
+Simulation  791 
+Total: 0.985 sec elapsed
+Simulation  792 
+Total: 1.013 sec elapsed
+Simulation  793 
+Total: 0.986 sec elapsed
+Simulation  794 
+Total: 0.979 sec elapsed
+Simulation  795 
+Total: 0.99 sec elapsed
+Simulation  796 
+Total: 0.987 sec elapsed
+Simulation  797 
+Total: 0.988 sec elapsed
+Simulation  798 
+Total: 0.987 sec elapsed
+Simulation  799 
+Total: 0.987 sec elapsed
+Simulation  800 
+Total: 0.983 sec elapsed
+Simulation  801 
+Total: 0.981 sec elapsed
+Simulation  802 
+Total: 0.989 sec elapsed
+Simulation  803 
+Total: 0.981 sec elapsed
+Simulation  804 
+Total: 0.985 sec elapsed
+Simulation  805 
+Total: 0.989 sec elapsed
+Simulation  806 
+Total: 0.994 sec elapsed
+Simulation  807 
+Total: 0.986 sec elapsed
+Simulation  808 
+Total: 0.986 sec elapsed
+Simulation  809 
+Total: 0.98 sec elapsed
+Simulation  810 
+Total: 1.006 sec elapsed
+Simulation  811 
+Total: 0.983 sec elapsed
+Simulation  812 
+Total: 0.979 sec elapsed
+Simulation  813 
+Total: 0.977 sec elapsed
+Simulation  814 
+Total: 0.981 sec elapsed
+Simulation  815 
+Total: 0.979 sec elapsed
+Simulation  816 
+Total: 0.98 sec elapsed
+Simulation  817 
+Total: 0.986 sec elapsed
+Simulation  818 
+Total: 0.978 sec elapsed
+Simulation  819 
+Total: 0.983 sec elapsed
+Simulation  820 
+Total: 0.983 sec elapsed
+Simulation  821 
+Total: 0.981 sec elapsed
+Simulation  822 
+Total: 0.987 sec elapsed
+Simulation  823 
+Total: 0.988 sec elapsed
+Simulation  824 
+Total: 0.982 sec elapsed
+Simulation  825 
+Total: 0.987 sec elapsed
+Simulation  826 
+Total: 0.987 sec elapsed
+Simulation  827 
+Total: 0.979 sec elapsed
+Simulation  828 
+Total: 1.007 sec elapsed
+Simulation  829 
+Total: 0.987 sec elapsed
+Simulation  830 
+Total: 0.98 sec elapsed
+Simulation  831 
+Total: 0.985 sec elapsed
+Simulation  832 
+Total: 0.988 sec elapsed
+Simulation  833 
+Total: 0.987 sec elapsed
+Simulation  834 
+Total: 0.979 sec elapsed
+Simulation  835 
+Total: 0.996 sec elapsed
+Simulation  836 
+Total: 0.983 sec elapsed
+Simulation  837 
+Total: 0.987 sec elapsed
+Simulation  838 
+Total: 0.992 sec elapsed
+Simulation  839 
+Total: 0.99 sec elapsed
+Simulation  840 
+Total: 0.991 sec elapsed
+Simulation  841 
+Total: 0.983 sec elapsed
+Simulation  842 
+Total: 0.98 sec elapsed
+Simulation  843 
+Total: 0.986 sec elapsed
+Simulation  844 
+Total: 0.986 sec elapsed
+Simulation  845 
+Total: 0.992 sec elapsed
+Simulation  846 
+Total: 1.021 sec elapsed
+Simulation  847 
+Total: 0.982 sec elapsed
+Simulation  848 
+Total: 0.984 sec elapsed
+Simulation  849 
+Total: 0.999 sec elapsed
+Simulation  850 
+Total: 0.991 sec elapsed
+Simulation  851 
+Total: 0.981 sec elapsed
+Simulation  852 
+Total: 0.988 sec elapsed
+Simulation  853 
+Total: 0.985 sec elapsed
+Simulation  854 
+Total: 0.992 sec elapsed
+Simulation  855 
+Total: 0.99 sec elapsed
+Simulation  856 
+Total: 0.989 sec elapsed
+Simulation  857 
+Total: 0.98 sec elapsed
+Simulation  858 
+Total: 0.984 sec elapsed
+Simulation  859 
+Total: 0.984 sec elapsed
+Simulation  860 
+Total: 0.983 sec elapsed
+Simulation  861 
+Total: 0.989 sec elapsed
+Simulation  862 
+Total: 0.989 sec elapsed
+Simulation  863 
+Total: 0.989 sec elapsed
+Simulation  864 
+Total: 1.014 sec elapsed
+Simulation  865 
+Total: 0.988 sec elapsed
+Simulation  866 
+Total: 0.976 sec elapsed
+Simulation  867 
+Total: 0.99 sec elapsed
+Simulation  868 
+Total: 0.984 sec elapsed
+Simulation  869 
+Total: 0.995 sec elapsed
+Simulation  870 
+Total: 0.987 sec elapsed
+Simulation  871 
+Total: 0.988 sec elapsed
+Simulation  872 
+Total: 0.976 sec elapsed
+Simulation  873 
+Total: 0.992 sec elapsed
+Simulation  874 
+Total: 0.986 sec elapsed
+Simulation  875 

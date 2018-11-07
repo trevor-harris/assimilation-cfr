@@ -18,40 +18,33 @@ source("/home/trevorh2/assimilation-cfr/code/simulation.R")
 #### SIZE
 set.seed(seed)
 
-k.xd = matrix(0, sims, 2)
-k.pd = matrix(0, sims, 2)
-
-q.xd = matrix(0, sims, 2)
-q.pd = matrix(0, sims, 2)
-
+kvals = matrix(0, sims, 2)
+qvals = matrix(0, sims, 2)
 
 for(s in 1:sims) {
   tic("Total")
   cat("Simulation ", s, "\n")
   
-  f = gp1d(fields = n, pts = pts, l = l)
-  g = gp1d(fields = n+1, pts = pts, l = l)
-  
-  f = apply(f, 2, function(x) spline(1:pts, x, n = d*pts)$y)
-  g = apply(g, 2, function(x) spline(1:pts, x, n = d*pts)$y)
-  
-  k.xd[s,] = kolm.xd(f, g)
-  k.pd[s,] = kolm.pd(f, g)
-  
-  q.xd[s,] = quality.xd(f, g)
-  q.pd[s,] = quality.pd(f, g)
+  f = gp2d(fields = n, pts = pts, l = l)
+  g = gp2d(fields = n+1, pts = pts, l = l)
+
+  f = flatten(f)
+  g = flatten(g)
+
+  kvals[s,] = kolm(f, g)
+  qvals[s,] = quality(f, g)
   
   toc()
 }
 
-size = data.frame(stat = c(k.xd[,1], k.pd[,1], q.xd[,1], q.pd[,1]),
-                  pval = c(k.xd[,2], k.pd[,2], q.xd[,2], q.pd[,2]),
-		  method = rep(c("K_XD", "K_PD", "Q_XD", "Q_PD"), each=500),
+size = data.frame(stat = c(kvals[,1], qvals[,1]),
+                  pval = c(kvals[,2], qvals[,2]),
+		  method = rep(c("K", "Q"), each=sims),
                   sims = sims,
                   pts = pts,
                   functions = n,
                   range = l,
                   seed = seed)
 
-saveRDS(size, file = paste0("/home/trevorh2/size/output/sim",i,".RDS"))
+saveRDS(size, file = paste0("/home/trevorh2/size/independent/sim",i,".RDS"))
 

@@ -31,6 +31,27 @@ kolm.xd = function(f, g) {
   c(ks, 1-ks_cdf(ks))
 }
 
+kolm = function(f, g) {
+  ff.xd = xdepth(f, f)
+  fg.xd = xdepth(f, g)
+  
+  gg.xd = xdepth(g, g)
+  gf.xd = xdepth(g, f)
+  
+  ff.cdf = sapply(ff.xd, function(y) mean(ff.xd <= y))
+  gf.cdf = sapply(ff.xd, function(y) mean(gf.xd <= y))
+  fg.cdf = sapply(gg.xd, function(y) mean(fg.xd <= y))
+  gg.cdf = sapply(gg.xd, function(y) mean(gg.xd <= y))
+  
+  rate = sqrt((ncol(g)*ncol(f)) / (ncol(g) + ncol(f)))
+  
+  ksf = rate*max(abs(ff.cdf - gf.cdf))
+  ksg = rate*max(abs(gg.cdf - fg.cdf))
+  
+  ks = max(ksf, ksg)
+  c(ks, 1-ks_cdf(ks))
+}
+
 # K test with Extremal Depth
 kolm.ed = function(f, g) {
   ff.xd = edepth_set(f)
@@ -85,12 +106,12 @@ kolm.pd = function(f, g) {
 #### QI
 
 # Quality Index with Expected Depth
-quality.xd = function(f, g) {
+quality = function(f, g) {
   fxd = xdepth(f, f)
   gxd = xdepth(g, f)
   
   r = sapply(gxd, function(y) mean(y >= fxd))
-  pval = 1 - pnorm((mean(r) - 0.5) / sqrt((1/ncol(f) + 1/ncol(g))/12))
+  pval = 1 - pnorm(abs(mean(r) - 0.5) / sqrt((1/ncol(f) + 1/ncol(g))/12))
   
   c(mean(r), pval)
 }
