@@ -5,8 +5,7 @@ library(dplyr)
 library(reshape2)
 
 # import raw size data
-dir = "../temp/size/independent/"
-dir = "../temp/size/output/"
+dir ="../assimilation-cfr/paper/size/independent/"
 files = list.files(dir)
 size_data = readRDS(paste0(dir, files[1]))
 for(f in 2:length(files)) {

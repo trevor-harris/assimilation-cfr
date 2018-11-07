@@ -4,9 +4,9 @@ library(ggplot2)
 library(dplyr)
 library(reshape2)
 
-source("research/temp/code/depth_tests.R")
-source("research/temp/code/depths.R")
-source("research/temp/code/simulation.R")
+source("research/assimilation-cfr/code/depth_tests.R")
+source("research/assimilation-cfr/code/depths.R")
+source("research/assimilation-cfr/code/simulation.R")
 
 kolm = function(f, g) {
   ff.xd = xdepth(f, f)
