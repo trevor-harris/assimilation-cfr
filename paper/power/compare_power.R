@@ -6,6 +6,8 @@ library(reshape2)
 
 # import raw size data
 dir = "../temp/power/independent/"
+dir = "../research/assimilation-cfr/paper/power/independent/"
+
 files = list.files(dir)
 power_data = readRDS(paste0(dir, files[1]))
 for(f in 2:length(files)) {

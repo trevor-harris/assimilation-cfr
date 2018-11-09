@@ -1,11 +1,7 @@
 rm(list = ls())
 gc()
 
-library(extdepth)
 library(ncdf4)
-library(dplyr)
-library(reshape2)
-library(OpenImageR)
 library(tictoc)
 
 source("../research/assimilation-cfr/code/depth_tests.R")
@@ -67,38 +63,29 @@ flatten = function(mat) {
   matrix(mat, prod(dim(mat)[1:2]), dim(mat)[3])
 }
 
-
-# parameters
-ds = 4
-
 nc.post = nc_open('../research/climate_data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 nc.prior = nc_open('../research/climate_data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 
+prior_ind = read.csv("../research/climate_data/prior.txt", header = F)$V1
+
 prior = prep_prior(nc.prior)
-prior.t = sapply(1:dim(prior)[3], function(x) down_sample_image(prior[,,x], ds))
+prior = flatten(prior[,,prior_ind])
 
 
-times = 1:998
+times = 1:9
 k.t = matrix(0, length(times), 2)
 
 for(t in 1:length(times)) {
   tic(paste0("Year ", times[t]))
   
-  # apply low pass filter to remove "noise" (really just to speed it up)
-  post = prep_post(nc.post, times[t])
-  post.t = sapply(1:dim(post)[3], function(x) down_sample_image(post[,,x], ds))
+  post.t = flatten(prep_post(nc.post, times[t]))
   
   # test
-  k.t[t,] = kolm(post.t, prior.t)
+  k.t[1,] = kolm(prior, post.t)
   
   toc()
 }
 
 pvals = p.adjust(k.t[,2], n = 998)
+write.csv(ksp.adj, "../research/assimilation-cfr/cfr/adjusted_pvals")
 
-plot(pvals)
-
-# summary(pvals)
-# 
-# write.csv(ksp, "../research/assimilation-cfr/cfr/pvals")
-# write.csv(ksp.adj, "../research/assimilation-cfr/cfr/adjusted_pvals")

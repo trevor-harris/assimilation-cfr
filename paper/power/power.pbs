@@ -9,7 +9,7 @@
 cd $PBS_O_WORKDIR
 
 # Run the simulation for the given params
-Rscript power.R ${N} ${PTS} ${MU1} ${MU2} ${SD1} ${SD2} ${R1} ${R2} ${I} ${S} ${NAME} 1000
+Rscript power.R ${N} ${PTS} ${MU1} ${MU2} ${SD1} ${SD2} ${R1} ${R2} ${I} ${S} ${NAME} 2000
 
 
 
