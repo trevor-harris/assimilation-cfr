@@ -1,0 +1,28 @@
+----------------------------------------
+Begin Torque Prologue (Fri Nov  9 08:18:46 2018)
+Job ID:           7871829.cc-mgmt1.campuscluster.illinois.edu
+Username:         trevorh2
+Group:            stat
+Job Name:         climate_temp
+Limits:           walltime=10:00:00,nodes=1:ppn=1,neednodes=1:ppn=1
+Job Queue:        stat
+Account:          stat
+Nodes:            golub114
+End Torque Prologue
+----------------------------------------
+----------------------------------------
+Begin Torque Epilogue (Fri Nov  9 12:08:53 2018)
+Job ID:           7871829.cc-mgmt1.campuscluster.illinois.edu
+Username:         trevorh2
+Group:            stat
+Job Name:         climate_temp
+Session:          44835
+Limits:           walltime=10:00:00,nodes=1:ppn=1,neednodes=1:ppn=1
+Resources:        cput=00:46:06,vmem=648056kb,walltime=03:49:46,mem=382964kb,energy_used=0
+Job Queue:        stat
+Account:          stat
+Nodes:            golub114
+rm: cannot remove '/tmp/passwd.tmp': No such file or directory
+rm: cannot remove '/tmp/group.tmp': No such file or directory
+End Torque Epilogue
+----------------------------------------

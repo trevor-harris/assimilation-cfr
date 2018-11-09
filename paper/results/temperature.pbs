@@ -1,0 +1,15 @@
+# inputs
+
+#PBS -l walltime=10:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l naccesspolicy=shared
+#PBS -N climate_temp
+#PBS -q stat
+
+cd $PBS_O_WORKDIR
+
+# Run the simulation for the given params
+Rscript temperature.R ${ERA} ${N}
+
+
+

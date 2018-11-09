@@ -10,6 +10,7 @@ i = as.integer(args[4])
 seed = as.integer(args[5]) + i
 pts = as.integer(args[6])
 sims = as.integer(args[7])
+j = as.integer(args[8])
 
 source("/home/trevorh2/assimilation-cfr/code/depth_tests.R")
 source("/home/trevorh2/assimilation-cfr/code/depths.R")
@@ -44,6 +45,7 @@ size = data.frame(stat = c(kvals[,1], qvals[,1]),
                   pts = pts,
                   functions = n,
                   range = l,
+                  group = j,
                   seed = seed)
 
 saveRDS(size, file = paste0("/home/trevorh2/size/independent/sim",i,".RDS"))

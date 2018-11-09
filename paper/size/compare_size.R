@@ -5,14 +5,13 @@ library(dplyr)
 library(reshape2)
 
 # import raw size data
-dir ="../assimilation-cfr/paper/size/independent/"
+dir = "../assimilation-cfr/paper/size/independent/"
 files = list.files(dir)
 size_data = readRDS(paste0(dir, files[1]))
 for(f in 2:length(files)) {
   size_data = rbind(size_data, readRDS(paste0(dir, files[f])))
 }
 
-# Compare mean shifts
 size = size_data %>%
   select(pval, method, functions, range) %>%
   group_by(method, functions, range) %>%
@@ -21,24 +20,77 @@ size = size_data %>%
   mutate(method = recode(method, 
                          K_WA = "K Statistic",
                          Q_XD = "Quality Index"),
-         functions = as.factor(functions),
-         range = as.factor(range)
+         Functions = as.factor(functions),
+         Range = as.factor(range)
   )
 
-ggplot(size, aes(x=method, y=size, color=functions)) +
+ggplot(size, aes(x=method, y=size, color=Functions)) +
   geom_boxplot() +
   geom_hline(yintercept = 0.05) +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Method") +
   ylab("Size") +
-  ggtitle("Type 1 error under F = G")
+  ggtitle("Size v.s. Number of Functions")
+ggsave(paste0("../assimilation-cfr/paper/size/", "size_functions.png"), width = 5, height = 3.2)
 
-ggplot(size, aes(x=method, y=size, color=range)) +
+ggplot(size, aes(x=method, y=size, color=Range)) +
   geom_boxplot() +
   geom_hline(yintercept = 0.05) +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Method") +
   ylab("Size") +
-  ggtitle("Type 1 error under F = G")
+  ggtitle("Size v.s. Range")
+ggsave(paste0("../assimilation-cfr/paper/size/", "size_range.png"), width = 5, height = 3.2)
+
+
+# boxplots over the seeds by range and function
+size = size_data %>%
+  select(pval, method, functions, range, seed) %>%
+  group_by(method, functions, range, seed) %>%
+  summarize(size = mean(pval < 0.05)) %>%
+  ungroup() %>%
+  mutate(Method = recode(method, 
+                         K_WA = "K Statistic",
+                         Q_XD = "Quality Index"),
+         Functions = as.factor(functions),
+         Range = as.factor(range)
+  )
+
+ggplot(size, aes(x=Range, y=size, color=Method)) +
+  geom_boxplot() +
+  geom_hline(yintercept = 0.05) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(strip.placement = "outside") +
+  facet_wrap(~Functions, strip.position = "bottom") +
+  xlab("Range by Number of Functions") +
+  ylab("Size") +
+  ggtitle("Size")
+
+
+# boxplots over the seeds by function
+size = size_data %>%
+  select(pval, method, functions, seed) %>%
+  group_by(method, functions, seed) %>%
+  summarize(size = mean(pval < 0.05)) %>%
+  ungroup() %>%
+  mutate(Method = recode(method, 
+                         K = "K Statistic",
+                         Q = "Quality Index"),
+         Functions = as.factor(functions)
+  )
+
+ggplot(size, aes(x=Functions, y=size, color=Method)) +
+  geom_boxplot() +
+  geom_hline(yintercept = 0.05) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab("Number of Functions") +
+  ylab("Size") +
+  ggtitle("Size of K(F, G) v.s. Q(F, G)")
+ggsave("../assimilation-cfr/paper/size/size.png", width = 5, height = 3.2)
+
+
+

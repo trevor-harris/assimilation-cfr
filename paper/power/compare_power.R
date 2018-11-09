@@ -6,6 +6,7 @@ library(reshape2)
 
 # import raw size data
 dir = "../temp/power/independent/"
+dir = "research/assimilation-cfr/paper/power/independent/"
 files = list.files(dir)
 power_data = readRDS(paste0(dir, files[1]))
 for(f in 2:length(files)) {
@@ -28,9 +29,10 @@ ggplot(power_mu, aes(x=mu2, y=power, color=method)) +
   geom_hline(yintercept = 0.05) +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
-  xlab("Posterior mean") +
+  xlab("G's mean parameter") +
   ylab("Power") +
   ggtitle("Power against mean change")
+ggsave(paste0("research/assimilation-cfr/paper/power/", "location.png"), width = 5, height = 3.2)
 
 # Compare Scale changes
 power_sd = power_data %>%
@@ -48,9 +50,10 @@ ggplot(power_sd, aes(x=sd2, y=power, color=method)) +
   geom_hline(yintercept = 0.05) +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
-  xlab("Posterior scale") +
+  xlab("G's SD parameter") +
   ylab("Power") +
-  ggtitle("Power against scale change")
+  ggtitle("Power against SD change")
+ggsave(paste0("research/assimilation-cfr/paper/power/", "scale.png"), width = 5, height = 3.2)
 
 
 # Compare correlation changes
@@ -69,6 +72,7 @@ ggplot(power_corr, aes(x=r2, y=power, color=method)) +
   geom_hline(yintercept = 0.05) +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
-  xlab("Posterior correlation") +
+  xlab("G's range parameter") +
   ylab("Power") +
-  ggtitle("Power against correlation change")
+  ggtitle("Power against range change")
+ggsave(paste0("research/assimilation-cfr/paper/power/", "correlation.png"), width = 5, height = 3.2)
