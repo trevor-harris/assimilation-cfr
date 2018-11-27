@@ -103,7 +103,6 @@ field_plot <- function(field, nc, main = "", downsamp = 1, zlim = c(-max(abs(fie
     ggtitle(main) +
     theme(plot.title = element_text(hjust = 0.5))
 }
-
 field_plot2 <- function(field, nc, main = "", downsamp = 1, zlim = c(-max(abs(field)), max(abs(field)))) {
   
   lats = as.vector(nc$dim$lat$vals)[seq(1, 96, by=downsamp)]
@@ -131,7 +130,6 @@ field_plot2 <- function(field, nc, main = "", downsamp = 1, zlim = c(-max(abs(fi
     theme(plot.title = element_text(hjust = 0.5)) +
     guide_legend(title="Temperature")
 }
-
 
 
 ###### Read in the temp data results (for K values)
@@ -163,7 +161,6 @@ prior = prep_prior(nc.prior)
 prior = flatten(prior[,,prior_ind])
 
 prior.depths = xdepth(prior, prior)
-
 
 
 

@@ -288,8 +288,7 @@ for(t in 1:times) {
 
 # reassemble into series
 kseries = melt(t(kfield)) %>% 
-  mutate(Region = as.factor(Var2),
-         value = value / sqrt(ens*ens / (ens + ens)))
+  mutate(Region = as.factor(Var2))
 
 pseries = melt(t(pfield)) %>%
   mutate(Region = as.factor(Var2),
@@ -306,7 +305,7 @@ ggplot(kseries, aes(Var1, value, color = Region)) +
   xlab("Time") +
   ylab("K") +
   ggtitle("K over time by region") +
-  facet_wrap(vars(Region), 4, 4)
+  facet_wrap(vars(Region), 8, 8)
 # ggsave(paste0(save_dir, "k_region.png"), width = 5, height = 3.2)
 
 ggplot(pseries, aes(Var1, value, color = Region)) +
@@ -319,7 +318,7 @@ ggplot(pseries, aes(Var1, value, color = Region)) +
   xlab("Time") +
   ylab("p-value") +
   ggtitle("P-values over time by region") +
-  facet_wrap(vars(Region), 4, 4)
+  facet_wrap(vars(Region), 8, 8)
 # ggsave(paste0(save_dir, "pval_region.png"), width = 5, height = 3.2)
 
 
