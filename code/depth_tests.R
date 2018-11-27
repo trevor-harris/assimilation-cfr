@@ -24,7 +24,7 @@ kolm = function(f, g) {
   ksg = rate*max(abs(gg.cdf - fg.cdf))
   
   ks = max(ksf, ksg)
-  c(ks, 1-ks_cdf(ks))
+  c(ks/rate, 1-ks_cdf(ks))
 }
 
 
