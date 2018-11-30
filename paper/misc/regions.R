@@ -6,7 +6,7 @@ library(dplyr)
 library(reshape2)
 library(ggplot2)
 
-source("../assimilation-cfr/code/simulation.R")
+source("../research/assimilation-cfr/code/simulation.R")
 
 prep_prior = function(nc.prior) {
   
@@ -57,14 +57,23 @@ prep_post = function(nc.post, t) {
   return(ens)
 }
 
-field_plot <- function(field, nc, main = "", downsamp = 1, zlim = c(-max(abs(field)), max(abs(field)))) {
+
+region_plot <- function(field, nc, main = "", zlim = c(-max(abs(field)), max(abs(field)))) {
   
-  lats = as.vector(nc$dim$lat$vals)[seq(1, 96, by=downsamp)]
-  lons = as.vector(nc$dim$lon$vals)[seq(1, 144, by=downsamp)]
-  dimnames(field) = list(lats, ifelse(lons >= 180, lons - 360, lons))
+  lats = rev(as.vector(nc$dim$lat$vals))
+  lons = as.vector(nc$dim$lon$vals)
+  dimnames(field) = list(lats, sort(ifelse(lons >= 180, lons - 360, lons)))
   
   field.gg = melt(field)
-  colnames(field.gg) = c("lat", "lon", "Temp")
+  colnames(field.gg) = c("lat", "lon", "Region")
+  field.gg[["Region"]] = as.factor(field.gg[["Region"]])
+  
+  lcuts = field.gg %>% group_by(lon, Region) %>% summarize(lcut = max(lat))
+  indy = tail(unique(lcuts$lcut), -1)
+  indy = indy - median(indy)
+  
+  lcuts = field.gg %>% group_by(lat, Region) %>% summarize(lcut = max(lon))
+  indx = head(unique(lcuts$lcut), -1) + 1
   
   world = map_data("world")
   world = world[world$long <= 178, ]
@@ -72,19 +81,20 @@ field_plot <- function(field, nc, main = "", downsamp = 1, zlim = c(-max(abs(fie
   zlim = c(-max(abs(field)), max(abs(field)))
   
   ggplot() +
-    geom_raster(data = field.gg, aes(x=lon, y=lat, fill=Temp), interpolate = TRUE) +
+    geom_raster(data = field.gg, aes(x=lon, y=lat, fill=Region), alpha = 0.4) +
     geom_polygon(data = world, aes(x=long, y=lat, group=group), fill = NA, color="black") +
+    geom_hline(yintercept = indy, color = "White") +
+    geom_vline(xintercept = indx, color = "white") +
     coord_cartesian() +
-    scale_fill_gradient2(midpoint=0, low="blue", mid="white", high="red") +
-    # scale_fill_gradient2(midpoint=0, low="#4393c3", mid="white", high="#d6604d") +
-    # scale_fill_gradient2(midpoint=0, low="#2166ac", mid="white", high="#b2182b") +
     theme_void() +
     ggtitle(main) +
-    theme(plot.title = element_text(hjust = 0.5))
+    theme(plot.title = element_text(hjust = 0.5)) +
+    theme(legend.position="none")
 }
-region_plot <- function(field, nc, main = "", zlim = c(-max(abs(field)), max(abs(field)))) {
+
+region_plot_simple <- function(field, nc, main = "", zlim = c(-max(abs(field)), max(abs(field)))) {
   
-  lats = as.vector(nc$dim$lat$vals)
+  lats = rev(as.vector(nc$dim$lat$vals))
   lons = as.vector(nc$dim$lon$vals)
   dimnames(field) = list(lats, sort(ifelse(lons >= 180, lons - 360, lons)))
   
@@ -92,11 +102,11 @@ region_plot <- function(field, nc, main = "", zlim = c(-max(abs(field)), max(abs
   colnames(field.gg) = c("lat", "lon", "Region")
   
   lcuts = field.gg %>% group_by(lon, Region) %>% summarize(lcut = max(lat))
-  indy = head(unique(lcuts$lcut), -1)
+  indy = tail(unique(lcuts$lcut), -1)
   indy = indy - median(indy)
   
   lcuts = field.gg %>% group_by(lat, Region) %>% summarize(lcut = max(lon))
-  indx = head(unique(lcuts$lcut), -1)
+  indx = head(unique(lcuts$lcut), -1) + 1
   
   world = map_data("world")
   world = world[world$long <= 178, ]
@@ -104,14 +114,13 @@ region_plot <- function(field, nc, main = "", zlim = c(-max(abs(field)), max(abs
   zlim = c(-max(abs(field)), max(abs(field)))
   
   ggplot() +
-    # geom_raster(data = field.gg, aes(x=lon, y=lat, fill=Region)) +
     geom_polygon(data = world, aes(x=long, y=lat, group=group), fill = NA, color="black") +
     geom_hline(yintercept = indy, color = "#F8766D") +
     geom_vline(xintercept = indx, color = "#F8766D") +
     coord_cartesian() +
     theme_void() +
-    ggtitle(main) +
-    theme(plot.title = element_text(hjust = 0.5))
+    theme(plot.title = element_text(hjust = 0.5)) +
+    theme(legend.position="none")
 }
 
 # regionalizations
@@ -164,8 +173,8 @@ area_splitter = function(arr, regions = 16, rx = sqrt(regions)) {
 }
 
 #### Regaionlized significant differences
-nc.prior = nc_open('../assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-prior_ind = read.csv("../assimilation-cfr/data/prior_ens.txt", header = F)$V1
+nc.prior = nc_open('../research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+prior_ind = read.csv("../research/assimilation-cfr/data/prior_ens.txt", header = F)$V1
 
 # 16 region setting
 regions = 16
@@ -178,5 +187,8 @@ prior.split = area_splitter(prior, regions)
 
 region.map = lapply(1:regions, function(x) matrix(x, nrow(prior.split[[x]][,,1]), ncol(prior.split[[x]][,,1])))
 region.map = matcombiner(region.map, rs)
-region_plot(region.map, nc.prior)
+region_plot(region.map, nc.prior, main = "Geographic Regions")
+ggsave(paste0("../research/assimilation-cfr/paper/misc/", "fancy_regions.png"), width = 5, height = 3.2)
 
+region_plot_simple(region.map, nc.prior)
+ggsave(paste0("../research/assimilation-cfr/paper/misc/", "regions.png"), width = 5, height = 3.2)
