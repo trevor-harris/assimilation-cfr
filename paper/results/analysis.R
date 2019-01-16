@@ -1,6 +1,9 @@
 rm(list = ls())
 gc()
 
+years = 851:1848
+ens = 100
+
 library(extdepth)
 library(ncdf4)
 library(dplyr)
@@ -11,9 +14,9 @@ library(tictoc)
 library(future)
 library(future.apply)
 
-source("../research/assimilation-cfr/code/depth_tests.R")
-source("../research/assimilation-cfr/code/depths.R")
-source("../research/assimilation-cfr/code/simulation.R")
+source("research/assimilation-cfr/code/depth_tests.R")
+source("research/assimilation-cfr/code/depths.R")
+source("research/assimilation-cfr/code/simulation.R")
 
 prep_prior = function(nc.prior) {
   
@@ -142,11 +145,11 @@ area_splitter = function(arr, regions = 16, rx = sqrt(regions)) {
 }
 
 
-save_dir = "../research/assimilation-cfr/paper/results/"
+save_dir = "research/assimilation-cfr/paper/results/"
 
 # import raw size data
 # dir = "../temp/power/independent/"
-dir = "../research/assimilation-cfr/paper/results/results/"
+dir = "research/assimilation-cfr/paper/results/results/"
 files = list.files(dir)
 
 temperature = read_era(dir, files[1])
@@ -154,7 +157,7 @@ for(f in 3:length(files)) {
   temperature = rbind(temperature, read_era(dir, files[f]))
 }
 temperature = rbind(temperature, read_era(dir, files[2]))
-temperature[["time"]] = 1:times
+temperature[["time"]] = years
 
 temperature$stat = temperature$stat / (sqrt((ens*ens)/(ens + ens)))
 
@@ -164,8 +167,8 @@ ggplot(temperature, aes(time, stat)) +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
   ylab("Effect Size") +
-  xlab("Time") +
-  ggtitle("K(F, G) over time")
+  xlab("Year")
+  # ggtitle("K(F, G) over time")
 ggsave("research/assimilation-cfr/paper/results/effect_over_time.png", width = 5, height = 3.2)
 
 temperature$pval = p.adjust(temperature$pval)
@@ -175,18 +178,18 @@ ggplot(temperature, aes(time, pval)) +
   # geom_smooth(se = F, color = "red") +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
-  ylab("p-values") +
-  xlab("Time") +
-  ggtitle("P-values of K(F, G) over time")
-ggsave("../research/assimilation-cfr/paper/results/pval_over_time.png", width = 5, height = 3.2)
+  ylab("p-values")+
+  xlab("Year")
+  # ggtitle("P-values of K(F, G) over time")
+ggsave("research/assimilation-cfr/paper/results/pval_over_time.png", width = 5, height = 3.2)
 
 
 
 
 #### Regaionlized significant differences
-nc.post = nc_open('../research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-nc.prior = nc_open('../research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-prior_ind = read.csv("../research/assimilation-cfr/data/prior_ens.txt", header = F)$V1
+nc.post = nc_open('research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.prior = nc_open('research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+prior_ind = read.csv("research/assimilation-cfr/data/prior_ens.txt", header = F)$V1
 
 
 # 16 region setting
@@ -259,68 +262,68 @@ ggplot(pseries, aes(Var1, value, color = Region)) +
 ggsave(paste0(save_dir, "pval_region.png"), width = 5, height = 3.2)
 
 
-# 64 region setting
-times = 998
-lats = 96
-lons = 144
-ens = 100
-regions = 64
-rs = sqrt(regions)
-kfield = matrix(0, regions, times)
-pfield = matrix(0, regions, times)
-
-# import all of prior
-prior.split = area_splitter(prior, regions)
-
-
-for(t in 1:times) {
-  tic(paste0("Time: ", t))
-  
-  post.t = post[,,,t]
-  post.split = area_splitter(post.t, regions)
-  
-  ktest = future_sapply(1:regions, function(x) kolm(flatten(prior.split[[x]]), flatten(post.split[[x]])))
-  kfield[,t] = ktest[1,]
-  pfield[,t] = ktest[2,]
-  
-  toc()
-}
-
-# reassemble into series
-kseries = melt(t(kfield)) %>% 
-  mutate(Region = as.factor(Var2))
-
-pseries = melt(t(pfield)) %>%
-  mutate(Region = as.factor(Var2),
-         value = p.adjust(value, method = "BY"))
-
-ggplot(kseries, aes(Var1, value, color = Region)) +
-  geom_point(size = 0.2) +
-  geom_smooth(color = "black") +
-  theme_classic() + 
-  theme(plot.title = element_text(hjust = 0.5)) +
-  theme(legend.position="none") +
-  scale_x_continuous(breaks = c(1, 500, 998)) +
-  scale_y_continuous(breaks = c(0, 0.5, 1)) +
-  xlab("Time") +
-  ylab("K") +
-  ggtitle("K over time by region") +
-  facet_wrap(vars(Region), 8, 8)
-# ggsave(paste0(save_dir, "k_region.png"), width = 5, height = 3.2)
-
-ggplot(pseries, aes(Var1, value, color = Region)) +
-  geom_point(size = 0.2) +
-  theme_classic() + 
-  theme(plot.title = element_text(hjust = 0.5)) +
-  theme(legend.position="none") +
-  scale_x_continuous(breaks = c(1, 500, 998)) +
-  scale_y_continuous(breaks = c(0, 0.5, 1)) +
-  xlab("Time") +
-  ylab("p-value") +
-  ggtitle("P-values over time by region") +
-  facet_wrap(vars(Region), 8, 8)
-# ggsave(paste0(save_dir, "pval_region.png"), width = 5, height = 3.2)
-
+# # 64 region setting
+# times = 998
+# lats = 96
+# lons = 144
+# ens = 100
+# regions = 64
+# rs = sqrt(regions)
+# kfield = matrix(0, regions, times)
+# pfield = matrix(0, regions, times)
+# 
+# # import all of prior
+# prior.split = area_splitter(prior, regions)
+# 
+# 
+# for(t in 1:times) {
+#   tic(paste0("Time: ", t))
+#   
+#   post.t = post[,,,t]
+#   post.split = area_splitter(post.t, regions)
+#   
+#   ktest = future_sapply(1:regions, function(x) kolm(flatten(prior.split[[x]]), flatten(post.split[[x]])))
+#   kfield[,t] = ktest[1,]
+#   pfield[,t] = ktest[2,]
+#   
+#   toc()
+# }
+# 
+# # reassemble into series
+# kseries = melt(t(kfield)) %>% 
+#   mutate(Region = as.factor(Var2))
+# 
+# pseries = melt(t(pfield)) %>%
+#   mutate(Region = as.factor(Var2),
+#          value = p.adjust(value, method = "BY"))
+# 
+# ggplot(kseries, aes(Var1, value, color = Region)) +
+#   geom_point(size = 0.2) +
+#   geom_smooth(color = "black") +
+#   theme_classic() + 
+#   theme(plot.title = element_text(hjust = 0.5)) +
+#   theme(legend.position="none") +
+#   scale_x_continuous(breaks = c(1, 500, 998)) +
+#   scale_y_continuous(breaks = c(0, 0.5, 1)) +
+#   xlab("Time") +
+#   ylab("K") +
+#   ggtitle("K over time by region") +
+#   facet_wrap(vars(Region), 8, 8)
+# # ggsave(paste0(save_dir, "k_region.png"), width = 5, height = 3.2)
+# 
+# ggplot(pseries, aes(Var1, value, color = Region)) +
+#   geom_point(size = 0.2) +
+#   theme_classic() + 
+#   theme(plot.title = element_text(hjust = 0.5)) +
+#   theme(legend.position="none") +
+#   scale_x_continuous(breaks = c(1, 500, 998)) +
+#   scale_y_continuous(breaks = c(0, 0.5, 1)) +
+#   xlab("Time") +
+#   ylab("p-value") +
+#   ggtitle("P-values over time by region") +
+#   facet_wrap(vars(Region), 8, 8)
+# # ggsave(paste0(save_dir, "pval_region.png"), width = 5, height = 3.2)
+# 
 
 
 # reassemble into maps

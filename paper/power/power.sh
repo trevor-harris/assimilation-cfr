@@ -5,7 +5,7 @@ i=1
 s=042696
 
 # parameters for F
-n=100
+n=300
 pts=20
 
 mu1=0

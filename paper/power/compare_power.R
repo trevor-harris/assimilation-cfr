@@ -20,18 +20,19 @@ power_mu = power_data %>%
   group_by(method, functions, mu2) %>%
   summarize(power = mean(pval < 0.05)) %>%
   ungroup() %>%
-  mutate(method = recode(method, 
-                         K = "K Statistic",
-                         Q = "Quality Index")
+  mutate(Statistic = recode(method, 
+                         K = "K",
+                         Q = "Q")
   )
-ggplot(power_mu, aes(x=mu2, y=power, color=method)) +
+power_mu = power_mu[power_mu$functions == 300,]
+ggplot(power_mu, aes(x=mu2, y=power, color=Statistic)) +
   geom_line() +
   geom_hline(yintercept = 0.05) +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
-  xlab("G's mean parameter") +
-  ylab("Power") +
-  ggtitle("Power against mean change")
+  xlab("Mean shift") +
+  ylab("Power")
+  # ggtitle("Power against mean change")
 ggsave(paste0("research/assimilation-cfr/paper/power/", "location.png"), width = 5, height = 3.2)
 
 # Compare Scale changes
@@ -41,18 +42,18 @@ power_sd = power_data %>%
   group_by(method, functions, sd2) %>%
   summarize(power = mean(pval < 0.05)) %>%
   ungroup() %>%
-  mutate(method = recode(method, 
-                         K = "K Statistic",
-                         Q = "Quality Index")
+  mutate(Statistic = recode(method, 
+                         K = "K",
+                         Q = "Q")
   )
-ggplot(power_sd, aes(x=sd2, y=power, color=method)) +
+ggplot(power_sd, aes(x=sd2, y=power, color=Statistic)) +
   geom_line() +
   geom_hline(yintercept = 0.05) +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
-  xlab("G's SD parameter") +
-  ylab("Power") +
-  ggtitle("Power against SD change")
+  xlab("Std. dev. multiple") +
+  ylab("Power")
+  # ggtitle("Power against SD change")
 ggsave(paste0("research/assimilation-cfr/paper/power/", "scale.png"), width = 5, height = 3.2)
 
 
@@ -63,16 +64,17 @@ power_corr = power_data %>%
   group_by(method, functions, r2) %>%
   summarize(power = mean(pval < 0.05)) %>%
   ungroup() %>%
-  mutate(method = recode(method, 
-                         K = "K Statistic",
-                         Q = "Quality Index")
+  mutate(Statistic = recode(method, 
+                            K = "K",
+                            Q = "Q"),
+         r2 = r2 - 30
   )
-ggplot(power_corr, aes(x=r2, y=power, color=method)) +
+ggplot(power_corr, aes(x=r2, y=power, color=Statistic)) +
   geom_line() +
   geom_hline(yintercept = 0.05) +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
-  xlab("G's range parameter") +
-  ylab("Power") +
-  ggtitle("Power against range change")
+  xlab("Range Shift") +
+  ylab("Power")
+  # ggtitle("Power against range change")
 ggsave(paste0("research/assimilation-cfr/paper/power/", "correlation.png"), width = 5, height = 3.2)

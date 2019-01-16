@@ -35,24 +35,52 @@ gp2d = function(fields = 100, mu = 0, sd = 1, l = 30, pts = 30) {
 flatten = function(mat) {
   matrix(mat, prod(dim(mat)[1:2]), dim(mat)[3])
 }
-plt_funs = function(f, g, main = "Functions") {
+
+
+plt_funs = function(f, g, yl = "Value", fcol = "red", gcol = "blue", domain = seq(0, 1, length.out = nrow(f))) {
+  domain = domain
   
-  if(missing(g)) {
-    f = as.matrix(f)
-    plot(f[,1], type = "l", ylim = c(min(f), max(f)), col = "red", main = main)
-    for(i in 2:ncol(f)) {
-      lines(f[,i], col = "red")
-    }
+  f = melt(f)
+  f$Var1 = domain
+  
+  plt = ggplot() +
+    geom_line(data = f, aes(x = Var1, y = value, group = Var2, alpha = 0.5), color = fcol)
+  
+  if(!missing(g)) {
+    g = melt(g)
+    g$Var1 = t
+    
+    plt = plt + 
+      geom_line(data = g, aes(x = Var1, y = value, group = Var2, alpha = 0.5), color = gcol)
   }
-  else {
-    f = as.matrix(f)
-    g = as.matrix(g)
-    plot(f[,1], type = "l", ylim = c(min(cbind(f, g)), max(cbind(f, g))), col = "red", main = main)
-    for(i in 2:ncol(f)) {
-      lines(f[,i], col = "red")
-    }
-    for(i in 1:ncol(g)) {
-      lines(g[,i], col = "blue")
-    }
-  }
+  plt = plt + 
+    theme_classic() +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    theme(legend.position="none") +
+    ylab(yl) +
+    xlab("Time")
+  
+  print(plt)
 }
+
+# plt_funs = function(f, g, main = "Functions") {
+#   
+#   if(missing(g)) {
+#     f = as.matrix(f)
+#     plot(f[,1], type = "l", ylim = c(min(f), max(f)), col = "red", main = main)
+#     for(i in 2:ncol(f)) {
+#       lines(f[,i], col = "red")
+#     }
+#   }
+#   else {
+#     f = as.matrix(f)
+#     g = as.matrix(g)
+#     plot(f[,1], type = "l", ylim = c(min(cbind(f, g)), max(cbind(f, g))), col = "red", main = main)
+#     for(i in 2:ncol(f)) {
+#       lines(f[,i], col = "red")
+#     }
+#     for(i in 1:ncol(g)) {
+#       lines(g[,i], col = "blue")
+#     }
+#   }
+# }
