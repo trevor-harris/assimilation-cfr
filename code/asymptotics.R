@@ -1,20 +1,131 @@
 rm(list = ls())
 
-library(reshape2)
-library(ggplot2)
 library(tictoc)
 
-source("research/assimilation-cfr/code/simulation.R")
-source("research/assimilation-cfr/code/depths.R")
+#### SIMULATION
+gp1d = function(fields = 100, mu = 0, sd = 1, l = 50, pts = 50) {
+  grid = 1:pts
+  distmat = as.matrix(dist(grid))
+  
+  # calc sigma with cov kernel
+  sigma = exp(-distmat / l)
+  
+  sigma.eig = eigen(sigma)
+  sigma.half = sigma.eig$vectors %*% diag(sqrt(sigma.eig$values)) %*% t(sigma.eig$vectors)
+  
+  gps = matrix(0, pts, fields)
+  for(f in 1:fields) {
+    gps[,f] = (sigma.half %*% rnorm(pts, sd = sd)) + mu
+  }
+  return(gps)
+}
 
+# Expected Depth (XD) pointwise
+depth = function(g, fmat) {
+  
+  # Computes the depth values of a function with respect to a set of functions (fmat)
+  fn = ncol(fmat)
+  depth = rep(0, length(g))
+  
+  for (row in 1:nrow(fmat)) {
+    diff = abs(sum(sign(g[row] - fmat[row,])))
+    depth[row] = 1 - (diff / fn)
+  }
+  
+  return(depth)
+}
+
+# expected depth 
+xdepth = function(gmat, fmat) {
+  apply(gmat, 2, function(x) mean(depth(x, fmat)))
+}
+
+# true depth pointwise
 gpdepth = function(f) {
   ds = sapply(1:length(f), function(x) pnorm(f[x]))
   mean(1 - abs(1 - 2*ds))
 }
 
+# true depth
+gdepth = function(f) {
+  apply(f, 2, gpdepth)
+}
+
+
+sims = 1000
+# ns = c(25, 50, 100, 200, 400, 800, 1200)
+ns = c(25, 50, 200, 400, 800, 1400, 2000, 2600)
+diff = matrix(0, sims, length(ns))
+
+for(j in 1:length(ns)) {
+  tic()
+  for(i in 1:sims) {
+    f = gp1d(ns[j], pts = 50, l = 10)
+    xf = xdepth(f, f)
+    gf = gdepth(f)
+    
+    # diff[i, j] = mean(xf < 0.3) - mean(gf < 0.3)
+    diff[i, j] = mean(as.numeric(xf < 0.3) - as.numeric(gf < 0.3))
+  }
+  toc()
+}
+boxplot(sapply(1:length(ns), function(x) diff[,x] * sqrt(ns[x])))
+abline(h = 0)
+
+scaled_diff = sapply(1:length(ns), function(x) diff[,x] * sqrt(ns[x]))
+plot(apply(scaled_diff, 2, sd))
+
 
 f = gp1d(100, pts = 20)
-xf = xdepth(f, f)
+xf = mean(depth(f[,1], f))
+gf = gdepth(f)[1]
+
+
+sims = 1000
+ns = c(25, 50, 100, 200, 400)
+diff = matrix(0, sims, length(ns))
+
+for(j in 1:length(ns)) {
+  tic()
+  for(i in 1:sims) {
+    f = gp1d(ns[j], pts = 20)
+
+    diff[i, j] = abs(as.numeric(mean(depth(f[,1], f)) < 0.3) - as.numeric(gdepth(f)[1] < 0.3))
+  }
+  toc()
+}
+boxplot(sapply(1:length(ns), function(x) diff[,x] * sqrt(ns[x])))
+abline(h = 0)
+
+1-apply(diff, 2, mean)
+
+
+
+
+sims = 1000
+ns = c(25, 50, 100, 200, 400)
+diff = matrix(0, sims, length(ns))
+
+for(j in 1:length(ns)) {
+  tic()
+  for(i in 1:sims) {
+    f1 = gp1d(ns[j], pts = 20)
+    f2 = gp1d(ns[j], pts = 20)
+    
+    f1d = xdepth(f, f)
+    gf = gdepth(f)
+    
+    # diff[i, j] = mean(xf < 0.3) - mean(gf < 0.3)
+    diff[i, j] = mean(as.numeric(xf < 0.3) - as.numeric(gf < 0.3))
+  }
+  toc()
+}
+boxplot(sapply(1:length(ns), function(x) diff[,x] * sqrt(ns[x])))
+abline(h = 0)
+
+
+
+
 
 xf[1]
 gpdepth(f[,1])
@@ -60,7 +171,7 @@ ggplot(diff, aes(x = Var2, y = value)) +
 
 # True Depth CDFs converge to Normal
 #####
-sims = 10000
+sims = 100
 ns = c(25, 50, 100, 200, 400, 800)
 ns = c(1000)
 diff = matrix(0, sims, length(ns))
