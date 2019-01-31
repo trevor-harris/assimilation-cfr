@@ -13,6 +13,7 @@ gpdepth = function(f) {
 }
 
 
+
 f = gp1d(100, pts = 20)
 xf = xdepth(f, f)
 
