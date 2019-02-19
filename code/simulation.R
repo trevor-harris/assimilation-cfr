@@ -48,7 +48,7 @@ plt_funs = function(f, g, yl = "Value", fcol = "red", gcol = "blue", domain = se
   
   if(!missing(g)) {
     g = melt(g)
-    g$Var1 = t
+    g$Var1 = domain
     
     plt = plt + 
       geom_line(data = g, aes(x = Var1, y = value, group = Var2, alpha = 0.5), color = gcol)
