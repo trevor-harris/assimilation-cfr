@@ -13,9 +13,9 @@ library(OpenImageR)
 library(future)
 library(future.apply)
 
-source("research/assimilation-cfr/code/depth_tests.R")
-source("research/assimilation-cfr/code/depths.R")
-source("research/assimilation-cfr/code/simulation.R")
+source("../research/assimilation-cfr/code/depth_tests.R")
+source("../research/assimilation-cfr/code/depths.R")
+source("../research/assimilation-cfr/code/simulation.R")
 
 plan(multiprocess)
 
