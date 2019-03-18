@@ -21,12 +21,18 @@ for(f in 2:length(files)) {
 power_mu = power_data %>%
   filter(feature == "mean") %>%
   select(pval, method, functions, mu1, mu2, r1) %>%
-  group_by(method, functions, mu2, r1) %>%
+  group_by(method, functions, mu2, r1 = as.factor(r1)) %>%
   summarize(power = mean(pval < 0.05)) %>%
   ungroup() %>%
   mutate(Statistic = recode(method, 
                             K = "K",
-                            Q = "Q")
+                            Q = "Q"),
+         rng = recode(r1,
+                      "5" = "r = 05",
+                     "10" = "r = 10",
+                     "20" = "r = 20",
+                     "30" = "r = 30",
+                     "40" = "r = 40")
   )
 ggplot(power_mu, aes(x=mu2, y=power, color=Statistic)) +
   geom_line() +
@@ -35,9 +41,9 @@ ggplot(power_mu, aes(x=mu2, y=power, color=Statistic)) +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Mean shift") +
   ylab("Power") +
-  facet_wrap(. ~ r1)
-# ggtitle("Power against mean change")
-# ggsave(paste0("research/assimilation-cfr/paper/power/", "location1d.png"), width = 5, height = 3.2)
+  facet_wrap(. ~ rng) + 
+  ggtitle("Power against mean change")
+ggsave("../location1d_rng.png")
 
 # Compare Scale changes
 power_sd = power_data %>%
@@ -48,7 +54,13 @@ power_sd = power_data %>%
   ungroup() %>%
   mutate(Statistic = recode(method, 
                             K = "K",
-                            Q = "Q")
+                            Q = "Q"),
+         rng = recode(r1,
+                      "5" = "r = 05",
+                      "10" = "r = 10",
+                      "20" = "r = 20",
+                      "30" = "r = 30",
+                      "40" = "r = 40")
   )
 ggplot(power_sd, aes(x=sd2, y=power, color=Statistic)) +
   geom_line() +
@@ -57,10 +69,9 @@ ggplot(power_sd, aes(x=sd2, y=power, color=Statistic)) +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Std. dev. multiple") +
   ylab("Power") +
-  facet_wrap(. ~ r1)
-# ggtitle("Power against scale change")
-# ggsave(paste0("research/assimilation-cfr/paper/power/", "scale1d.png"), width = 5, height = 3.2)
-
+  facet_wrap(. ~ rng) +
+  ggtitle("Power against scale change")
+ggsave("../scale1d_rng.png")
 
 # Compare correlation changes
 power_corr = power_data %>%
@@ -71,7 +82,13 @@ power_corr = power_data %>%
   ungroup() %>%
   mutate(Statistic = recode(method, 
                             K = "K",
-                            Q = "Q")
+                            Q = "Q"),
+         rng = recode(r1,
+                      "5" = "r = 05",
+                      "10" = "r = 10",
+                      "20" = "r = 20",
+                      "30" = "r = 30",
+                      "40" = "r = 40")
   )
 ggplot(power_corr, aes(x=r2, y=power, color=Statistic)) +
   geom_line() +
@@ -80,6 +97,6 @@ ggplot(power_corr, aes(x=r2, y=power, color=Statistic)) +
   theme(plot.title = element_text(hjust = 0.5)) +
   xlab("Range Shift") +
   ylab("Power") +
-  facet_wrap(. ~ r1)
-# ggtitle("Power against correlation change")
-# ggsave(paste0("research/assimilation-cfr/paper/power/", "correlation1d.png"), width = 5, height = 3.2)
+  facet_wrap(. ~ rng) +
+  ggtitle("Power against correlation change")
+ggsave("../correlation1d_rng.png")
