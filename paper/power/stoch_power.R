@@ -3,18 +3,18 @@ library(tictoc)
 library(future.apply)
 
 # get args
-n = 400
-pts = 50
+n = 200
+pts = 20
 mu1 = 0
-mu2 = seq(-0.5, 0.5, length.out = pts)
+mu2 = 0
 sd1 = 1
 sd2 = 1
 r1 = 20
 r2 = 20
-i = 1
 seed = 102391 + i
+
 feature = "mean"
-sims = 250
+sims = 1000
 
 # source("/home/trevorh2/assimilation-cfr/code/depth_tests.R")
 # source("/home/trevorh2/assimilation-cfr/code/depths.R")
@@ -24,128 +24,96 @@ source("../../../code/depth_tests.R")
 source("../../../code/depths.R")
 source("../../../code/simulation.R")
 
-#### POWER MEAN
 plan(multiprocess)
 set.seed(seed)
 
+params = 20
+out = matrix(0, params, 3)
 
-nmu = 20
-out3 = matrix(0, nmu, 3)
 
-for(m in 1:nmu) {
-  mu2 = gp1d(1, mu = 0, sd = m/nmu, l = r1, pts = pts)
+#### MEAN changes
+for(m in 1:params) {
+  mu2 = flatten(gp2d(1, mu = 0, sd = m/params, l = r1, pts = pts))
   mu2 = mu2 - mean(mu2)
   
-  tic("Total")
-  cat("Simulation ", m, "\n")
+  tic(paste0("Param ", m))
   
   pvals = future_sapply(1:sims, function(x) {
     
-    f = gp1d(fields = n, mu = mu1, sd = sd1, l = r1, pts = pts)
-    g = gp1d(fields = n+1, mu = mu2, sd = sd2, l = r2, pts = pts)
+    f = gp2d(fields = n, mu = mu1, sd = sd1, l = r1, pts = pts)
+    g = gp2d(fields = n+1, mu = mu2, sd = sd1, l = r1, pts = pts)
+    
+    f = flatten(f)
+    g = flatten(g) 
     
     c(kolm(f, g)[2], quality(f, g)[2])
   })
   
-  out3[m,1] = mean(pvals[1,] < 0.05)
-  out3[m,2] = mean(pvals[2,] < 0.05)
-  out3[m,3] = mean(mu2^2)
+  out[m,1] = mean(pvals[1,] < 0.05)
+  out[m,2] = mean(pvals[2,] < 0.05)
+  out[m,3] = mean(mu2^2)
   
   toc()
-  
 }
 
+out2 = as.data.frame(rbind(out[,c(1, 3)], out[,c(2, 3)]))
+out2["Stat"] = c(rep("K", params), rep("Q", params))
+out2["param"] = "mean"
 
-out4 = as.data.frame(rbind(out3[,c(1, 3)], out3[,c(2, 3)]))
-out4["Stat"] = c(rep("K", nmu), rep("Q", nmu))
-
-ggplot(out4, aes(x = V2, y = V1, color = Stat)) +
+ggplot(out2, aes(x = V2, y = V1, color = Stat)) +
   geom_line() +
   theme_classic() +
   ggtitle("Stochastic mean change")
 
 
-
-### POWER SD
-sims = 250
-
-nmu = 40
-out3 = matrix(0, nmu, 4)
-
-for(m in 1:nmu) {
-  sd2 = gp1d(1, mu = 1, sd = nmu/nmu, l = r1, pts = pts)
-  sd2 = abs(sd2 - mean(sd2) + 1)
+#### SD changes
+for(m in 1:params) {
+  sd2.m1 = gp1d(1, mu = seq(1 - m/params, 1, length.out = 20), sd = 0.2, l = r1, pts = 20)
+  sd2.m1 = as.vector(abs(sd2.m1-mean(sd2.m1)+1))
   
-  plot(sd2, type = "l")
+  sd2.m2 = gp1d(1, mu = seq(1 - m/params, 1, length.out = 20), sd = 0.2, l = r1, pts = 20)
+  sd2.m2 = as.vector(abs(sd2.m2-mean(sd2.m2)+1))
   
-  tic("Total")
-  cat("Simulation ", m, "\n")
+  sd2 = as.vector(outer(sd2.m1, sd2.m2, "*"))
+  
+  tic(paste0("Param ", m))
   
   pvals = future_sapply(1:sims, function(x) {
     
-    f = gp1d(fields = n, mu = mu1, sd = sd1, l = r1, pts = pts)
-    g = gp1d(fields = n+1, mu = mu1, sd = sd2, l = r2, pts = pts)
+    f = gp2d(fields = n, mu = mu1, sd = sd1, l = r1, pts = pts)
+    g = gp2d(fields = n+1, mu = mu1, sd = sd2, l = r1, pts = pts)
+    
+    f = flatten(f)
+    g = flatten(g) 
     
     c(kolm(f, g)[2], quality(f, g)[2])
   })
   
-  out3[m,1] = mean(pvals[1,] < 0.05)
-  out3[m,2] = mean(pvals[2,] < 0.05)
-  out3[m,3] = mean((sd2 - 1)^2)
-  out3[m,4] = max(abs(sd2 - 1))
+  out[m,1] = mean(pvals[1,] < 0.05)
+  out[m,2] = mean(pvals[2,] < 0.05)
+  out[m,3] = mean((sd2 - 1)^2)
   
   toc()
-  
 }
 
-out4 = as.data.frame(rbind(out3[,c(1, 3)], out3[,c(2, 3)]))
-out4["Stat"] = c(rep("K", nmu), rep("Q", nmu))
+out3 = as.data.frame(rbind(out[,c(1, 3)], out[,c(2, 3)]))
+out3["Stat"] = c(rep("K", params), rep("Q", params))
+out3["param"] = "Standard Deviation"
 
-ggplot(out4, aes(x = V2, y = V1, color = Stat)) +
+ggplot(out3, aes(x = V2, y = V1, color = Stat)) +
   geom_line() +
-  theme_classic()  +
+  theme_classic() +
   ggtitle("Stochastic sd change")
 
 
-
-
-### POWER SD
-sims = 250
-
-nmu = 40
-out3 = matrix(0, nmu, 4)
-
-for(m in 1:nmu) {
-  cr2 = gp1d(1, mu = 0, sd = 20*m/nmu, l = r1, pts = pts)
-  cr2 = abs(cr2 - mean(cr2) + 30)
-  
-  # plot(cr2, type = "l")
-  
-  tic("Total")
-  cat("Simulation ", m, "\n")
-  
-  pvals = future_sapply(1:sims, function(x) {
-    
-    f = gp1d(fields = n, mu = mu1, sd = sd1, l = r1, pts = pts)
-    g = gp1d(fields = n+1, mu = mu1, sd = sd1, l = cr2, pts = pts)
-    
-    c(kolm(f, g)[2], quality(f, g)[2])
-  })
-  
-  out3[m,1] = mean(pvals[1,] < 0.05)
-  out3[m,2] = mean(pvals[2,] < 0.05)
-  out3[m,3] = mean((sd2 - 1)^2)
-  out3[m,4] = max(abs(sd2 - 1))
-  
-  toc()
-  
-}
-
-out4 = as.data.frame(rbind(out3[,c(1, 3)], out3[,c(2, 3)]))
-out4["Stat"] = c(rep("K", nmu), rep("Q", nmu))
-
-ggplot(out4, aes(x = V2, y = V1, color = Stat)) +
+power2d = rbind(out2, out3)
+ggplot(power2d, aes(x=V2, y=V1, color=Stat)) +
   geom_line() +
-  theme_classic()  +
-  ggtitle("Stochastic sd change")
- 
+  geom_hline(yintercept = 0.05) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab("Parameter Change") +
+  ylab("Power") +
+  facet_wrap(. ~ param, nrow = 1, scales = "free_x")
+
+ggsave("../stoch_multi2d.png", width = 9, heigh = 3)
