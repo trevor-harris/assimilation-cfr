@@ -1,4 +1,6 @@
 rm(list = ls()); gc()
+library(plotly)
+library(fdasrvf)
 library(tictoc)
 library(future.apply)
 
@@ -9,12 +11,10 @@ mu1 = 0
 mu2 = 0
 sd1 = 1
 sd2 = 1
-r1 = 20
-r2 = 20
-seed = 102391 + i
-
-feature = "mean"
-sims = 1000
+r1 = 10
+r2 = 10
+seed = 102391
+sims = 100
 
 # source("/home/trevorh2/assimilation-cfr/code/depth_tests.R")
 # source("/home/trevorh2/assimilation-cfr/code/depths.R")
@@ -57,7 +57,7 @@ for(m in 1:params) {
 }
 
 out2 = as.data.frame(rbind(out[,c(1, 3)], out[,c(2, 3)]))
-out2["Stat"] = c(rep("K", params), rep("Q", params))
+out2["Stat"] = c(rep("K", params), rep("QI", params))
 out2["param"] = "mean"
 
 ggplot(out2, aes(x = V2, y = V1, color = Stat)) +
@@ -67,21 +67,29 @@ ggplot(out2, aes(x = V2, y = V1, color = Stat)) +
 
 
 #### SD changes
+sigmoid = function(r) {
+  x = seq(-r, r, length.out = 20)
+  1 / (1 + exp(-x))
+}
+relu = function(x) {
+  sapply(x, function(t) max(t, 0.01))
+}
 for(m in 1:params) {
-  sd2.m1 = gp1d(1, mu = seq(1 - m/params, 1, length.out = 20), sd = 0.2, l = r1, pts = 20)
-  sd2.m1 = as.vector(abs(sd2.m1-mean(sd2.m1)+1))
+
+  sd2 = gp2d(1, mu = 0, sd = 5*m/params, l = 100, pts = 20)
+  sd2 = sd2 - mean(sd2) + 0.5
+  sd2 = matrix(relu(sd2), pts, pts)
   
-  sd2.m2 = gp1d(1, mu = seq(1 - m/params, 1, length.out = 20), sd = 0.2, l = r1, pts = 20)
-  sd2.m2 = as.vector(abs(sd2.m2-mean(sd2.m2)+1))
-  
-  sd2 = as.vector(outer(sd2.m1, sd2.m2, "*"))
+  plot_ly() %>% add_surface(z = ~sd2)
+  sd2 = smooth.data(t(smooth.data(sd2, 3)), 3)
+  sd2 = as.vector(sd2)
   
   tic(paste0("Param ", m))
   
   pvals = future_sapply(1:sims, function(x) {
     
-    f = gp2d(fields = n, mu = mu1, sd = sd1, l = r1, pts = pts)
-    g = gp2d(fields = n+1, mu = mu1, sd = sd2, l = r1, pts = pts)
+    f = gp2d(fields = n, mu = mu1, sd = 1, l = r1, pts = pts)
+    g = gp2d(fields = n, mu = mu1, sd = sd2, l = r1, pts = pts)
     
     f = flatten(f)
     g = flatten(g) 
@@ -117,3 +125,18 @@ ggplot(power2d, aes(x=V2, y=V1, color=Stat)) +
   facet_wrap(. ~ param, nrow = 1, scales = "free_x")
 
 ggsave("../stoch_multi2d.png", width = 9, heigh = 3)
+
+saveRDS(power2d, "")
+
+
+
+m = 20
+sd2 = gp2d(1, mu = 0, sd = 1 + m/params, l = 200, pts = 20)
+sd2 = sd2 - mean(sd2) + 1
+sd2 = matrix(relu(sd2), pts, pts)
+mean((sd2 - 1)^2)
+plot_ly() %>% add_surface(z = ~sd2)
+
+sd2 = smooth.data(t(smooth.data(sd2, 2)), 2)
+
+plot_ly() %>% add_surface(z = ~sd2)

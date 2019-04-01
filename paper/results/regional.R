@@ -14,10 +14,12 @@ library(OpenImageR)
 library(tictoc)
 library(future)
 library(future.apply)
+library(fdasrvf)
 
-source("../research/assimilation-cfr/code/depth_tests.R")
-source("../research/assimilation-cfr/code/depths.R")
-source("../research/assimilation-cfr/code/simulation.R")
+setwd("C:/Users/trevorh2/research/")
+source("assimilation-cfr/code/depth_tests.R")
+source("assimilation-cfr/code/depths.R")
+source("assimilation-cfr/code/simulation.R")
 
 prep_prior = function(nc.prior) {
   
@@ -96,6 +98,9 @@ region_plot <- function(field, nc, reg_names, main = "", downsamp = 1, zlim = c(
     theme(legend.position="none") +
     theme(plot.title = element_text(hjust = 0.5))
 }
+smooth.mat = function(m) {
+  t(smooth.data(t(smooth.data(m, 3)), 3))
+}
 
 save_dir = "../research/assimilation-cfr/paper/results/"
 
@@ -113,9 +118,6 @@ reg_ind = c(c(10, 20, 30, 40, 50), c(1000, 2000, 3000, 4000, 5000, 6000, 7000))
 reg_names = c(c("Arctic Ocean", "Indian Ocean", "Pacific Ocean", "Atlantic Ocean", "Southern Ocean"), 
               c("Antarctica", "South America", "North America", "Africa", "Europe", "Asia", "Australia"))
 
-region_plot(mask, nc.prior, reg_names)
-ggsave(paste0(save_dir, "regions.png"), width = 5, height = 3.2)
-
 
 times = 998
 lats = 96
@@ -125,28 +127,40 @@ reg = length(reg_ind)
 kfield = matrix(0, reg, times)
 pfield = matrix(0, reg, times)
 
-plan(multiprocess)
-options(future.globals.maxSize = 4000*1024^2)
 
 # import all of prior
 prior = prep_prior(nc.prior)
 prior = prior[,,prior_ind]
-prior_reg = vector("list", length(reg_ind)) 
 
+# smooth out prior
+prior = vapply(1:ens, function(t) smooth.mat(prior[,,t]), matrix(0, lats, lons))
+
+prior_reg = vector("list", length(reg_ind)) 
 for(r in 1:length(reg_ind)) {
   prior_reg[[r]] =  matrix(prior[mask == reg_ind[r]], ncol = 100)
 }
 
 # import posterior at time t
 post = vapply(1:times, function(t) prep_post(nc.post, t), array(0, dim=c(lats, lons, ens)))
-post_reg = vector("list", length(reg_ind))
 
+# smooth out posterior
+for(t in 1:times) {
+  for(e in 1:ens) {
+    post[,,e,t] = smooth.mat(post[,,e,t])
+  }
+}
+
+post_reg = vector("list", length(reg_ind))
 for(r in 1:length(reg_ind)) {
   reg.r = post[mask == reg_ind[r]]
   post_reg[[r]] =  array(post[mask == reg_ind[r]], dim = c(length(reg.r)/(ens*times), ens, times))
 }
 
+
 # perform tests
+plan(multiprocess)
+options(future.globals.maxSize = 4000*1024^2)
+
 for(r in 1:length(reg_ind)) {
   post_reg.r = post_reg[r][[1]]
   prior_reg.r = prior_reg[r][[1]]
@@ -161,7 +175,7 @@ for(r in 1:length(reg_ind)) {
 kseries = melt(t(kfield)) %>% 
   mutate(Region = as.factor(Var2),
          Year = rep(years, 12),
-         value = value / sqrt(ens*ens / (ens + ens)))
+         value = value)
 levels(kseries$Region) = reg_names
 
 pseries = melt(t(pfield)) %>%
@@ -177,14 +191,13 @@ ggplot(kseries, aes(Year, value, color = Region)) +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
   theme(legend.position="none") +
-  scale_x_continuous(breaks = c(850, 1350, 1850)) +
-  scale_y_continuous(breaks = c(0, 0.5, 1)) +
+  scale_x_continuous(breaks = c(1000, 1400, 1800)) +
+  scale_y_continuous(breaks = c(0.1, 0.5, 1)) +
   # scale_color_manual(values = colorRampPalette(brewer.pal(11,"Paired"))(12)) +
   xlab("Year") +
   ylab("K") +
-  ggtitle("K over time by Region") +
   facet_wrap(vars(Region), 3, 4)
-ggsave(paste0(save_dir, "k_region.png"), width = 5, height = 3.2)
+ggsave(paste0(save_dir, "k_region.png"), width = 6, height = 3.5)
 
 # plot Pval of K
 ggplot(pseries, aes(Year, value, color = Region)) +
@@ -192,13 +205,12 @@ ggplot(pseries, aes(Year, value, color = Region)) +
   theme_classic() + 
   theme(plot.title = element_text(hjust = 0.5)) +
   theme(legend.position="none") +
-  scale_x_continuous(breaks = c(850, 1350, 1850)) +
+  scale_x_continuous(breaks = c(1000, 1400, 1800)) +
   scale_y_continuous(breaks = c(0, 0.5, 1)) +
   xlab("Year") +
   ylab("p-value") +
-  ggtitle("P-values over time by Region") +
   facet_wrap(vars(Region), 3, 4)
-ggsave(paste0(save_dir, "pval_region.png"), width = 5, height = 3.2)
+ggsave(paste0(save_dir, "pval_region.png"), width = 6, height = 3.5)
 
 
 # reassemble into maps

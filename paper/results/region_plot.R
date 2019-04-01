@@ -112,4 +112,4 @@ cc = c("#F8766D","#E18A00","#BE9C00","#8CAB00","#24B700","#00BE70",
        "#000000")
 
 region_plot(mask, nc.prior, reg_names, cc)
-ggsave(paste0(save_dir, "regions.png"), width = 9, height = 6)
+# ggsave(paste0(save_dir, "regions.png"), width = 9, height = 6)

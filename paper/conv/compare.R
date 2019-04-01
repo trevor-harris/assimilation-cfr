@@ -4,13 +4,14 @@ library(reshape2)
 library(ggplot2)
 library(dplyr)
 
-setwd("../../conv/out/")
+setwd("../../conv/out3/")
+setwd("../research/assimilation-cfr/paper/conv/out3/")
 
 conv = readRDS("conv.RDS")
 conv = conv[conv$range < 25, ]
 conv2 = melt(conv[,-1], id.vars = c("nfun", "range"), variable.name = "Critical")
 
-conv[["Range"]] = as.factor(conv[["range"]])
+conv[["Range"]] = factor(conv[["range"]], labels = c("r = 5", "r = 10", "r = 15", "r = 20"))
 conv[["nfun"]] = as.factor(conv[["nfun"]])
 
 conv[["mse"]] = conv[["cdf_diff"]]
@@ -23,12 +24,12 @@ ggplot(conv, aes(x = nfun, y = rmse, fill = Range)) +
   theme(plot.title = element_text(hjust = 0.5)) + 
   geom_hline(yintercept = 0) +
   xlab("Number of functions (n)") +
-  ylab("RMSE") +
+  ylab(bquote(''*L^2*'  Distance')) +
   facet_wrap(. ~ Range, nrow = 1)
   # ylim(c(0, 0.03))
 ggsave("../conv1.png", width = 9, height = 3)
 
-conv2[["Range"]] = as.factor(conv2[["range"]])
+conv2[["Range"]] = factor(conv[["range"]], labels = c("r = 5", "r = 10", "r = 15", "r = 20"))
 conv2[["nfun"]] = as.factor(conv2[["nfun"]])
 conv2[["Critical2"]] = factor(conv2[["Critical"]], labels =  c("0.90", "0.95", "0.99"))
 

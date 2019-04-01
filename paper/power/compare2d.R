@@ -4,7 +4,10 @@ library(ggplot2)
 library(dplyr)
 library(reshape2)
 
-setwd("../../power/out2d/")
+setwd("C:/Users/trevorh2/research/")
+setwd("../research/assimilation-cfr/paper/power/out2d/")
+
+# setwd("../../power/out2d/")
 
 # import raw size data
 # dir = "../temp/power/independent/"
@@ -26,7 +29,7 @@ power_mu = power_data %>%
   ungroup() %>%
   mutate(Statistic = recode(method, 
                             K = "K",
-                            Q = "Q")
+                            Q = "QI")
   )
 ggplot(power_mu, aes(x=mu2, y=power, color=Statistic)) +
   geom_line() +
@@ -48,7 +51,7 @@ power_sd = power_data %>%
   ungroup() %>%
   mutate(Statistic = recode(method, 
                             K = "K",
-                            Q = "Q")
+                            Q = "QI")
   )
 ggplot(power_sd, aes(x=sd2, y=power, color=Statistic)) +
   geom_line() +
@@ -71,7 +74,7 @@ power_corr = power_data %>%
   ungroup() %>%
   mutate(Statistic = recode(method, 
                             K = "K",
-                            Q = "Q")
+                            Q = "QI")
   )
 ggplot(power_corr, aes(x=r2, y=power, color=Statistic)) +
   geom_line() +
