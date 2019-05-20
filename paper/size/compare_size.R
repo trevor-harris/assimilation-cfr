@@ -3,94 +3,125 @@ rm(list = ls()); gc()
 library(ggplot2)
 library(dplyr)
 library(reshape2)
+library(xtable)
 
 # import raw size data
-dir = "research/assimilation-cfr/paper/size/independent/"
+dir = "../research/assimilation-cfr/paper/size/out/"
 files = list.files(dir)
 size_data = readRDS(paste0(dir, files[1]))
 for(f in 2:length(files)) {
   size_data = rbind(size_data, readRDS(paste0(dir, files[f])))
 }
 
-# size = size_data %>%
-#   select(pval, method, functions, range) %>%
-#   group_by(method, functions, range) %>%
-#   summarize(size = mean(pval < 0.05)) %>%
-#   ungroup() %>%
-#   mutate(Statistic = recode(method, 
-#                          K_WA = "K",
-#                          Q_XD = "Q"),
-#          Functions = as.factor(functions),
-#          Range = as.factor(range)
-#   )
-# 
-# ggplot(size, aes(x=Statistic, y=size, color=Functions)) +
-#   geom_boxplot() +
-#   geom_hline(yintercept = 0.05) +
-#   theme_classic() +
-#   theme(plot.title = element_text(hjust = 0.5)) +
-#   xlab("Number of Functions (N)") +
-#   ylab("Size")
-#   # ggtitle("Size v.s. Number of Functions")
-# ggsave(paste0("../assimilation-cfr/paper/size/", "size_functions.png"), width = 5, height = 3.2)
-# 
-# ggplot(size, aes(x=method, y=size, color=Range)) +
-#   geom_boxplot() +
-#   geom_hline(yintercept = 0.05) +
-#   theme_classic() +
-#   theme(plot.title = element_text(hjust = 0.5)) +
-#   xlab("Method") +
-#   ylab("Size") +
-#   ggtitle("Size v.s. Range")
-# ggsave(paste0("../assimilation-cfr/paper/size/", "size_range.png"), width = 5, height = 3.2)
-# 
-# 
-# # boxplots over the seeds by range and function
-# size = size_data %>%
-#   select(pval, method, functions, range, seed) %>%
-#   group_by(method, functions, range, seed) %>%
-#   summarize(size = mean(pval < 0.05)) %>%
-#   ungroup() %>%
-#   mutate(Method = recode(method, 
-#                          K_WA = "K Statistic",
-#                          Q_XD = "Quality Index"),
-#          Functions = as.factor(functions),
-#          Range = as.factor(range)
-#   )
-# 
-# ggplot(size, aes(x=Range, y=size, color=Method)) +
-#   geom_boxplot() +
-#   geom_hline(yintercept = 0.05) +
-#   theme_classic() +
-#   theme(plot.title = element_text(hjust = 0.5)) +
-#   theme(strip.placement = "outside") +
-#   facet_wrap(~Functions, strip.position = "bottom") +
-#   xlab("Range by Number of Functions") +
-#   ylab("Size") +
-#   ggtitle("Size")
-
-
-# boxplots over the seeds by function
 size = size_data %>%
-  select(pval, method, functions, seed) %>%
-  group_by(method, functions, seed) %>%
+  select(pval, method, n1, n2, rng, nu) %>%
+  group_by(method, n1, n2, rng, nu) %>%
   summarize(size = mean(pval < 0.05)) %>%
   ungroup() %>%
-  mutate(Statistic = recode(method, 
-                         K = "K",
-                         Q = "Q"),
-         Functions = as.factor(functions)
+  mutate(stat = recode(method, 
+                            K = "K",
+                            Q = "QI"),
+         n1 = as.factor(n1),
+         n2 = as.factor(n2),
+         range = as.factor(rng),
+         nu = as.factor(nu)
+  ) %>% 
+  select(
+    stat, n1, n2, range, nu, size
   )
 
-ggplot(size, aes(x=Functions, y=size, color=Statistic)) +
-  geom_boxplot() +
-  geom_hline(yintercept = 0.05) +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  xlab("Number of functions (N)") +
-  ylab("Size")
-  # ggtitle("Size of K(F, G) v.s. Q(F, G)")
-ggsave("research/assimilation-cfr/paper/size/size.png", width = 5, height = 3.2)
+### long
+size.tab = size %>%
+  mutate(
+    size = sprintf("%.2f", round(size, 2)),
+    size = ifelse(stat == "QI",
+                  paste0("(", size, ")"),
+                  size)
+  ) %>%
+  dcast(
+    n1 + n2 + stat ~ nu + range, value.var = "size"
+  )
+xtable(size.tab, booktabs = T)
 
 
+### wide
+size.tab = size %>%
+  mutate(
+    size = as.character(round(size, 2)),
+    size = ifelse(stat == "QI",
+                  paste0("(", size, ")"),
+                  size)
+  ) %>%
+  dcast(
+    n1 + n2 + nu + range ~ stat, value.var = "size"
+  ) %>%
+  mutate(
+    size = paste0(K, " ", QI)
+  ) %>%
+  select(
+    n1, n2, nu, range, size
+  ) %>%
+  dcast(
+    nu + n1 + n2 ~ range, value.var = "size"
+  )
+xtable(size.tab, booktabs = T)
+
+
+### multi
+size.tab = size %>%
+  mutate(
+    size = sprintf("%.2f" ,  round(size, 2)),
+    size = ifelse(stat == "QI",
+                  paste0("(", size, ")"),
+                  size)
+  ) %>%
+  dcast(
+    n1 + n2 + nu + range ~ stat, value.var = "size"
+  ) %>%
+  mutate(
+    size = paste0(K, " ", QI)
+  ) %>%
+  select(
+    n1, n2, nu, range, size
+  ) %>%
+  dcast(
+    n1 + n2 + nu ~ range, value.var = "size"
+  )
+xtable(size.tab %>% 
+         filter(nu == "0.5") %>%
+         select(-nu), booktabs = T)
+xtable(size.tab %>% 
+         filter(nu == "1") %>%
+         select(-nu), booktabs = T)
+xtable(size.tab %>% 
+         filter(nu == "1.5") %>%
+         select(-nu), booktabs = T)
+
+size.tab = size %>%
+  filter(
+    range == 0.4,
+    nu == 1
+  ) %>%
+  select(
+    stat, n1, n2, size
+  ) %>%
+  dcast(
+   n1 + stat ~ n2, value.var = "size"
+  )
+xtable(size.tab, booktabs = T)
+
+
+size.tab = size %>%
+  filter(n1 == n2) %>%
+  dcast(
+     range + stat ~ nu + n1, value.var = "size"
+  )
+
+
+size.tab = size %>%
+  filter(n1 == n2) %>%
+  dcast(
+    stat + nu + range ~ n1, value.var = "size"
+  )
+xtable(size.tab, booktabs = T)
 
