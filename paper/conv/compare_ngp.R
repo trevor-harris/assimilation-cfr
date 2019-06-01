@@ -6,7 +6,7 @@ library(reshape2)
 library(latex2exp)
 
 # import raw size data
-dir = "../research/proxy/paper/conv/diag/"
+dir = "../research/matern/nongp/"
 files = list.files(dir)
 conv_data = readRDS(paste0(dir, files[1]))
 for(f in 2:length(files)) {
@@ -43,8 +43,7 @@ ggplot(conv, aes(x = n, y = sqrt(cdf_diff), fill = r)) +
              labeller = label_both) +
   theme(strip.text.y = element_text(angle = 180)) +
   guides(fill=guide_legend("Range"))
-ggsave("../research/assimilation-cfr/paper/conv/diag_l2.png", width = 9.1, height = 5)
-
+ggsave("../research/proxy/paper/conv/ngp_l2.png", width = 10, height = 5.3)
 
 crit = conv %>% 
   select(n, r, nu, cval_90, cval_95, cval_99) %>%
@@ -65,10 +64,10 @@ ggplot(crit, aes(x = n, y = value, fill = critical)) +
   geom_hline(yintercept = 0) +
   xlab("Number of functions (n)") +
   ylab("Critical value difference") +
-  ylim(c(-0.04, 0.04)) +
+  ylim(c(-0.06, 0.06)) +
   facet_grid(nu ~ r, 
              switch = "y", 
              labeller = label_both) +
   theme(strip.text.y = element_text(angle = 180)) +
   guides(fill=guide_legend("Level"))
-ggsave("../research/assimilation-cfr/paper/conv/diag_cv.png", width = 9.1, height = 5)
+ggsave("../research/proxy/paper/conv/ngp_cv.png", width = 10, height = 5.3)
