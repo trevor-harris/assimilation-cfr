@@ -1,0 +1,33 @@
+----------------------------------------
+Begin Torque Prologue (Fri Mar 15 13:59:14 2019)
+Job ID:           8250343.cc-mgmt1.campuscluster.illinois.edu
+Username:         trevorh2
+Group:            stat
+Job Name:         convergence
+Limits:           walltime=50:00:00,nodes=1:ppn=10,neednodes=1:ppn=10
+Job Queue:        stat
+Account:          stat
+Nodes:            golub231
+End Torque Prologue
+----------------------------------------
+
+Attaching package: 'future.apply'
+
+The following object is masked from 'package:future':
+
+    future_lapply
+
+----------------------------------------
+Begin Torque Epilogue (Sat Mar 16 13:59:14 2019)
+Job ID:           8250343.cc-mgmt1.campuscluster.illinois.edu
+Username:         trevorh2
+Group:            stat
+Job Name:         convergence
+Session:          62809
+Limits:           walltime=50:00:00,nodes=1:ppn=10,neednodes=1:ppn=10
+Resources:        cput=236:25:39,vmem=4160876kb,walltime=24:00:01,mem=1470344kb,energy_used=0
+Job Queue:        stat
+Account:          stat
+Nodes:            golub231
+End Torque Epilogue
+----------------------------------------

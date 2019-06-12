@@ -13,9 +13,9 @@ library(OpenImageR)
 library(future)
 library(future.apply)
 
-source("research/assimilation-cfr/code/depth_tests.R")
-source("research/assimilation-cfr/code/depths.R")
-source("research/assimilation-cfr/code/simulation.R")
+source("../research/assimilation-cfr/code/depth_tests.R")
+source("../research/assimilation-cfr/code/depths.R")
+source("../research/assimilation-cfr/code/simulation.R")
 
 plan(multiprocess)
 
@@ -136,10 +136,10 @@ field_plot2 <- function(field, nc, main = "", downsamp = 1, zlim = c(-max(abs(fi
 
 
 ##### Actual data
-nc.post = nc_open('research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-nc.prior = nc_open('research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.post = nc_open('../research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.prior = nc_open('../research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 
-prior_ind = read.csv("research/assimilation-cfr/data/prior_ens.txt", header = F)$V1
+prior_ind = read.csv("../research/assimilation-cfr/data/prior_ens.txt", header = F)$V1
 
 prior = prep_prior(nc.prior)
 prior = flatten(prior[,,prior_ind])
@@ -214,11 +214,11 @@ ggplot(dt.gg, aes(Var1, value, group = Var2)) +
 
 
 ##### ACTUAL CLIMATE ##### 
-field_plot2(matrix(prior[,1], 96, 144), nc.post, main = "Prior ensemble member", downsamp = 1)
+field_plot(matrix(prior[,,1], 96, 144), nc.post, main = "Background ensemble member", downsamp = 1)
 # ggsave(paste0(save_dir, "prior.png"), width = 5, height = 3.2)
 
 
 post = prep_post(nc.post, times[4])
-field_plot2(post[,,10], nc.post, main = "Posterior ensemble member (Year 998)", downsamp = 1)
+field_plot2(post[,,10], nc.post, main = "Analysis ensemble member (Year 998)", downsamp = 1)
 # ggsave(paste0(save_dir, "posterior.png"), width = 5, height = 3.2)
 

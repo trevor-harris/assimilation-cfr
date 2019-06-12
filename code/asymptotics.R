@@ -636,3 +636,4 @@ plot(abs(cvest1), main = "l2 convergence of 1 - fn")
 # 
 # mean((cdfs[,1] - cdfs[,2]) < 1 / sqrt(ns/2))
 # 
+

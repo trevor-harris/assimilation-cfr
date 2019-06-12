@@ -1,0 +1,27 @@
+         used (Mb) gc trigger (Mb) max used (Mb)
+Ncells 256189 13.7     627482 33.6   418013 22.4
+Vcells 445434  3.4    8388608 64.0  1759046 13.5
+n = 25 r = 5: 712.496 sec elapsed
+n = 25 r = 10: 709.778 sec elapsed
+n = 25 r = 15: 706.274 sec elapsed
+n = 25 r = 20: 706.985 sec elapsed
+n = 25 r = 25: 706.034 sec elapsed
+n = 25 r = 30: 704.871 sec elapsed
+n = 50 r = 5: 1714.212 sec elapsed
+n = 50 r = 10: 1708.519 sec elapsed
+n = 50 r = 15: 1703.714 sec elapsed
+n = 50 r = 20: 1697.875 sec elapsed
+n = 50 r = 25: 1694.196 sec elapsed
+n = 50 r = 30: 1692.345 sec elapsed
+n = 100 r = 5: 4286.882 sec elapsed
+n = 100 r = 10: 4267.656 sec elapsed
+n = 100 r = 15: 4255.144 sec elapsed
+n = 100 r = 20: 4250.326 sec elapsed
+n = 100 r = 25: 4250.218 sec elapsed
+n = 100 r = 30: 4245.964 sec elapsed
+n = 150 r = 5: 7775.587 sec elapsed
+n = 150 r = 10: 7754.046 sec elapsed
+n = 150 r = 15: 7729.352 sec elapsed
+n = 150 r = 20: 7715.392 sec elapsed
+n = 150 r = 25: 7703.493 sec elapsed
+n = 150 r = 30: 7688.52 sec elapsed

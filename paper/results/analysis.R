@@ -149,7 +149,7 @@ save_dir = "research/assimilation-cfr/paper/results/"
 
 # import raw size data
 # dir = "../temp/power/independent/"
-dir = "research/assimilation-cfr/paper/results/results/"
+dir = "../research/assimilation-cfr/paper/results/results/"
 files = list.files(dir)
 
 temperature = read_era(dir, files[1])
@@ -166,10 +166,10 @@ ggplot(temperature, aes(time, stat)) +
   geom_smooth(se = F, color = "red") +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
-  ylab("Effect Size") +
+  ylab("K") +
   xlab("Year")
   # ggtitle("K(F, G) over time")
-ggsave("research/assimilation-cfr/paper/results/effect_over_time.png", width = 5, height = 3.2)
+ggsave("../research/assimilation-cfr/paper/results/effect_over_time.png", width = 5, height = 3.2)
 
 temperature$pval = p.adjust(temperature$pval)
 
@@ -181,7 +181,7 @@ ggplot(temperature, aes(time, pval)) +
   ylab("p-values")+
   xlab("Year")
   # ggtitle("P-values of K(F, G) over time")
-ggsave("research/assimilation-cfr/paper/results/pval_over_time.png", width = 5, height = 3.2)
+ggsave("../research/assimilation-cfr/paper/results/pval_over_time.png", width = 5, height = 3.2)
 
 
 
