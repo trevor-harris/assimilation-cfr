@@ -3,10 +3,11 @@ rm(list = ls()); gc()
 library(ggplot2)
 library(dplyr)
 library(reshape2)
+library(tictoc)
 
-source("research/assimilation-cfr/code/depth_tests.R")
-source("research/assimilation-cfr/code/depths.R")
-source("research/assimilation-cfr/code/simulation.R")
+source("../research/assimilation-cfr/code/depth_tests.R")
+source("../research/assimilation-cfr/code/depths.R")
+source("../research/assimilation-cfr/code/simulation.R")
 
 kolm = function(f, g) {
   ff.xd = xdepth(f, f)
@@ -57,7 +58,7 @@ skt.perm = function(f, g, perms=500) {
 
 set.seed(1023)
 n = 25
-pts = 20
+pts = 40
 infil = 1
 mu = 0
 sd = 1

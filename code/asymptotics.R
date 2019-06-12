@@ -69,11 +69,13 @@ for(j in 1:length(ns)) {
   }
   toc()
 }
-boxplot(sapply(1:length(ns), function(x) diff[,x] * sqrt(ns[x])))
+scaled_diff = sapply(1:length(ns), function(x) diff[,x] * sqrt(ns[x]))
+
+boxplot(scaled_diff, names = ns)
 abline(h = 0)
 
 scaled_diff = sapply(1:length(ns), function(x) diff[,x] * sqrt(ns[x]))
-plot(apply(scaled_diff, 2, sd))
+plot(ns, apply(scaled_diff, 2, sd))
 
 
 f = gp1d(100, pts = 20)

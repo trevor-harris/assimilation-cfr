@@ -1,0 +1,25 @@
+n = 50 r = 10: 265.886 sec elapsed
+n = 50 r = 20: 232.937 sec elapsed
+n = 50 r = 30: 232.788 sec elapsed
+n = 50 r = 40: 232.379 sec elapsed
+n = 100 r = 10: 485.373 sec elapsed
+n = 100 r = 20: 478.036 sec elapsed
+n = 100 r = 30: 476.163 sec elapsed
+n = 100 r = 40: 476.172 sec elapsed
+n = 200 r = 10: 1186.546 sec elapsed
+n = 200 r = 20: 1188.731 sec elapsed
+n = 200 r = 30: 1186.631 sec elapsed
+n = 200 r = 40: 1186.992 sec elapsed
+n = 300 r = 10: 2226.303 sec elapsed
+n = 300 r = 20: 2181.191 sec elapsed
+n = 300 r = 30: 2188.267 sec elapsed
+n = 300 r = 40: 2161.52 sec elapsed
+n = 400 r = 10: 3518.47 sec elapsed
+n = 400 r = 20: 3527.741 sec elapsed
+n = 400 r = 30: 3543.74 sec elapsed
+n = 400 r = 40: 3499.791 sec elapsed
+n = 500 r = 10: 5286.561 sec elapsed
+n = 500 r = 20: 5223.306 sec elapsed
+n = 500 r = 30: 5223.172 sec elapsed
+n = 500 r = 40: 5224.383 sec elapsed
+Total: 51433.179 sec elapsed

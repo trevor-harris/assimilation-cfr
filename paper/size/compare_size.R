@@ -5,12 +5,37 @@ library(dplyr)
 library(reshape2)
 
 # import raw size data
-dir = "research/assimilation-cfr/paper/size/independent/"
+dir = "../research/assimilation-cfr/paper/size/independent/"
 files = list.files(dir)
 size_data = readRDS(paste0(dir, files[1]))
 for(f in 2:length(files)) {
   size_data = rbind(size_data, readRDS(paste0(dir, files[f])))
 }
+
+# boxplots over the seeds by function
+size = size_data %>%
+  select(pval, method, functions, seed) %>%
+  group_by(method, functions, seed) %>%
+  summarize(size = mean(pval < 0.05)) %>%
+  ungroup() %>%
+  mutate(Statistic = recode(method, 
+                            K = "K",
+                            Q = "Q"),
+         Functions = as.factor(functions)
+  )
+
+ggplot(size, aes(x=Functions, y=size, color=Statistic)) +
+  geom_boxplot() +
+  geom_hline(yintercept = 0.05) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab("Number of functions (N)") +
+  ylab("Size")
+# ggtitle("Size of K(F, G) v.s. Q(F, G)")
+# ggsave("research/assimilation-cfr/paper/size/size.png", width = 5, height = 3.2)
+
+
+
 
 # size = size_data %>%
 #   select(pval, method, functions, range) %>%
@@ -68,29 +93,4 @@ for(f in 2:length(files)) {
 #   xlab("Range by Number of Functions") +
 #   ylab("Size") +
 #   ggtitle("Size")
-
-
-# boxplots over the seeds by function
-size = size_data %>%
-  select(pval, method, functions, seed) %>%
-  group_by(method, functions, seed) %>%
-  summarize(size = mean(pval < 0.05)) %>%
-  ungroup() %>%
-  mutate(Statistic = recode(method, 
-                         K = "K",
-                         Q = "Q"),
-         Functions = as.factor(functions)
-  )
-
-ggplot(size, aes(x=Functions, y=size, color=Statistic)) +
-  geom_boxplot() +
-  geom_hline(yintercept = 0.05) +
-  theme_classic() +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  xlab("Number of functions (N)") +
-  ylab("Size")
-  # ggtitle("Size of K(F, G) v.s. Q(F, G)")
-ggsave("research/assimilation-cfr/paper/size/size.png", width = 5, height = 3.2)
-
-
 
