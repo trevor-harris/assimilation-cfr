@@ -4,22 +4,21 @@ gc()
 years = 851:1848
 ens = 100
 
-library(extdepth)
+# library(extdepth)
 library(ncdf4)
 library(dplyr)
 library(reshape2)
 library(ggplot2)
 library(RColorBrewer)
-library(OpenImageR)
+# library(OpenImageR)
 library(tictoc)
 library(future)
 library(future.apply)
 library(fdasrvf)
 
-setwd("C:/Users/trevorh2/research/")
-source("assimilation-cfr/code/depth_tests.R")
-source("assimilation-cfr/code/depths.R")
-source("assimilation-cfr/code/simulation.R")
+source("../research/proxy/code/depth_tests.R")
+source("../research/proxy/code/depths.R")
+source("../research/proxy/code/simulation.R")
 
 prep_prior = function(nc.prior) {
   
@@ -102,15 +101,15 @@ smooth.mat = function(m) {
   t(smooth.data(t(smooth.data(m, 3)), 3))
 }
 
-save_dir = "../research/assimilation-cfr/paper/results/"
+# save_dir = "../research/assimilation-cfr/paper/results/"
 
 #### Regionlized significant differences
-nc.post = nc_open('../research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-nc.prior = nc_open('../research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-prior_ind = read.csv("../research/assimilation-cfr/data/prior_ens.txt", header = F)$V1
+nc.post = nc_open('../research/proxy/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.prior = nc_open('../research/proxy/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+prior_ind = read.csv("../research/proxy/data/prior-ens.txt", header = F)$V1
 
 # read in the mask file
-mask = read.csv("../research/assimilation-cfr/data/mask.csv", stringsAsFactors = F)
+mask = read.csv("../research/proxy/data/mask.csv", stringsAsFactors = F)
 mask = as.matrix(mask)
 mask = apply(mask, 2, rev)
 
@@ -133,9 +132,9 @@ prior = prep_prior(nc.prior)
 prior = prior[,,prior_ind]
 
 # smooth out prior
-prior = vapply(1:ens, function(t) smooth.mat(prior[,,t]), matrix(0, lats, lons))
+# prior = vapply(1:ens, function(t) smooth.mat(prior[,,t]), matrix(0, lats, lons))
 
-prior_reg = vector("list", length(reg_ind)) 
+prior_reg = vector("list", length(reg_ind))
 for(r in 1:length(reg_ind)) {
   prior_reg[[r]] =  matrix(prior[mask == reg_ind[r]], ncol = 100)
 }
@@ -144,11 +143,11 @@ for(r in 1:length(reg_ind)) {
 post = vapply(1:times, function(t) prep_post(nc.post, t), array(0, dim=c(lats, lons, ens)))
 
 # smooth out posterior
-for(t in 1:times) {
-  for(e in 1:ens) {
-    post[,,e,t] = smooth.mat(post[,,e,t])
-  }
-}
+# for(t in 1:times) {
+#   for(e in 1:ens) {
+#     post[,,e,t] = smooth.mat(post[,,e,t])
+#   }
+# }
 
 post_reg = vector("list", length(reg_ind))
 for(r in 1:length(reg_ind)) {
@@ -156,6 +155,8 @@ for(r in 1:length(reg_ind)) {
   post_reg[[r]] =  array(post[mask == reg_ind[r]], dim = c(length(reg.r)/(ens*times), ens, times))
 }
 
+saveRDS(prior_reg, "../research/proxy/data/prior.RDS")
+saveRDS(post_reg, "../research/proxy/data/post.RDS")
 
 # perform tests
 plan(multiprocess)
@@ -170,9 +171,17 @@ for(r in 1:length(reg_ind)) {
   pfield[r,] = ktest[2,]
 }
 
+saveRDS(kfield, "../research/proxy/data/kvals.RDS")
+saveRDS(pfield, "../research/proxy/data/pvals.RDS")
+
+kfield = readRDS("../research/proxy/data/kvals.RDS")
+pfield = readRDS("../research/proxy/data/pvals.RDS")
+
+kfield = kfield / sqrt(50)
+
 
 # reassemble into series
-kseries = melt(t(kfield)) %>% 
+kseries = melt(t(kfield)) %>%
   mutate(Region = as.factor(Var2),
          Year = rep(years, 12),
          value = value)
@@ -184,45 +193,46 @@ pseries = melt(t(pfield)) %>%
          value = p.adjust(value, method = "BY"))
 levels(pseries$Region) = reg_names
 
+# lilr = kseries$Region
+# kseries[["colr"]] = rep(c("#8CF0E6", "#6DE1EA", "#4FBCE3", "#328FDC", "#155AD3",
+#                           "#546642", "#6E7A50", "#8A8E5E", "#A19A6C", "#AE9F7F", "#BBA792", "#C8B0A5"),
+#                         each = 998)
+
+kseries[["colr"]] = rep(c("#4bb1bf", "#235354", "#5c9c9a", "#8be0e0", "#102829",
+                          "#c4c2b3", "#84553b", "#cea672", "#834210", "#af8c78", "#A98E44", "#3e1d0d"),
+                        each = 998)
+
+pseries[["colr"]] = rep(c("#4bb1bf", "#235354", "#5c9c9a", "#8be0e0", "#102829",
+                          "#c4c2b3", "#84553b", "#cea672", "#834210", "#af8c78", "#A98E44", "#3e1d0d"),
+                        each = 998)
+
 # plot K
-ggplot(kseries, aes(Year, value, color = Region)) +
+ggplot(kseries, aes(Year, value)) +
   geom_point(size = 0.2) +
-  geom_smooth(color = "black") +
+  geom_smooth(color = "red") +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
   theme(legend.position="none") +
   scale_x_continuous(breaks = c(1000, 1400, 1800)) +
   scale_y_continuous(breaks = c(0.1, 0.5, 1)) +
+  scale_color_identity(guide = 'legend') +
+  # scale_colour_manual(values = colr) +
   # scale_color_manual(values = colorRampPalette(brewer.pal(11,"Paired"))(12)) +
   xlab("Year") +
   ylab("K") +
-  facet_wrap(vars(Region), 3, 4)
-ggsave(paste0(save_dir, "k_region.png"), width = 6, height = 3.5)
+  facet_wrap(vars(Region), 3, 4, scales = "free_x")
+ggsave("../research/proxy/results/k_region.png", width = 6, height = 3.5)
 
-# plot Pval of K
-ggplot(pseries, aes(Year, value, color = Region)) +
-  geom_point(size = 0.2) +
+
+ggplot(pseries, aes(Year, value)) +
+  geom_point(size = 0.2, color = "black") +
   theme_classic() + 
   theme(plot.title = element_text(hjust = 0.5)) +
   theme(legend.position="none") +
   scale_x_continuous(breaks = c(1000, 1400, 1800)) +
   scale_y_continuous(breaks = c(0, 0.5, 1)) +
+  scale_color_identity(guide = 'legend') +
   xlab("Year") +
   ylab("p-value") +
-  facet_wrap(vars(Region), 3, 4)
-ggsave(paste0(save_dir, "pval_region.png"), width = 6, height = 3.5)
-
-
-# reassemble into maps
-# kmaps = vapply(1:times, function(t) {
-
-#   matcombiner(rmap(kfield[,t], lats/4, lons/4), 4)
-# }, matrix(0, lats, lons))
-# 
-# pmaps = vapply(1:times, function(t) {
-#   matcombiner(rmap(pfield[,t], lats/4, lons/4), 4)
-# }, matrix(0, lats, lons))
-# 
-# field_plot(kmaps[,,3], nc.post)
-# field_plot(pmaps[,,3], nc.post)
-
+  facet_wrap(vars(Region), 3, 4, scales = "free_x")
+ggsave("../research/proxy/results/pval_region.png", width = 6, height = 4.5)

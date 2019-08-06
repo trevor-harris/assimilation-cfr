@@ -96,20 +96,29 @@ region_plot(mask, nc.prior, reg_names, cc)
 save_dir = "../research/assimilation-cfr/paper/results/"
 
 #### Regionlized significant differences
-nc.post = nc_open('../research/assimilation-cfr/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-nc.prior = nc_open('../research/assimilation-cfr/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-prior_ind = read.csv("../research/assimilation-cfr/data/prior_ens.txt", header = F)$V1
+nc.post = nc_open('../research/proxy/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.prior = nc_open('../research/proxy/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+prior_ind = read.csv("../research/proxy/data/prior-ens.txt", header = F)$V1
 
 # read in the mask file
-mask = read.csv("../research/assimilation-cfr/data/mask2.csv", stringsAsFactors = F)[,2:145]
+mask = read.csv("../research/proxy/data/mask2.csv", stringsAsFactors = F)[,2:145]
 mask = as.matrix(mask)
+mask = apply(mask, 2, rev)
 
 reg_names = c(c("Arctic Ocean", "Indian Ocean", "Pacific Ocean", "Atlantic Ocean", "Southern Ocean"), 
               c("Antarctica", "South America", "North America", "Africa", "Europe", "Asia", "Australia", "Borders"))
 
-cc = c("#F8766D","#E18A00","#BE9C00","#8CAB00","#24B700","#00BE70",
-       "#00C1AB","#00BBDA","#00ACFC","#8B93FF","#D575FE","#F962DD",
+# cc = c("#8CF0E6", "#235354", "#4FBCE3", "#328FDC", "#155AD3",
+#        "#004700", "#1B5D00", "#447100", "#768500", "#A98E44", "#CA9E88", "#E9CCCC",
+#        "#000000")
+
+# cc = c("#4bb1bf", "#235354", "#5c9c9a", "#8be0e0", "#d2fcf7",
+#        "#af8c78", "#84553b", "#cea672", "#834210", "#af8c78", "#A98E44", "#3e1d0d",
+#        "#000000")
+
+cc = c("#4bb1bf", "#235354", "#5c9c9a", "#8be0e0", "#102829",
+       "#c4c2b3", "#84553b", "#cea672", "#834210", "#af8c78", "#A98E44", "#3e1d0d",
        "#000000")
 
 region_plot(mask, nc.prior, reg_names, cc)
-# ggsave(paste0(save_dir, "regions.png"), width = 9, height = 6)
+# ggsave("../research/proxy/results/regions.png", width = 9, height = 6)
