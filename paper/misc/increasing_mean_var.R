@@ -161,8 +161,8 @@ ggplot(data = mu, aes(years, value)) +
   theme(plot.title = element_text(hjust = 0.5), 
         text = element_text(size=20)) +
   ylab("Average difference squared") +
-  xlab("Year") +
-  ggtitle("Average difference between background and analysis means")
+  xlab("Year")
+  # ggtitle("Average difference between background and analysis means")
 ggsave("../research/assimilation-cfr/paper/misc/means.png", width = 9.67, height = 6.95)
 
 
@@ -173,8 +173,8 @@ ggplot(data = sig, aes(years, value)) +
   theme(plot.title = element_text(hjust = 0.5), 
         text = element_text(size=20)) +
   ylab("Average ratio squared") +
-  xlab("Year") +
-  ggtitle("Average ratio of background over analysis standard deviations")
+  xlab("Year")
+  # ggtitle("Average ratio of background over analysis standard deviations")
 ggsave("../research/assimilation-cfr/paper/misc/sds.png", width = 9.67, height = 6.95)
 
 
