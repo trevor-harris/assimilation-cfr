@@ -149,7 +149,7 @@
 #   param[y,2] = mean((sd1 / sd2)^2)
 #
 #   toc()
-# }
+# }d
 
 plot(param[,1])
 plot(param[,2])
@@ -163,7 +163,7 @@ ggplot(data = mu, aes(years, value)) +
   ylab("Average difference squared") +
   xlab("Year")
   # ggtitle("Average difference between background and analysis means")
-ggsave("../research/assimilation-cfr/paper/misc/means.png", width = 9.67, height = 6.95)
+ggsave("../research/assimilation-cfr/paper/misc/means.png", width = 8, heigh = 6)
 
 
 sig = data.frame(time = years, value = param[,2])
@@ -175,7 +175,7 @@ ggplot(data = sig, aes(years, value)) +
   ylab("Average ratio squared") +
   xlab("Year")
   # ggtitle("Average ratio of background over analysis standard deviations")
-ggsave("../research/assimilation-cfr/paper/misc/sds.png", width = 9.67, height = 6.95)
+ggsave("../research/assimilation-cfr/paper/misc/sds.png", width = 8, heigh = 6)
 
 
 
