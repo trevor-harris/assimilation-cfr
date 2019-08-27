@@ -3,4 +3,5 @@
 .RData
 .Ruserdata
 data/*.nc
+data/*.RDS
 outdata/
