@@ -7,6 +7,8 @@ library(latex2exp)
 
 
 dir = "../research/proxy/power/data_het/"
+
+dir = "/Users/trevh/research/assimilation-cfr/paper/hetpower/data/"
 files = list.files(dir)
 power_data = readRDS(paste0(dir, "/", files[1]))
 for(f in 2:length(files)) {

@@ -5,8 +5,9 @@ library(dplyr)
 library(reshape2)
 library(latex2exp)
 
+setwd("/Users/trevh/research")
 
-dir = "../research/proxy/ngppower/data/"
+dir = "/Users/trevh/research/assimilation-cfr/paper/ngppower/data/"
 files = list.files(dir)
 power_data = readRDS(paste0(dir, "/", files[1]))
 for(f in 2:length(files)) {
@@ -16,9 +17,9 @@ for(f in 2:length(files)) {
 # Compare mean shifts
 pow_mu = power_data %>%
   filter(feature == "mean") %>%
-  select(pval, method, mu1, mu2) %>%
+  dplyr::select(pval, method, mu1, mu2) %>%
   group_by(method, mu2) %>%
-  summarize(power = mean(pval < 0.05)) %>%
+  summarize(power = mean(pval < 0.05, na.rm = T)) %>%
   ungroup() %>%
   mutate(Statistic = as.factor(method),
          Statistic = recode(method, 
@@ -27,15 +28,15 @@ pow_mu = power_data %>%
          parameter = "Mean",
          vary = mu2
   ) %>%
-  select(
+  dplyr::select(
     Statistic, parameter, vary, power
   )
 
 pow_sd = power_data %>%
   filter(feature == "sd") %>%
-  select(pval, method, sd1, sd2) %>%
+  dplyr::select(pval, method, sd1, sd2) %>%
   group_by(method, sd2) %>%
-  summarize(power = mean(pval < 0.05)) %>%
+  summarize(power = mean(pval < 0.05, na.rm = T)) %>%
   ungroup() %>%
   mutate(Statistic = as.factor(method),
          Statistic = recode(method, 
@@ -44,16 +45,16 @@ pow_sd = power_data %>%
          parameter = "Std. Dev.",
          vary = sd2
   ) %>%
-  select(
+  dplyr::select(
     Statistic, parameter, vary, power
   )
 
 
 pow_cor = power_data %>%
   filter(feature == "corr") %>%
-  select(pval, method, r1, r2) %>%
+  dplyr::select(pval, method, r1, r2) %>%
   group_by(method, r2) %>%
-  summarize(power = mean(pval < 0.05)) %>%
+  summarize(power = mean(pval < 0.05, na.rm = T)) %>%
   ungroup() %>%
   mutate(Statistic = as.factor(method),
          Statistic = recode(method, 
@@ -62,16 +63,16 @@ pow_cor = power_data %>%
          parameter = "Range",
          vary = r2
   ) %>%
-  select(
+  dplyr::select(
     Statistic, parameter, vary, power
   )
 
 
 pow_sm = power_data %>%
   filter(feature == "smooth") %>%
-  select(pval, method, nu1, nu2) %>%
+  dplyr::select(pval, method, nu1, nu2) %>%
   group_by(method, nu2) %>%
-  summarize(power = mean(pval < 0.05)) %>%
+  summarize(power = mean(pval < 0.05, na.rm = T)) %>%
   ungroup() %>%
   mutate(Statistic = as.factor(method),
          Statistic = recode(method, 
@@ -80,7 +81,7 @@ pow_sm = power_data %>%
          parameter = "Smoothness",
          vary = nu2
   ) %>%
-  select(
+  dplyr::select(
     Statistic, parameter, vary, power
   )
 
@@ -103,4 +104,4 @@ ggplot(power, aes(x=vary, y=power, color=Statistic)) +
   facet_wrap(. ~ parameter, nrow = 1, scales = "free_x",
              labeller = label_parsed)
 
-ggsave("../research/proxy/ngppower/ngppower_const.png", width = 9, heigh = 3)
+ggsave("assimilation-cfr/paper/ngppower/ngppower_const.png", width = 9, heigh = 3)
