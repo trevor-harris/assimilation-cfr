@@ -35,4 +35,3 @@ pdepth = function(gmat, fmat, proj = 1000) {
 
 # extremal Depth(ED)
 library(extdepth)
-

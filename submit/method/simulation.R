@@ -1,3 +1,7 @@
+library(MASS)
+library(fields)
+library(mvtnorm)
+
 #### SIMULATION
 gp1d = function(fields = 100, mu = 0, sd = 1, l = 50, pts = 50) {
   grid = 1:pts
@@ -71,6 +75,51 @@ gp2d.mat = function(fields = 100, mu = 0, sd = 1, l = 1, pts = 25,
   return(gps)
 }
 
+tp1d = function(fields = 10, mu = 0, df = 1, sd = 1, l = 1, pts = 50, 
+                range = 0.1, nu = 1, phi = 1) {
+  
+  grid = seq(0, 1, length.out = pts)
+  distmat = as.matrix(dist(grid))
+  
+  sigma = fields::Matern(distmat, range = range, nu = nu, phi = 1)
+  
+  t(rmvt(fields, sigma, df)) + mu
+}
+# tp2d = function(fields = 100, mu = 0, df = 1, sd = 1, l = 1, pts = 25, 
+#                 range = 0.1, nu = 1, phi = 1) {
+#   
+#   grid = seq(0, 1, length.out = pts)
+#   grid = expand.grid(grid, grid)
+#   distmat = as.matrix(dist(grid))
+#   
+#   sigma = fields::Matern(distmat, range = range, nu = nu, phi = phi)
+#   sigma = matrix(sigma, 400, 400)
+#   
+#   tps = t(rmvt(fields, sigma, df))
+#   vapply(1:fields, function(i) matrix(tps[,i]), FUN.VALUE = matrix(0, pts, pts)) + mu
+# }
+
+tp2d = function(fields = 100, mu = 0, df = 2, sd = 1, l = 1, pts = 25, 
+                range = 0.1, nu = 1, phi = 1) {
+  
+  grid = seq(0, 1, length.out = pts)
+  grid = expand.grid(grid, grid)
+  distmat = as.matrix(dist(grid))
+  
+  sigma = fields::Matern(distmat, range = range, nu = nu, phi = phi) / 3
+  sigma.cho = t(chol(sigma))
+  
+  gps = array(0, dim=c(pts, pts, fields))
+  for(f in 1:fields) {
+    chi = sqrt(df / rchisq(1, df = df))
+    td = as.vector(sigma.cho %*% rnorm(pts^2, sd = sd))
+    
+    gps[,,f] =  td * chi + mu
+  }
+  
+  return(gps)
+}
+
 plt_funs = function(f, g, yl = "Value", fcol = "red", gcol = "blue", domain = seq(0, 1, length.out = nrow(f))) {
   domain = domain
   
@@ -117,3 +166,4 @@ plt_funs = function(f, g, yl = "Value", fcol = "red", gcol = "blue", domain = se
 #       lines(g[,i], col = "blue")
 #     }
 #   }
+# }
