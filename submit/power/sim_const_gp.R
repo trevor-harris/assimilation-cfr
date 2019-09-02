@@ -1,8 +1,5 @@
 rm(list = ls()); gc()
 
-# set to the top level folder
-setwd("/Users/trevh/research/submit/")
-
 library(tictoc)
 library(future.apply)
 
@@ -11,6 +8,9 @@ library(refund)
 
 # Band test
 library(roahd)
+
+# set to the top level folder
+setwd("/Users/trevorh2/research/assimilation-cfr/submit/")
 
 source("method/depth_tests.R")
 source("method/depths.R")

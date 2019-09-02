@@ -5,3 +5,4 @@
 data/*.nc
 data/*.RDS
 outdata/
+submit/data/*.nc

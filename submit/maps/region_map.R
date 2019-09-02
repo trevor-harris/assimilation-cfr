@@ -1,13 +1,15 @@
 rm(list = ls())
 gc()
 
-# set to the top level folder
-setwd("/Users/trevh/research/submit/")
-
 library(ncdf4)
-library(reshape2)
+library(tictoc)
 library(ggplot2)
-library(OpenImageR)
+library(dplyr)
+library(reshape2)
+
+# set to the top level folder
+setwd("/Users/trevorh2/research/assimilation-cfr/submit/")
+
 
 source("method/depth_tests.R")
 source("method/depths.R")
@@ -61,9 +63,6 @@ prep_post = function(nc.post, t) {
   
   return(ens)
 }
-read_era = function(dir, file) {
-  cbind(readRDS(paste0(dir, file)), era = as.numeric(strsplit(file, "\\D+")[[1]][-1]))
-}
 region_plot <- function(field, nc, reg_names, cc = cc, main = "", zlim = c(-max(abs(field)), max(abs(field)))) {
   
   lats = as.vector(nc$dim$lat$vals)
@@ -95,9 +94,12 @@ region_plot <- function(field, nc, reg_names, cc = cc, main = "", zlim = c(-max(
 
 
 #### Regionlized significant differences
-nc.post = nc_open('../research/proxy/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-nc.prior = nc_open('../research/proxy/data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-prior_ind = read.csv("../research/proxy/data/prior-ens.txt", header = F)$V1
+# prior
+nc.prior = nc_open('data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+prior_ind = read.csv("data/prior_ens.txt", header = F)$V1
+
+# post
+nc.post = nc_open('data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 
 # read in the mask file
 mask = read.csv("data/mask2.csv", stringsAsFactors = F)[,2:145]
@@ -112,4 +114,4 @@ cc = c("#4bb1bf", "#235354", "#5c9c9a", "#8be0e0", "#102829",
        "#000000")
 
 region_plot(mask, nc.prior, reg_names, cc)
-ggsave("maps/regions.png", width = 9, height = 6)
+# ggsave("maps/regions.png", width = 9, height = 6)

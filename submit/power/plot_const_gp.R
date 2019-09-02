@@ -5,6 +5,9 @@ library(dplyr)
 library(reshape2)
 library(latex2exp)
 
+# set to the top level folder
+setwd("/Users/trevorh2/research/assimilation-cfr/submit/")
+
 
 dir = "power/out_const_gp/"
 files = list.files(dir)
@@ -16,7 +19,7 @@ for(f in 2:length(files)) {
 # Compare mean shifts
 pow_mu = power_data %>%
   filter(feature == "mean") %>%
-  select(pval, method, mu1, mu2) %>%
+  dplyr::select(pval, method, mu1, mu2) %>%
   group_by(method, mu2) %>%
   summarize(power = mean(pval < 0.05)) %>%
   ungroup() %>%
@@ -27,13 +30,13 @@ pow_mu = power_data %>%
          parameter = "Mean",
          vary = mu2
   ) %>%
-  select(
+  dplyr::select(
     Statistic, parameter, vary, power
   )
 
 pow_sd = power_data %>%
   filter(feature == "sd") %>%
-  select(pval, method, sd1, sd2) %>%
+  dplyr::select(pval, method, sd1, sd2) %>%
   group_by(method, sd2) %>%
   summarize(power = mean(pval < 0.05)) %>%
   ungroup() %>%
@@ -44,14 +47,14 @@ pow_sd = power_data %>%
          parameter = "Std. Dev.",
          vary = sd2
   ) %>%
-  select(
+  dplyr::select(
     Statistic, parameter, vary, power
   )
 
 
 pow_cor = power_data %>%
   filter(feature == "corr") %>%
-  select(pval, method, r1, r2) %>%
+  dplyr::select(pval, method, r1, r2) %>%
   group_by(method, r2) %>%
   summarize(power = mean(pval < 0.05)) %>%
   ungroup() %>%
@@ -62,14 +65,14 @@ pow_cor = power_data %>%
          parameter = "Range",
          vary = r2
   ) %>%
-  select(
+  dplyr::select(
     Statistic, parameter, vary, power
   )
 
 
 pow_sm = power_data %>%
   filter(feature == "smooth") %>%
-  select(pval, method, nu1, nu2) %>%
+  dplyr::select(pval, method, nu1, nu2) %>%
   group_by(method, nu2) %>%
   summarize(power = mean(pval < 0.05)) %>%
   ungroup() %>%
@@ -80,7 +83,7 @@ pow_sm = power_data %>%
          parameter = "Smoothness",
          vary = nu2
   ) %>%
-  select(
+  dplyr::select(
     Statistic, parameter, vary, power
   )
 
@@ -103,4 +106,4 @@ ggplot(power, aes(x=vary, y=power, color=Statistic)) +
   facet_wrap(. ~ parameter, nrow = 1, scales = "free_x",
              labeller = label_parsed)
 
-ggsave("power/power_const_gp.png", width = 10, heigh = 3)
+# ggsave("power/power_const_gp.png", width = 10, heigh = 3)

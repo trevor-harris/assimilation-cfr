@@ -3,6 +3,10 @@ rm(list = ls()); gc()
 library(ggplot2)
 library(dplyr)
 library(reshape2)
+library(latex2exp)
+
+# set to the top level folder
+setwd("/Users/trevorh2/research/assimilation-cfr/submit/")
 
 
 dir = "power/out_het_nongp"
@@ -15,9 +19,9 @@ for(f in 2:length(files)) {
 # Compare mean shifts
 pow_mu = power_data %>%
   filter(feature == "mean") %>%
-  select(pval, method, amp) %>%
+  dplyr::select(pval, method, amp) %>%
   group_by(method, amp) %>%
-  summarize(power = mean(pval < 0.05)) %>%
+  summarize(power = mean(pval < 0.05, na.rm = T)) %>%
   ungroup() %>%
   mutate(Statistic = recode(method, 
                             Kolm = "KD",
@@ -25,15 +29,15 @@ pow_mu = power_data %>%
          parameter = "Mean",
          vary = amp
   ) %>%
-  select(
+  dplyr::select(
     Statistic, parameter, vary, power
   )
 
 pow_sd = power_data %>%
   filter(feature == "sd") %>%
-  select(pval, method, amp) %>%
+  dplyr::select(pval, method, amp) %>%
   group_by(method, amp) %>%
-  summarize(power = mean(pval < 0.05)) %>%
+  summarize(power = mean(pval < 0.05, na.rm = T)) %>%
   ungroup() %>%
   mutate(Statistic = recode(method, 
                             Kolm = "KD",
@@ -41,7 +45,7 @@ pow_sd = power_data %>%
          parameter = "Std. Dev.",
          vary = amp
   ) %>%
-  select(
+  dplyr::select(
     Statistic, parameter, vary, power
   )
 
@@ -60,4 +64,4 @@ ggplot(power, aes(x=vary, y=power, color=Statistic)) +
   facet_wrap(. ~ parameter, nrow = 1, scales = "free_x",
              labeller = label_parsed)
 
-ggsave("power/power_het_nongp.png", width = 10, heigh = 3)
+# ggsave("power/power_het_nongp.png", width = 10, heigh = 3)

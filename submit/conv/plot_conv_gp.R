@@ -5,6 +5,9 @@ library(dplyr)
 library(reshape2)
 library(latex2exp)
 
+# set to the top level folder
+setwd("/Users/trevorh2/research/assimilation-cfr/submit/")
+
 # import raw size data
 dir = "conv/out_gp/"
 files = list.files(dir)
@@ -19,7 +22,7 @@ conv = conv_data %>% na.omit() %>%
          nu = as.factor(nu))
 
 conv = conv %>%
-  select(-one_of(c("n1", "n2"))) %>%
+  dplyr::select(-one_of(c("n1", "n2"))) %>%
   mutate(r = as.factor(range),
          nu = as.factor(nu)
   )
@@ -43,11 +46,11 @@ ggplot(conv, aes(x = n, y = sqrt(cdf_diff), fill = range)) +
              labeller = label_parsed) +
   guides(fill=guide_legend("Range"))
 
-ggsave("conv/gp_l2.png", width = 9.1, height = 5)
+# ggsave("conv/gp_l2.png", width = 9.1, height = 5)
 
 
 crit = conv %>% 
-  select(n, r, nu, cval_90, cval_95, cval_99) %>%
+  dplyr::select(n, r, nu, cval_90, cval_95, cval_99) %>%
   melt(id.vars = c("n", "r", "nu"), variable.name = "critical") %>%
   mutate(critical = recode(critical,
                            "cval_90" = "0.90",
@@ -70,4 +73,4 @@ ggplot(crit, aes(x = n, y = value, fill = critical)) +
              switch = "y",
              labeller = label_parsed) +
   guides(fill=guide_legend("Level"))
-ggsave("conv/gp_cv.png", width = 9.1, height = 5)
+# ggsave("conv/gp_cv.png", width = 9.1, height = 5)

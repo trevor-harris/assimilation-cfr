@@ -1,11 +1,23 @@
+rm(list = ls())
+gc()
+
 library(ncdf4)
 library(tictoc)
+library(ggplot2)
+library(dplyr)
+library(reshape2)
+library(latex2exp)
+
+# FAD test
 library(refund)
 
 # set to the top level folder
+setwd("/Users/trevorh2/research/assimilation-cfr/submit/")
 
 
-source("../method/depth_tests.R")
+source("method/depth_tests.R")
+source("method/depths.R")
+source("method/simulation.R")
 
 prep_prior = function(nc.prior) {
   
@@ -57,18 +69,21 @@ prep_post = function(nc.post, t) {
 }
 
 # prior
-nc.prior = nc_open('../data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
-prior_ind = read.csv("../data/prior-ens.txt", header = F)$V1
+nc.prior = nc_open('data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+prior_ind = read.csv("data/prior_ens.txt", header = F)$V1
 
 prior = prep_prior(nc.prior)
 prior = prior[,,prior_ind]
 prior = flatten(prior)
 
 # post
-nc.post = nc_open('../research/proxy/data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
+nc.post = nc_open('data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 
-fad = matrix(0, 998, 2)
-for(i in 1:998) {
+times = 998
+years = 851:1848
+
+fad = matrix(0, times, 2)
+for(i in 1:times) {
   tic(paste0("Year ", i))
   
   post = prep_post(nc.post, i)

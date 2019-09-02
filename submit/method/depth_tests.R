@@ -284,8 +284,10 @@ adk.pval <-
     list(p0 = p0, extrap = extrap)
   }
 
-
 fadtest = function(f, g) {
+  
+  f = gp1d()
+  g = gp1d(mu = 1)
   ### FAD method
   h = cbind(f, g)
   fpc = fpca.face(t(h))
@@ -293,8 +295,11 @@ fadtest = function(f, g) {
   fscores = fpc$scores[1:ncol(f),]
   gscores = fpc$scores[(ncol(f) + 1):ncol(h),]
   
-  pvals = sapply(1:ncol(fscores), function(x) adk.test(fscores[,x], gscores[,x])$adk[2, 2])
-  min(1, min(pvals)*ncol(fscores))
+  fad = sapply(1:ncol(fscores), function(x) adk.test(fscores[,x], gscores[,x])$adk[2, 1:2])
+  tvals = abs(fad[1,])
+  pvals = fad[2,]
+  
+  c(max(tvals), min(1, min(pvals)*ncol(fscores)))
 }
 
 #### BAND test

@@ -14,11 +14,14 @@ library(fdasrvf)
 library(tictoc)
 
 
-setwd("../research/assimilation-cfr/paper/submit")
+# set to the top level folder
+setwd("/Users/trevorh2/research/assimilation-cfr/submit/")
 
-source("code/depth_tests.R")
-source("code/depths.R")
-source("code/simulation.R")
+
+source("method/depth_tests.R")
+source("method/depths.R")
+source("method/simulation.R")
+
 
 prep_prior = function(nc.prior) {
   
@@ -166,7 +169,7 @@ ggplot(kseries, aes(Year, value)) +
   xlab("Year") +
   ylab("KD") +
   facet_wrap(vars(Region), 3, 4, scales = "free_x")
-ggsave("results/kd_region.png", width = 6, height = 3.8)
+# ggsave("results/kd_region.png", width = 6, height = 3.8)
 
 
 # plot p-values
@@ -184,4 +187,4 @@ ggplot() +
   xlab("Year") +
   ylab("p-value") +
   facet_wrap(vars(Region), 3, 4, scales = "free_x")
-ggsave("results/pval_region.png", width = 6, height = 3.8)
+# ggsave("results/pval_region.png", width = 6, height = 3.8)

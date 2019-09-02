@@ -8,16 +8,16 @@ library(dplyr)
 library(reshape2)
 library(latex2exp)
 
-setwd("../research/assimilation-cfr/paper/submit")
+# set to the top level folder
+setwd("/Users/trevorh2/research/assimilation-cfr/submit/")
 
-source("code/depth_tests.R")
-source("code/depths.R")
-source("code/simulation.R")
+
+source("method/depth_tests.R")
+source("method/depths.R")
+source("method/simulation.R")
 
 
 ###### TESTING
-
-
 prep_prior = function(nc.prior) {
   
   n.lon = nc.prior$dim$lon$len
@@ -79,13 +79,13 @@ prior_ind = read.csv("data/prior_ens.txt", header = F)$V1
 prior = prep_prior(nc.prior)
 prior = flatten(prior[,,prior_ind])
 
-times = 1:998
+times = 998
 years = 851:1848
-k.t = matrix(0, length(times), 3)
+k.t = matrix(0, length(times), 2)
 
 # run test for each year in reconstruction
-for(t in 1:length(times)) {
-  post.t = flatten(prep_post(nc.post, times[t]))
+for(t in 1:times) {
+  post.t = flatten(prep_post(nc.post, t))
   k.t[t,] = kolm(prior, post.t)
 }
 
@@ -101,7 +101,7 @@ ggplot(kstats, aes(x=Year, y=stat)) +
   theme(plot.title = element_text(hjust = 0.5), 
         text = element_text(size=24)) +
   ylab("KD")
-ggsave("results/kd_global.png", width = 8, heigh = 6)
+# ggsave("results/kd_global.png", width = 8, heigh = 6)
 
 
 ggplot(kstats, aes(x=Year, y=pval)) +
@@ -110,4 +110,4 @@ ggplot(kstats, aes(x=Year, y=pval)) +
   theme(plot.title = element_text(hjust = 0.5), 
         text = element_text(size=24)) +
   ylab("p-values")
-ggsave("results/pval_global.png", width = 8, heigh = 6)
+# ggsave("results/pval_global.png", width = 8, heigh = 6)

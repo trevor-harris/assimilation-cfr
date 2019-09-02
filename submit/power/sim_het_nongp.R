@@ -1,8 +1,5 @@
 rm(list = ls()); gc()
 
-# set to the top level folder
-setwd("/Users/trevh/research/submit/")
-
 library(tictoc)
 library(future.apply)
 
@@ -11,6 +8,9 @@ library(refund)
 
 # Band test
 library(roahd)
+
+# set to the top level folder
+setwd("/Users/trevorh2/research/assimilation-cfr/submit/")
 
 source("method/depth_tests.R")
 source("method/depths.R")
@@ -48,8 +48,8 @@ for (amp in seq(0, 1, by = 0.05)) {
   mu2 = as.vector(outer(mu2, mu2)) - 1
   
   vals = future_sapply(1:sims, function(x) {
-    f = tp2d(fields = n1, mu = mu1, df = 3, phi = sd1, range = r1, nu = nu1, pts = pts)
-    g = tp2d(fields = n2, mu = mu2, df = 3, phi = sd2, range = r2, nu = nu2, pts = pts)
+    f = tp2d(fields = n1, mu = mu1, df = 3, sd = sd1, range = r1, nu = nu1, pts = pts)
+    g = tp2d(fields = n2, mu = mu2, df = 3, sd = sd2, range = r2, nu = nu2, pts = pts)
     
     f = flatten(f)
     g = flatten(g)
