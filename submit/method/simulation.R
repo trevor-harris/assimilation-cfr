@@ -3,39 +3,38 @@ library(fields)
 library(mvtnorm)
 
 #### SIMULATION
-gp1d = function(fields = 100, mu = 0, sd = 1, l = 50, pts = 50) {
-  grid = 1:pts
+gp1d = function(fields = 100, mu = 0, sd = 1, pts = 50, range = 0.3, nu = 1, phi = 1) {
+  
+  grid = seq(0, 1, length.out = pts)
   distmat = as.matrix(dist(grid))
   
-  # calc sigma with cov kernel
-  sigma = exp(-distmat / l)
-  
-  sigma.eig = eigen(sigma)
-  sigma.half = sigma.eig$vectors %*% diag(sqrt(sigma.eig$values)) %*% t(sigma.eig$vectors)
+  sigma = fields::Matern(distmat, range = range, nu = nu, phi = phi)
+  sigma.cho = t(chol(sigma))
   
   gps = matrix(0, pts, fields)
   for(f in 1:fields) {
-    gps[,f] = (sigma.half %*% rnorm(pts, sd = sd)) + mu
+    gps[,f] = (sigma.cho %*% rnorm(pts, sd = sd)) + mu
   }
   return(gps)
 }
-gp2d = function(fields = 100, mu = 0, sd = 1, l = 30, pts = 30) {
-  grid = 1:pts
+
+gp2d = function(fields = 100, mu = 0, sd = 1, l = 1, pts = 25, 
+                    range = 1,nu = 0.5, phi = 1) {
+  
+  grid = seq(0, 1, length.out = pts)
   grid = expand.grid(grid, grid)
   distmat = as.matrix(dist(grid))
   
-  # calc sigma with cov kernel
-  sigma = exp(-distmat / l)
-  
-  sigma.eig = eigen(sigma)
-  sigma.half = sigma.eig$vectors %*% diag(sqrt(sigma.eig$values)) %*% t(sigma.eig$vectors)
+  sigma = fields::Matern(distmat, range = range, nu = nu, phi = phi)
+  sigma.cho = t(chol(sigma))
   
   gps = array(0, dim=c(pts, pts, fields))
   for(f in 1:fields) {
-    gps[,,f] = (sigma.half %*% rnorm(pts^2, sd = sd)) + mu
+    gps[,,f] = (sigma.cho %*% rnorm(pts^2, sd = sd)) + mu
   }
   return(gps)
 }
+
 flatten = function(mat) {
   matrix(mat, prod(dim(mat)[1:2]), dim(mat)[3])
 }

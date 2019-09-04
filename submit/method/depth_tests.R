@@ -285,9 +285,6 @@ adk.pval <-
   }
 
 fadtest = function(f, g) {
-  
-  f = gp1d()
-  g = gp1d(mu = 1)
   ### FAD method
   h = cbind(f, g)
   fpc = fpca.face(t(h))
