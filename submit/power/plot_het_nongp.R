@@ -1,12 +1,26 @@
-rm(list = ls()); gc()
+rm(list = ls())
+gc()
+
+
+
+########### READ ME #############
+
+# you must change the working directory to be the submit folder
+# none of this will work otherwise
+# mine is left here as an example
+
+########## Example
+# setwd("/Users/trevh/research/assimilation-cfr/submit/")
+
+#################################
+
+
 
 library(ggplot2)
 library(dplyr)
 library(reshape2)
 library(latex2exp)
 
-# set to the top level folder
-setwd("/Users/trevorh2/research/assimilation-cfr/submit/")
 
 
 dir = "power/out_het_nongp"
@@ -16,7 +30,7 @@ for(f in 2:length(files)) {
   power_data = rbind(power_data, readRDS(paste0(dir, "/", files[f])))
 }
 
-# Compare mean shifts
+#  convert mean shift power comparison into ggplot2 compliant format
 pow_mu = power_data %>%
   filter(feature == "mean") %>%
   dplyr::select(pval, method, amp) %>%
@@ -33,6 +47,8 @@ pow_mu = power_data %>%
     Statistic, parameter, vary, power
   )
 
+
+#  convert standard deviation power comparison into ggplot2 compliant format
 pow_sd = power_data %>%
   filter(feature == "sd") %>%
   dplyr::select(pval, method, amp) %>%
@@ -49,6 +65,7 @@ pow_sd = power_data %>%
     Statistic, parameter, vary, power
   )
 
+# combine back together and plot side by side
 power = rbind(pow_mu, pow_sd)
 power$parameter = as.factor(power$parameter)
 levels(power$parameter) = c(TeX("$\\mu"), TeX("$\\sigma"))

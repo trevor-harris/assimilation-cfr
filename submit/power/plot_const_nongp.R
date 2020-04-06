@@ -1,12 +1,25 @@
 rm(list = ls()); gc()
 
+
+
+
+########### READ ME #############
+
+# you must change the working directory to be the submit folder
+# none of this will work otherwise
+# mine is left here as an example
+
+########## Example
+# setwd("/Users/trevh/research/assimilation-cfr/submit/")
+
+#################################
+
+
+
 library(ggplot2)
 library(dplyr)
 library(reshape2)
 library(latex2exp)
-
-# set to the top level folder
-setwd("/Users/trevorh2/research/assimilation-cfr/submit/")
 
 
 dir = "power/out_const_nongp/"
@@ -16,7 +29,7 @@ for(f in 2:length(files)) {
   power_data = rbind(power_data, readRDS(paste0(dir, "/", files[f])))
 }
 
-# Compare mean shifts
+#  convert mean shift power comparison into ggplot2 compliant format
 pow_mu = power_data %>%
   filter(feature == "mean") %>%
   dplyr::select(pval, method, mu1, mu2) %>%
@@ -34,6 +47,8 @@ pow_mu = power_data %>%
     Statistic, parameter, vary, power
   )
 
+
+#  convert standard deviation power comparison into ggplot2 compliant format
 pow_sd = power_data %>%
   filter(feature == "sd") %>%
   dplyr::select(pval, method, sd1, sd2) %>%
@@ -52,6 +67,7 @@ pow_sd = power_data %>%
   )
 
 
+#  convert correlation (range) power comparison into ggplot2 compliant format
 pow_cor = power_data %>%
   filter(feature == "corr") %>%
   dplyr::select(pval, method, r1, r2) %>%
@@ -70,6 +86,7 @@ pow_cor = power_data %>%
   )
 
 
+#  convert smoothness power comparison into ggplot2 compliant format
 pow_sm = power_data %>%
   filter(feature == "smooth") %>%
   dplyr::select(pval, method, nu1, nu2) %>%
@@ -87,11 +104,13 @@ pow_sm = power_data %>%
     Statistic, parameter, vary, power
   )
 
+# combine the 4 ggplot compliant datasets back together
 power = rbind(pow_mu, pow_sd, pow_cor, pow_sm)
 power$parameter = as.factor(power$parameter)
 
 levels(power$parameter) = c(TeX("$\\mu"), TeX("$r"), TeX("$\\nu"), TeX("$\\sigma"))
 
+# plot mean, sd, range, and smoothness results side by side
 ggplot(power, aes(x=vary, y=power, color=Statistic)) +
   geom_line(size = 1) +
   geom_hline(yintercept = 0.05) +

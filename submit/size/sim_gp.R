@@ -1,4 +1,21 @@
-rm(list = ls()); gc()
+rm(list = ls())
+gc()
+
+
+
+########### READ ME #############
+
+# you must change the working directory to be the submit folder
+# none of this will work otherwise
+# mine is left here as an example
+
+########## Example
+# setwd("/Users/trevh/research/assimilation-cfr/submit/")
+
+#################################
+
+
+
 
 library(tictoc)
 library(future.apply)
@@ -8,14 +25,17 @@ library(refund)
 
 # Band test
 library(roahd)
+devtools::install_version('roahd', version = "1.4.1", repos = "http://cran.us.r-project.org")
 
-# set to the top level folder
-# set to the top level folder
-setwd("/Users/trevorh2/research/assimilation-cfr/submit/")
+# KD test
+devtools::install_github('trevor-harris/kstat')
+library(kstat)
 
-source("method/depth_tests.R")
-source("method/depths.R")
-source("method/simulation.R")
+# code for simulating guassian processes, t-processes, and plotting functions
+source("util/simulation.R")
+
+# code for running the QI and FAD tests
+source("util/other_methods.R")
 
 #### SIZE
 plan(multicore)
@@ -32,13 +52,17 @@ for (n1 in c(50,100,200,300)) {
         set.seed(072393 + i)
         
         vals = future_sapply(1:sims, function(x) {
-          f = gp2d.mat(fields = n1, range = rng, nu = nu)
-          g = gp2d.mat(fields = n2, range = rng, nu = nu)
           
+          # simulate 2d gaussian process data
+          f = gp2d(fields = n1, range = rng, nu = nu)
+          g = gp2d(fields = n2, range = rng, nu = nu)
+          
+          # flattent into 1d vectors
           f = flatten(f)
           g = flatten(g)
           
-          c(kolm(f, g)[2], quality(f, g)[2], fadtest(f, g), bandtest(f, g)[2])
+          # compute each competing statistic on the generated data and save the p-value
+          c(kstat(f, g)[2], quality(f, g)[2], fadtest(f, g)[2], bandtest(f, g)[2])
           
         })
         

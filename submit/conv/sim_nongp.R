@@ -1,4 +1,21 @@
-rm(list = ls()); gc()
+rm(list = ls())
+gc()
+
+
+
+########### READ ME #############
+
+# you must change the working directory to be the submit folder
+# none of this will work otherwise
+# mine is left here as an example
+
+########## Example
+# setwd("/Users/trevh/research/assimilation-cfr/submit/")
+
+#################################
+
+
+
 
 
 library(reshape2)
@@ -6,13 +23,18 @@ library(tictoc)
 library(future)
 library(future.apply)
 
-# set to the top level folder
-setwd("/Users/trevorh2/research/assimilation-cfr/submit/")
+# KD test
+devtools::install_github('trevor-harris/kstat')
+library(kstat)
 
-source("method/depth_tests.R")
-source("method/depths.R")
-source("method/simulation.R")
 
+# code for simulating guassian processes, t-processes, and plotting functions
+source("util/simulation.R")
+
+# code for running the QI and FAD tests
+source("util/other_methods.R")
+
+# computes the permutation distribution for the KD statistic
 kolm.perm = function(f, g, perms=500) {
   h = cbind(f, g)
   hn = ncol(h)
@@ -22,7 +44,7 @@ kolm.perm = function(f, g, perms=500) {
   
   ksd.dist = future_sapply(1:perms, function(y) {
     hstar = h[,sample(1:hn, hn, replace = F)]
-    kolm(hstar[,1:fn], hstar[,-(1:fn)])
+    kstat(hstar[,1:fn], hstar[,-(1:fn)])
   })
 }
 
@@ -52,20 +74,26 @@ for (bat in 1:10) {
         
         for(j in 1:sims) {
           
+          # generate 2d t-process data
           f = tp2d(fields = n1, df = 3, range = rng, nu = nu)
           g = tp2d(fields = n2, df = 3, range = rng, nu = nu)
           
+          # flatten into 1d vectors
           f = flatten(f)
           g = flatten(g)
           
+          # compute permutation distribution
           perm.table = kolm.perm(f, g, perms)
           
+          # assess significance
           perm_cdf = sapply(t, function(x) mean(perm.table < x))
           perm_cval = quantile(perm_cdf, probs = c(0.90, 0.95, 0.99))
           
+          # compare to asymptotic distribution
           cdf_diff = mean((perm_cdf - asym_cdf)^2)
           cval_diff = perm_cval - asym_cval
           
+          # save results
           conv[k,] = c(cdf_diff, cval_diff, n1, n1)
           
           k = k + 1

@@ -1,12 +1,27 @@
-rm(list = ls()); gc()
+rm(list = ls())
+gc()
+
+
+
+########### READ ME #############
+
+# you must change the working directory to be the submit folder
+# none of this will work otherwise
+# mine is left here as an example
+
+########## Example
+# setwd("/Users/trevh/research/assimilation-cfr/submit/")
+
+#################################
+
+
+
 
 library(ggplot2)
 library(dplyr)
 library(reshape2)
 library(xtable)
 
-# set to the top level folder
-setwd("/Users/trevorh2/research/assimilation-cfr/submit/")
 
 # import raw size data
 dir = "size/out_gp/"
@@ -17,7 +32,7 @@ for(f in 2:length(files)) {
   size_data = rbind(size_data, readRDS(paste0(dir, files[f])))
 }
 
-# calculate size and summarize data
+# calculate size and summarize data by sample sizes, range, and smoothness
 size = size_data %>%
   dplyr::select(pval, method, n1, n2, rng, nu) %>%
   group_by(method, n1, n2, rng, nu) %>%
@@ -39,7 +54,7 @@ size = size_data %>%
 
 
 
-### full table
+### print the full table
 size.tab = size %>%
   mutate(
     size = sprintf("%.2f", round(size, 2)),

@@ -1,68 +1,49 @@
 rm(list = ls())
 gc()
 
+
+
+
+########### READ ME #############
+
+# you must change the working directory to be the submit folder
+# none of this will work otherwise
+# mine is left here as an example
+
+########## Example
+# setwd("/Users/trevh/research/assimilation-cfr/submit/")
+
+#################################
+
+
+
+
 library(ncdf4)
 library(tictoc)
 library(ggplot2)
 library(dplyr)
 library(reshape2)
+library(gridExtra)
+library(cowplot)
 
-# set to the top level folder
-setwd("/Users/trevorh2/research/assimilation-cfr/submit/")
+devtools::install_github('trevor-harris/kstat')
+library(kstat)
+
+# code for simulating guassian processes, t-processes, and plotting functions
+source("util/simulation.R")
+
+# code for importing and processing the ensemble data
+source("util/import_data.R")
 
 
-source("method/depth_tests.R")
-source("method/depths.R")
-source("method/simulation.R")
-
-prep_prior = function(nc.prior) {
-  
-  n.lon = nc.prior$dim$lon$len
-  n.lat = nc.prior$dim$lat$len
-  n.ens = nc.prior$dim$time2$len
-  
-  # extract data from the ncdf4 objects
-  prior = ncvar_get(nc.prior, attributes(nc.prior$var)$names[1], start = c(1, 1, 1), count = c(-1, -1, -1))
-  
-  # transpose for intuitive (to me) layout
-  prior = aperm(prior, c(2, 1, 3))
-  
-  # remove lat means
-  # prior = vapply(1:n.ens, function(x) prior[,,x] - rowMeans(prior[,,x]), FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
-  
-  # normalize
-  lats = as.vector(nc.prior$dim$lat$vals)
-  latmat = matrix(rep(lats, n.lon), n.lat, n.lon)
-  latmat = sqrt(abs(cos(latmat*pi/180)))
-  
-  prior = vapply(1:n.ens, function(x) prior[,,x]*latmat, FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
-  
-  return(prior)
+# helper function for multiplot
+get_legend<-function(myggplot){
+  tmp <- ggplot_gtable(ggplot_build(myggplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)
 }
-prep_post = function(nc.post, t) {
-  
-  n.lon = nc.post$dim$lon$len
-  n.lat = nc.post$dim$lat$len
-  n.ens = nc.post$dim$sub_ens$len
-  
-  # extract data from the ncdf4 objects
-  ens = ncvar_get(nc.post, attributes(nc.post$var)$names[1], start = c(1, 1, t, 1), count = c(-1, -1, 1, -1))
-  
-  # transpose for intuitive (to me) layout
-  ens = aperm(ens, c(2, 1, 3))
-  
-  # remove lat means
-  # ens = vapply(1:n.ens, function(x) ens[,,x] - rowMeans(ens[,,x]), FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
-  
-  # normalize
-  lats = as.vector(nc.post$dim$lat$vals)
-  latmat = matrix(rep(lats, n.lon), n.lat, n.lon)
-  latmat = sqrt(abs(cos(latmat*pi/180)))
-  
-  ens = vapply(1:n.ens, function(x) ens[,,x]*latmat, FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
-  
-  return(ens)
-}
+
 
 #### Regionlized significant differences
 # prior
@@ -77,16 +58,18 @@ prior.mean = apply(prior.all, c(1, 2), mean)
 nc.post = nc_open('data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 post.all = prep_post(nc.post, 1)
 
-
+# convert to anomalies with respect to the background
 prior = prior.all[,,70] - prior.mean
 post = post.all[,,70] - prior.mean
 
+# pull out coordinates for plotting
 lats = as.vector(nc.prior$dim$lat$vals)
 lons = as.vector(nc.prior$dim$lon$vals)
 
 dimnames(prior) = list(lats, ifelse(lons >= 180, lons - 360, lons))
 dimnames(post) = list(lats, ifelse(lons >= 180, lons - 360, lons))
 
+# convert to ggplot2 compliant form
 prior = melt(prior)
 post = melt(post)
 
@@ -96,26 +79,60 @@ colnames(post) = c("lat", "lon", "val")
 prior[["dist"]] = "Background ensemble member 70"
 post[["dist"]] = "Analysis ensemble member 70 (850 CE)"
 
+# import world map overlay
 world = map_data("world")
 world = world[world$long <= 178, ]
 
-combined = rbind(prior, post)
+### add proxy locations
+prox = readMat("maps/proxydata_aprmar_lmr_v0.2.0_pages2k_v2.mat")
+smap = prox$lmr2k.data[850,]
+smap = 1-sapply(smap, is.nan)
+smap = which(smap == 1)
 
-combined$dist = factor(combined$dist, levels = c(
-  "Background ensemble member 70", "Analysis ensemble member 70 (850 CE)"
-))
+# extract lat and lon and reparameterize lon to match ggplot
+lat = prox$p.lat[smap]
+lon = prox$p.lon[smap]
+lon = ifelse(lon >= 180, lon - 360, lon)
+prox_loc = data.frame(lat = lat, lon = lon)
 
-ggplot() +
-  geom_raster(data = combined, aes(x=lon, y=lat, fill=val)) +
-  geom_polygon(data = world, aes(x=long, y=lat, group=group), fill = NA, color="black") +
+# 1. Create the plots
+# background plot (lp)
+lp <- ggplot() +
+  geom_raster(data = prior, aes(x=lon, y=lat, fill=val)) +
+  geom_polygon(data = world, aes(x=long, y=lat, group=group),
+               fill = NA, color="grey30") +
   coord_cartesian() +
   theme_void() +
   scale_fill_distiller(palette = "RdBu",
                        limits = c(-2.5, 4),
                        name = "Temp.\nAnomaly (C)") +
+  ggtitle("Background ensemble member 70") +
   theme(plot.title = element_text(hjust = 0.5),
-        strip.text = element_text(size = 16,
-                                  margin=margin(b=2))) +
-  facet_grid(cols = vars(dist))
+        text = element_text(size = 14))
 
-# ggsave("maps/background_analysis_anomaly.png", width = 10, height = 4)
+
+# analysis plot (rp)
+rp <- ggplot() +
+  geom_raster(data = post, aes(x=lon, y=lat, fill=val)) +
+  geom_polygon(data = world, aes(x=long, y=lat, group=group), 
+               fill = NA, color="grey30") +
+  geom_point(data = prox_loc, aes(x=lon, y=lat), 
+             color = "black", fill = 'red', shape = 25, size = 3) +
+  coord_cartesian() +
+  theme_void() +
+  scale_fill_distiller(palette = "RdBu",
+                       limits = c(-2.5, 4),
+                       name = "Temp.\nAnomaly (C)") +
+  ggtitle("Analysis ensemble member 70 (850 CE)") +
+  theme(plot.title = element_text(hjust = 0.5),
+        text = element_text(size = 14)) +
+  theme(legend.position = "none")
+
+# Save the legend
+legend <- get_legend(lp)
+lp <- lp + theme(legend.position="none")
+
+# Arrange plot
+ba_anom = grid.arrange(lp, rp, legend, ncol=3, widths=c(2.4, 2.4, 0.8))
+
+save_plot("maps/background_analysis_anomaly.png", ba_anom, base_aspect_ratio = 2.9)

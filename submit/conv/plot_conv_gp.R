@@ -1,12 +1,27 @@
-rm(list = ls()); gc()
+rm(list = ls())
+gc()
+
+
+
+########### READ ME #############
+
+# you must change the working directory to be the submit folder
+# none of this will work otherwise
+# mine is left here as an example
+
+########## Example
+# setwd("/Users/trevh/research/assimilation-cfr/submit/")
+
+#################################
+
+
+
 
 library(ggplot2)
 library(dplyr)
 library(reshape2)
 library(latex2exp)
 
-# set to the top level folder
-setwd("/Users/trevorh2/research/assimilation-cfr/submit/")
 
 # import raw size data
 dir = "conv/out_gp/"
@@ -16,6 +31,7 @@ for(f in 2:length(files)) {
   conv_data = rbind(conv_data, readRDS(paste0(dir, files[f])))
 }
 
+# convert to ggplot2 compliant format and subset to only equal sample sizes
 conv = conv_data %>% na.omit() %>%
   mutate(range = as.factor(range),
          n = as.factor(n1),
@@ -27,9 +43,11 @@ conv = conv %>%
          nu = as.factor(nu)
   )
 
+# use greek characters for labelling
 levels(conv$nu) = c(TeX("$\\nu = 0.5"), TeX("$\\nu = 1.0"), TeX("$\\nu = 1.5"))
 levels(conv$r) = c(TeX("$r = 0.2"), TeX("$r = 0.3"), TeX("$r = 0.4"), TeX("$r = 0.5"))
 
+# plot the L2 distance metric
 ggplot(conv, aes(x = n, y = sqrt(cdf_diff), fill = range)) +
   geom_boxplot() +
   theme_bw() +
@@ -48,7 +66,7 @@ ggplot(conv, aes(x = n, y = sqrt(cdf_diff), fill = range)) +
 
 # ggsave("conv/gp_l2.png", width = 9.1, height = 5)
 
-
+# pull out only the critical value results
 crit = conv %>% 
   dplyr::select(n, r, nu, cval_90, cval_95, cval_99) %>%
   melt(id.vars = c("n", "r", "nu"), variable.name = "critical") %>%
@@ -57,6 +75,7 @@ crit = conv %>%
                            "cval_95" = "0.95",
                            "cval_99" = "0.99"))
 
+# plot critical value differences
 ggplot(crit, aes(x = n, y = value, fill = critical)) +
   geom_boxplot() +
   theme_bw() +

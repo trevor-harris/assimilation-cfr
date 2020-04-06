@@ -1,97 +1,108 @@
 rm(list = ls())
 gc()
 
+
+
+########### READ ME #############
+
+# you must change the working directory to be the submit folder
+# none of this will work otherwise
+# mine is left here as an example
+
+########## Example
+# setwd("/Users/trevh/research/assimilation-cfr/submit/")
+
+#################################
+
+
+
 library(ncdf4)
 library(tictoc)
 library(ggplot2)
 library(dplyr)
 library(reshape2)
 library(latex2exp)
+library(devtools)
 
-# set to the top level folder
-setwd("/Users/trevorh2/research/assimilation-cfr/submit/")
+devtools::install_github('trevor-harris/kstat')
+library(kstat)
+
+# code for importing and processing the ensemble data
+source("util/import_data.R")
 
 
-source("method/depth_tests.R")
-source("method/depths.R")
-source("method/simulation.R")
+###### DATA PREP
 
-
-###### TESTING
-prep_prior = function(nc.prior) {
-  
-  n.lon = nc.prior$dim$lon$len
-  n.lat = nc.prior$dim$lat$len
-  n.ens = nc.prior$dim$time2$len
-  
-  # extract data from the ncdf4 objects
-  prior = ncvar_get(nc.prior, attributes(nc.prior$var)$names[1], start = c(1, 1, 1), count = c(-1, -1, -1))
-  
-  # transpose for intuitive (to me) layout
-  prior = aperm(prior, c(2, 1, 3))
-  
-  # remove lat means
-  # prior = vapply(1:n.ens, function(x) prior[,,x] - rowMeans(prior[,,x]), FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
-  
-  # normalize
-  lats = as.vector(nc.prior$dim$lat$vals)
-  latmat = matrix(rep(lats, n.lon), n.lat, n.lon)
-  latmat = sqrt(abs(cos(latmat*pi/180)))
-  
-  prior = vapply(1:n.ens, function(x) prior[,,x]*latmat, FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
-  
-  return(prior)
-}
-prep_post = function(nc.post, t) {
-  
-  n.lon = nc.post$dim$lon$len
-  n.lat = nc.post$dim$lat$len
-  n.ens = nc.post$dim$sub_ens$len
-  
-  # extract data from the ncdf4 objects
-  ens = ncvar_get(nc.post, attributes(nc.post$var)$names[1], start = c(1, 1, t, 1), count = c(-1, -1, 1, -1))
-  
-  # transpose for intuitive (to me) layout
-  ens = aperm(ens, c(2, 1, 3))
-  
-  # remove lat means
-  # ens = vapply(1:n.ens, function(x) ens[,,x] - rowMeans(ens[,,x]), FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
-  
-  # normalize
-  lats = as.vector(nc.post$dim$lat$vals)
-  latmat = matrix(rep(lats, n.lon), n.lat, n.lon)
-  latmat = sqrt(abs(cos(latmat*pi/180)))
-  
-  ens = vapply(1:n.ens, function(x) ens[,,x]*latmat, FUN.VALUE = matrix(0, nrow = n.lat, ncol = n.lon))
-  
-  return(ens)
-}
-flatten = function(mat) {
-  matrix(mat, prod(dim(mat)[1:2]), dim(mat)[3])
-}
-
+# open connection to NCDF4 data files
 nc.post = nc_open('data/tas_ens_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 nc.prior = nc_open('data/tas_prior_da_hydro_r.1000-2000_d.16-Feb-2018.nc')
 
+# this file contains a list of ensemble members used to subset the background (prior)
 prior_ind = read.csv("data/prior_ens.txt", header = F)$V1
 
-# import all of prior
+# import all of prior then subset to ensemble members contained in prior_ind
 prior = prep_prior(nc.prior)
 prior = flatten(prior[,,prior_ind])
 
+
+###### SIGNIFICANCE TESTING
 times = 998
 years = 851:1848
-k.t = matrix(0, length(times), 2)
+k.t = matrix(0, times, 2)
 
 # run test for each year in reconstruction
-for(t in 1:times) {
-  post.t = flatten(prep_post(nc.post, t))
-  k.t[t,] = kolm(prior, post.t)
+for(i in 1:times) {
+  tic(paste0("t = ", years[i]))
+  post.t = flatten(prep_post(nc.post, i))
+  k.t[i,] = kstat(prior, post.t)
+  toc()
 }
 
+# unadjusted and FDR corrected pvals. FDR correction assumes all tests unique but this isnt true.
+# this FDR correction was done originally and is left it as comparison with the correct one (pval3)
+pval0 = k.t[,2]
+pval1 = p.adjust(pval0, "BY")
 
-###### PLOTTING
+# determine which ensembles are the same (out to 5 decimals) due to assimilating the exact same proxies
+times = 998
+ex = matrix(0, 13824, times)
+for(i in 1:times) {
+  post.t = flatten(prep_post(nc.post, i))
+  post.t = post.t - rowMeans(post.t)
+  ex[,i] = round(post.t[, 10], 5)
+}
 
+# go through each par of saved ensembles and check if they are the same
+equiv = matrix(F, times, times)
+for(i in 1:(times-1)) {
+  for(j in (i+1):times) {
+    equiv[i, j] = identical(ex[,i], ex[,j])
+  }
+}
+
+# orig = 1st appearance of a nonunique ensemble
+# repeats = > 1st appearance
+orig = which(apply(equiv, 1, sum) > 0)
+repeats = which(apply(equiv, 2, sum) > 0)
+
+pval2 = p.adjust(pval0[-repeats], "BY")
+pval3 = rep(0, times)
+pval3[-repeats] = pval2
+pval3[repeats] = pval2[orig]
+
+pval1 = readRDS("results/global_pval_full_adjusted.RDS")
+pval3 = readRDS("results/global_pval_correct_adjusted.RDS")
+plot(pval1 - pval3)
+
+max(pval3 - pval1)
+min(pval3 - pval1)
+
+saveRDS(pval0, "results/global_pval_unadjusted.RDS");
+saveRDS(pval1, "results/global_pval_full_adjusted.RDS");
+saveRDS(pval3, "results/global_pval_correct_adjusted.RDS");
+
+
+###### PLOT RESULTS
 kstats = data.frame(stat = k.t[,1], pval = k.t[,2], Year = years)
 
 ggplot(kstats, aes(x=Year, y=stat)) +
