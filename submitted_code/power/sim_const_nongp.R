@@ -24,8 +24,8 @@ library(future.apply)
 library(refund)
 
 # Band test
-library(roahd)
 devtools::install_version('roahd', version = "1.4.1", repos = "http://cran.us.r-project.org")
+library(roahd)
 
 # KD test
 devtools::install_github('trevor-harris/kstat')

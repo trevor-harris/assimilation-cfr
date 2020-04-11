@@ -1,6 +1,6 @@
 #### QI
 
-# Integrated Tukeuy Depth (XD)
+# Unvariate Tukey Depth
 depth = function(g, fmat) {
   
   # Computes the depth values of a function with respect to a set of functions (fmat)
@@ -14,6 +14,8 @@ depth = function(g, fmat) {
   
   return(depth)
 }
+
+# Integrated Tukey Depth
 xdepth = function(gmat, fmat) {
   apply(gmat, 2, function(x) mean(depth(x, fmat)))
 }

@@ -65,6 +65,8 @@ size.tab = size %>%
   dcast(
     n1 + n2 + stat ~ nu + range, value.var = "size"
   )
+
+# latex formatted (in the paper)
 xtable(size.tab, booktabs = T)
 
 

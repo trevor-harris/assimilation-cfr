@@ -17,7 +17,6 @@ gc()
 
 
 
-
 library(reshape2)
 library(tictoc)
 library(future)
@@ -26,7 +25,6 @@ library(future.apply)
 # KD test
 devtools::install_github('trevor-harris/kstat')
 library(kstat)
-
 
 # code for simulating guassian processes, t-processes, and plotting functions
 source("util/simulation.R")
@@ -57,15 +55,19 @@ perms = 500
 sims = 10
 n = c(25, 50, 75, 100)
 
+# precompute the asymptotic distribution for comparison with the permutation distributions
 t = seq(0, 2, length.out = 1000)
 asym_cdf = sapply(t, function(x) ks_cdf(x))
 asym_cval = quantile(asym_cdf, probs = c(0.90, 0.95, 0.99))
 
+# matrix to hold simulation output
 conv = matrix(NA, sims*length(n)^2, 6)
 
 for (bat in 1:10) {
   for (rng in c(0.2, 0.3, 0.4, 0.5)) {
     for (nu in c(0.5, 1.0, 1.5)) {
+      # matrix to hold simulation output (per batch)
+      conv = matrix(NA, sims*length(n)^2, 6)
       
       k = 1
       
@@ -74,9 +76,9 @@ for (bat in 1:10) {
         
         for(j in 1:sims) {
           
-          # generate 2d t-process data
-          f = tp2d(fields = n1, df = 3, range = rng, nu = nu)
-          g = tp2d(fields = n2, df = 3, range = rng, nu = nu)
+          # generate 2d gaussian process data
+          f = gp2d(fields = n1, range = rng, nu = nu)
+          g = gp2d(fields = n1, range = rng, nu = nu)
           
           # flatten into 1d vectors
           f = flatten(f)
@@ -110,7 +112,7 @@ for (bat in 1:10) {
                         cval_95 = conv[,3],
                         cval_99 = conv[,4])
       
-      saveRDS(conv, file = paste0("out_nongp/conv_rng_",rng,"_nu_",nu,"_bat_",bat,"_diag.RDS"))
+      saveRDS(conv, file = paste0("out_gp/conv_rng_",rng,"_nu_",nu,"_bat_",bat,"_diag.RDS"))
     }
   }
 }
