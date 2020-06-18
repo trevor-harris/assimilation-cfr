@@ -5,12 +5,12 @@ gc()
 
 ########### READ ME #############
 
-# you must change the working directory to be the submit folder
+# you must change the working directory to be the submitted_code folder
 # none of this will work otherwise
 # mine is left here as an example
 
 ########## Example
-# setwd("/Users/trevh/research/assimilation-cfr/submit/")
+# setwd("/Users/trevh/research/assimilation-cfr/submitted_code/")
 
 #################################
 
@@ -73,7 +73,7 @@ for (n1 in c(50,100,200,300)) {
                           n1 = n1,
                           n2 = n2)
         
-        saveRDS(size, file = paste0("out_gp/","size_sim_",i,".RDS"))
+        saveRDS(size, file = paste0("size/out_gp/","size_sim_",i,".RDS"))
         
         i = i + 1
       }

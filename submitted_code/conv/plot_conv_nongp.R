@@ -5,12 +5,12 @@ gc()
 
 ########### READ ME #############
 
-# you must change the working directory to be the submit folder
+# you must change the working directory to be the submitted_code folder
 # none of this will work otherwise
 # mine is left here as an example
 
 ########## Example
-# setwd("/Users/trevh/research/assimilation-cfr/submit/")
+# setwd("/Users/trevh/research/assimilation-cfr/submitted_code/")
 
 #################################
 

@@ -5,12 +5,12 @@ gc()
 
 ########### READ ME #############
 
-# you must change the working directory to be the submit folder
+# you must change the working directory to be the submitted_code folder
 # none of this will work otherwise
 # mine is left here as an example
 
 ########## Example
-# setwd("/Users/trevh/research/assimilation-cfr/submit/")
+# setwd("/Users/trevh/research/assimilation-cfr/submitted_code/")
 
 #################################
 
@@ -77,7 +77,7 @@ for (bat in 1:10) {
           
           # generate 2d t-process data
           f = tp2d(fields = n1, df = 3, range = rng, nu = nu)
-          g = tp2d(fields = n2, df = 3, range = rng, nu = nu)
+          g = tp2d(fields = n1, df = 3, range = rng, nu = nu)
           
           # flatten into 1d vectors
           f = flatten(f)
@@ -111,7 +111,7 @@ for (bat in 1:10) {
                         cval_95 = conv[,3],
                         cval_99 = conv[,4])
       
-      saveRDS(conv, file = paste0("out_nongp/conv_rng_",rng,"_nu_",nu,"_bat_",bat,"_diag.RDS"))
+      saveRDS(conv, file = paste0("conv/out_nongp/conv_rng_",rng,"_nu_",nu,"_bat_",bat,"_diag.RDS"))
     }
   }
 }

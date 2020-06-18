@@ -5,12 +5,12 @@ gc()
 
 ########### READ ME #############
 
-# you must change the working directory to be the submit folder
+# you must change the working directory to be the submitted_code folder
 # none of this will work otherwise
 # mine is left here as an example
 
 ########## Example
-# setwd("/Users/trevh/research/assimilation-cfr/submit/")
+# setwd("/Users/trevh/research/assimilation-cfr/submitted_code/")
 
 #################################
 
@@ -63,7 +63,6 @@ ggplot(conv, aes(x = n, y = sqrt(cdf_diff), fill = range)) +
              switch = "y",
              labeller = label_parsed) +
   guides(fill=guide_legend("Range"))
-
 # ggsave("conv/gp_l2.png", width = 9.1, height = 5)
 
 # pull out only the critical value results
